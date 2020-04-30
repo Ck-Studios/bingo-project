@@ -6,10 +6,8 @@ import { Provider } from "react-redux";
 import withReduxSaga from "next-redux-saga";
 import withRedux from "next-redux-wrapper";
 import { AnimatePresence } from "framer-motion";
-import {mobile, pointColor} from "common/theme/theme";
 import configureStore from "client/store";
 const isProduction = process.env.NODE_ENV === "production";
-
 
 class RootApp extends App {
     constructor(props) {
@@ -74,6 +72,7 @@ class RootApp extends App {
         return (
             <>
                 <Head>
+                    <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'/>
                 </Head>
                 <Provider store={store}>
                     <>
@@ -89,11 +88,18 @@ class RootApp extends App {
                 <style global jsx>
                     {`
                         body {
+                            margin: 0 auto;
+                            max-width: 800px;
+                            height: 100%;
                         }
-
+                        
                         html {
                             box-sizing: border-box;
+                            height: 100%;
+
                         }
+                        
+                        * { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans KR', 'Sans-serif'; }
 
                         *,
                         *:before,
@@ -104,6 +110,11 @@ class RootApp extends App {
                         #__next-build-watcher,
                         #__next-prerender-indicator {
                             display: none !important;
+                        }
+                        
+                        p, h1, h2, h3, h4, h5, h6, span, button {
+                            margin: 0;
+                            padding: 0;
                         }
                     `}
                 </style>

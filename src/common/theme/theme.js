@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 export const pointColor = {
     black: "#000000",
     white: "#ffffff",
@@ -45,4 +47,17 @@ export const pointColor = {
     NaverPost: "#01beff"
 };
 
+export const Image = styled.img`
+    width: ${({width}) => width || '100%'};
+    height: ${({height}) => height || '100%'};
+    object-fit: ${({cover}) => cover ? 'cover' : 'contain'};
+`;
+
 export const mobile = value => `${(value / 720) * 100}vw`;
+
+export const Layout = {
+    header: mobile(96),
+    tabBar: mobile(98),
+    hasHomeBar: mobile(170),
+    indent: mobile(32)
+};
