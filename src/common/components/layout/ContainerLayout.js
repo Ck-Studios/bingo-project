@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export default function ContainerLayout(props) {
     return (
-        <ContainerFrame>
+        <ContainerFrame background={props.background}>
             {props.children}
         </ContainerFrame>
     )
@@ -11,4 +11,5 @@ export default function ContainerLayout(props) {
 
 const ContainerFrame = styled.div`
     width: 100%;
+    background: ${({background}) => background || "transparent"};
 `;

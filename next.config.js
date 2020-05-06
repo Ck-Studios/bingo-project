@@ -2,7 +2,7 @@ const withSass = require("@zeit/next-sass");
 const withCSS = require("@zeit/next-css");
 const withFonts = require("next-fonts");
 const withImages = require("next-images");
-const withTM = require("next-transpile-modules")(["swiper", "dom7"]);
+const withTM = require("next-transpile-modules")(["swiper", "react-responsive-modal", "dom7"]);
 const withSourceMaps = require("@zeit/next-source-maps");
 
 module.exports = withTM(

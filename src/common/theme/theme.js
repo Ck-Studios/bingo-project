@@ -10,6 +10,10 @@ export const pointColor = {
     gray4: "#33363b",
     gray5: "#202225",
     gray6: "#484848",
+    gray7: "#333333",
+    gray8: "#6E6D79",
+    gray9: "#6E6D79",
+    gray10: "#999999",
     mainColor: "#0067ff",
     activeColor: "#003cff",
     activeColorLight: "#e5f0ff",
@@ -44,7 +48,16 @@ export const pointColor = {
     Facebook: "#0d33a2",
     Youtube: "#e4594a",
     KakaoStory: "#fbc800",
-    NaverPost: "#01beff"
+    NaverPost: "#01beff",
+
+    mainPurple: "#764AFF",
+    gradientPurple: "#9C57FF",
+    wallColor: "#F5F5F9",
+};
+
+export const breakPoints = {
+    web: "screen and (min-width: 768px)",
+    mobile: "screen and (max-width: 767px)"
 };
 
 export const Image = styled.img`
@@ -54,6 +67,19 @@ export const Image = styled.img`
 `;
 
 export const mobile = value => `${(value / 720) * 100}vw`;
+
+export const IconFrame = styled.div`
+    width: ${({size}) => size || mobile(30)};
+    height: ${({size}) => size || mobile(30)};
+    margin-top: ${({marginTop}) => marginTop || 0};
+    margin-right: ${({marginRight}) => marginRight || 0};
+    margin-bottom: ${({marginBottom}) => marginBottom || 0};
+    margin-left: ${({marginLeft}) => marginLeft || 0};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+`;
 
 export const Layout = {
     header: mobile(96),

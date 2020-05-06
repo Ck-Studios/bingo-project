@@ -1,32 +1,41 @@
 import styled from "styled-components";
-import {mobile, pointColor, Layout, Image} from "common/theme/theme";
+import {mobile, pointColor, Layout, Image, breakPoints} from "common/theme/theme";
 import {useRouter} from "next/router";
+import {PREFIX} from "client/constants";
 
-export default function Header({leftContent, title, titleContent, rightContent, children, withoutBackButton, backButtonColor, onPressBackButton, ...others}) {
+export default function Header({leftContent, title, titleContent, rightContent, children, withoutBackButton, withoutLogo, backButtonColor, onPressBackButton, ...others}) {
     const router = useRouter();
     return (
-        <ContainerFrame {...others}>
-            {leftContent ? (
+        <Wrapper>
+            <ContainerFrame {...others} className="header-container-frame">
+                {leftContent ? (
                     <LeftContentFrame>{leftContent || null}</LeftContentFrame>
-                ) :
-                <Image
-                    width={mobile(170)}
-                    height={mobile(40)}
-                    cover
-                    src={"/static/images/logo/bingobingo_logo.png"}
-                />
+                ) : <div/>
+                }
 
-            }
+                <CenterContentFrame>
+                    {
+                        withoutLogo ?
+                            <div/>
+                            :
+                            titleContent ?
+                                titleContent
+                                :
+                                title ? (<HeaderTitle>{title}</HeaderTitle>) :
+                                    <Image
+                                        className="logo"
+                                        width={mobile(120)}
+                                        height={mobile(40)}
+                                        cover
+                                        src={`${PREFIX}/static/images/logo/logo.svg`}
+                                        onClick={() => router.push("/")}
+                                    />
+                    }
+                </CenterContentFrame>
 
-            <CenterContentFrame>
-                {titleContent ||
-                (title ? (
-                    <HeaderTitle>{title}</HeaderTitle>
-                ) : null)}
-            </CenterContentFrame>
-
-            <RightContentFrame>{rightContent || null}</RightContentFrame>
-        </ContainerFrame>
+                <RightContentFrame>{rightContent || null}</RightContentFrame>
+            </ContainerFrame>
+        </Wrapper>
     )
 }
 
@@ -79,6 +88,19 @@ const ContainerFrame = styled.div`
     height: ${mobile(100)};
     padding: ${Layout.indent};
     background: ${({background}) => background || pointColor.white};
-    border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : mobile(1))}
-        solid ${pointColor.gray1};
+    border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : mobile(1))} solid ${pointColor.gray1};
+`;
+
+const Wrapper = styled.div`
+    @media ${breakPoints.web} {
+        .header-container-frame {
+            height: 100px;
+            
+            .logo {
+                width: 120px;
+                height: 50px;
+                object-fit: contain;
+            }
+        }
+    }
 `;

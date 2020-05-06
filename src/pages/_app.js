@@ -2,6 +2,7 @@ import React from "react";
 import App from "next/app";
 import Head from "next/head";
 import "swiper/css/swiper.css";
+import "react-responsive-modal/styles.css";
 import { Provider } from "react-redux";
 import withReduxSaga from "next-redux-saga";
 import withRedux from "next-redux-wrapper";
@@ -89,14 +90,14 @@ class RootApp extends App {
                     {`
                         body {
                             margin: 0 auto;
-                            max-width: 800px;
+                            max-width: 720px !important;
                             height: 100%;
                         }
                         
                         html {
                             box-sizing: border-box;
                             height: 100%;
-
+                            font-size: 16px;
                         }
                         
                         * { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans KR', 'Sans-serif'; }

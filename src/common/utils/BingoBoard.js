@@ -1,17 +1,35 @@
 import {useState, useEffect} from "react";
 import _ from "lodash";
 import styled from "styled-components";
-import {mobile, pointColor, breakPoints} from "common/theme/theme";
+import {Lottie} from "@crello/react-lottie";
+import {useDispatch, useSelector} from "react-redux";
+import {mobile, pointColor, breakPoints, Image} from "common/theme/theme";
+import * as animationData from "common/animation/lottie/pencil";
+import {commitCounts} from "modules/bingo";
 
-export default function BingoCreator(props) {
+const animationConfig = {
+    loop: false,
+    autoplay: false,
+    animationData: animationData.default
+};
+
+export default function BingoBoard(props) {
+    const dispatch = useDispatch();
     const [board, updateBoard] = useState(null);
     const [isLoading, setLoading] = useState(true);
+    const [count, updateCount] = useState(0);
+
+    const gameObjects = useSelector(state => state.bingo.gameObjects);
+
+    useEffect(() => {
+        dispatch(commitCounts(count));
+    }, [count]);
 
     useEffect(() => {
         const size = props.size ? Math.pow(props.size) : 25;
         const _tempArray = [];
-        for(let i = 0; i < size; ++i) {
-            _tempArray[i] = i+1;
+        for (let i = 0; i < size; ++i) {
+            _tempArray[i] = i + 1;
         }
 
         const _tempArray2 = _tempArray?.map((item, index) => {
@@ -20,8 +38,6 @@ export default function BingoCreator(props) {
                 marked: false,
             }
         });
-
-        _tempArray2.sort(() => 0.5 - Math.random());
 
         const _tempArray3 = _.chunk(_tempArray2, 5);
 
@@ -39,8 +55,8 @@ export default function BingoCreator(props) {
             })
         });
 
-        console.log(id, _tempBoard);
-
+        const markedCounts = _.flattenDeep(_tempBoard).filter(item => item.marked).length;
+        updateCount(markedCounts);
         updateBoard(_tempBoard);
     };
 
@@ -49,19 +65,57 @@ export default function BingoCreator(props) {
         null
         :
         (
-            <ContainerFrame>
+            <ContainerFrame
+                size={mobile(props.boardSize)}
+            >
                 {
                     board?.map((row, rowIndex) => (
-                        <RowFrame key={rowIndex.toString()}>
+                        <RowFrame
+                            key={rowIndex.toString()}
+                        >
                             {
                                 row?.map((item, itemIndex) => (
                                     <BingoItem
                                         onClick={() => markItem(item.id)}
                                         key={itemIndex.toString()}
+                                        boardSize={props.boardSize}
+                                        columnCount={row.length}
                                         index={itemIndex + 1}
                                         marked={item.marked}
                                     >
-                                        <p>{item.id}</p>
+                                        {
+                                            gameObjects.ring === "default" ?
+                                                <AnimationFrame>
+                                                    <Lottie
+                                                        playingState={
+                                                            item.marked ?
+                                                                "playing"
+                                                                :
+                                                                "stopped"
+                                                        }
+                                                        config={animationConfig}
+                                                        width={mobile(props.boardSize / row.length)}
+                                                        height={mobile(props.boardSize / row.length)}
+                                                        speed={0.7}
+                                                        isClickToPauseDisabled={false}
+                                                        isStopped={!item.marked}
+                                                        isPaused={!item.marked}
+                                                    />
+                                                </AnimationFrame>
+                                                :
+                                                item.marked ?
+                                                    <RingFrame
+                                                        width={mobile((props.boardSize / row.length) - 20)}
+                                                        height={mobile((props.boardSize / row.length) - 20)}
+                                                    >
+                                                        <Ring
+                                                            src={gameObjects.ring}
+                                                            contain
+                                                        />
+                                                    </RingFrame>
+                                                    :
+                                                    null
+                                        }
                                     </BingoItem>
                                 ))
                             }
@@ -72,15 +126,28 @@ export default function BingoCreator(props) {
         )
 }
 
+const AnimationFrame = styled.div`
+    position: absolute;
+    z-index: 10;
+`;
+
+const RingFrame = styled.div`
+    width: ${({width}) => width};
+    height: ${({height}) => height};
+`;
+
+const Ring = styled(Image)`
+`;
+
 const BingoItem = styled.div`
-    width: ${mobile(100)};
-    height: ${mobile(100)};
+    width: ${props => mobile(props.boardSize / props.columnCount)};
+    height: ${props => mobile(props.boardSize / props.columnCount)};
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${({marked}) => marked ? "pink" : pointColor.white};
-    border: ${mobile(1)} solid red;
-    margin-right: ${({index}) => index % 5 !== 0 ? -1 : 0}px;
+    background: transparent;
+    position: relative;
+    
 `;
 
 const RowFrame = styled.div`
@@ -88,6 +155,6 @@ const RowFrame = styled.div`
 `;
 
 const ContainerFrame = styled.div`
-    width: 100%;
-    height: 100%;
+    width: ${({size}) => size || "100%"};
+    height: ${({size}) => size || "100%"};
 `;
