@@ -7,7 +7,7 @@ const initialState = {
         result2: `${PREFIX}/static/images/bingo/grandma/g1_result2.png`,
         result3: `${PREFIX}/static/images/bingo/grandma/g1_result3.png`,
         result4: `${PREFIX}/static/images/bingo/grandma/g1_result4.png`,
-        ring: `${PREFIX}/static/images/bingo/grandma/g1_ring.png`,
+        ring: `${PREFIX}/static/images/bingo/grandma/g1_ring.svg`,
         thumbnail: `${PREFIX}/static/images/bingo/grandma/g1_thumbnail.png`,
         title: "할매 입맛 빙고",
         subtitle: "나의 할매력은 얼마일까?"
