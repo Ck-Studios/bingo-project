@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {pointColor, Layout, mobile, Image, breakPoints, IconFrame} from "common/theme/theme";
+import {pointColor, Layout, mobile, Image, breakPoints, IconFrame, desktop} from "common/theme/theme";
 import {useSelector} from "react-redux";
 import {PREFIX} from "client/constants";
 
@@ -19,6 +19,7 @@ export default function ContentCard(props) {
                     {gameObjects.title}
                 </Title>
                     <Image
+                        className="next-icon"
                         width={mobile(25)}
                         height={mobile(25)}
                         src={`${PREFIX}/static/images/icons/next.svg`}
@@ -133,7 +134,8 @@ const ContentFrame = styled.div`
     align-items: ${({type}) => type === "short" ? "center" : "flex-start"}; 
     
     @media ${breakPoints.web} {
-        padding: 30px 25px;
+        height: ${({type}) => type === "short" ? desktop(100) : desktop(220)};
+        padding: ${({type}) => type === "short" ? "0 15px" : "30px 25px"};
     }
 `;
 
@@ -143,7 +145,7 @@ const ImageFrame = styled.div`
     background: pink;
     
     @media ${breakPoints.web} {
-        height: 580px;
+        height: ${({type}) => type === "short" ? desktop(250) : "580px"};
     }
 `;
 
@@ -161,4 +163,13 @@ const ContainerFrame = styled.div`
 const ShortContainerFrame = styled(ContainerFrame)`
     height: ${mobile(350)};
     border: ${mobile(1)} solid ${pointColor.white};
+    
+    @media ${breakPoints.web} {
+        height: ${desktop(350)};
+        
+        .next-icon {
+            width: 30px;
+            height: 30px;
+        }
+    }
 `;

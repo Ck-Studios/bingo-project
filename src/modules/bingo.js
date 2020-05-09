@@ -16,11 +16,15 @@ const initialState = {
 };
 
 export const COMMIT_COUNTS = "bingo/COMMIT_COUNTS";
+export const RESET_COUNTS = "bingo/RESET_COUNTS";
 
 export default function bingo(state=initialState, action) {
     switch(action.type) {
         case COMMIT_COUNTS:
             return {...state, counts: action.payload.counts};
+
+        case RESET_COUNTS:
+            return {...state, counts: 0}
         default:
             return {...state};
     }
@@ -33,5 +37,11 @@ export function commitCounts(counts) {
         payload: {
             counts,
         }
+    }
+}
+
+export function resetCounts() {
+    return {
+        type: RESET_COUNTS
     }
 }

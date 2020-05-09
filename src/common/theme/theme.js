@@ -67,6 +67,7 @@ export const Image = styled.img`
 `;
 
 export const mobile = value => `${(value / 720) * 100}vw`;
+export const desktop = value => `${(value / 720) * 1000}px`;
 
 export const IconFrame = styled.div`
     width: ${({size}) => size || mobile(30)};
@@ -78,6 +79,11 @@ export const IconFrame = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    
+    @media ${breakPoints.web} {
+        width: 30px;
+        height: 30px;
+    }
     
 `;
 

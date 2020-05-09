@@ -1,4 +1,4 @@
-import {mobile, breakPoints, pointColor} from "common/theme/theme";
+import {mobile, breakPoints, pointColor, desktop} from "common/theme/theme";
 import styled from "styled-components";
 
 export default function Footer() {
@@ -21,6 +21,9 @@ const Text = styled.span`
     margin-right: ${({marginRight}) => marginRight || 0};
     font-size: ${mobile(25)};
     color: ${pointColor.white};
+    @media ${breakPoints.web} {
+        font-size: ${desktop(25)};
+    }
 `;
 
 const ContainerFrame = styled.div`
@@ -30,4 +33,9 @@ const ContainerFrame = styled.div`
     justify-content: center;
     height: ${mobile(100)};
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 50%);
+    @media ${breakPoints.web} {
+        margin-top: ${desktop(30)};
+        height: ${desktop(100)};
+        padding: 30px;
+    }
 `;

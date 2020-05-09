@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {mobile, pointColor, Layout, Image, breakPoints} from "common/theme/theme";
+import {mobile, pointColor, Layout, Image, breakPoints, desktop} from "common/theme/theme";
 import {useRouter} from "next/router";
 import {PREFIX} from "client/constants";
 
@@ -94,11 +94,11 @@ const ContainerFrame = styled.div`
 const Wrapper = styled.div`
     @media ${breakPoints.web} {
         .header-container-frame {
-            height: 100px;
-            
+            height: ${desktop(100)};
+            padding: 30px;
             .logo {
-                width: 120px;
-                height: 50px;
+                width: ${desktop(100)};
+                height: ${desktop(30)};
                 object-fit: contain;
             }
         }

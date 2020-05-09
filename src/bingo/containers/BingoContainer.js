@@ -14,16 +14,7 @@ class BingoContainer extends Component {
     render() {
         return (
             <ContainerFrame>
-                <Header
-                    rightContent={
-                        <Image
-                            width={mobile(55)}
-                            height={mobile(55)}
-                            cover
-                            src={`${PREFIX}/static/images/icons/search_icon.png`}
-                        />
-                    }
-                />
+                <Header/>
                 <Game
                     boardSize={648}
                 />

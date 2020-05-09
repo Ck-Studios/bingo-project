@@ -40,16 +40,16 @@ class RootApp extends App {
         const {store} = this.props;
         const {asPath} = this.props.router;
 
-        document.addEventListener(
-            "touchstart",
-            event => {
-                if (event.touches.length > 1) {
-                    event.preventDefault();
-                    event.stopPropagation(); // maybe useless
-                }
-            },
-            {passive: false}
-        );
+        // document.addEventListener(
+        //     "touchstart",
+        //     event => {
+        //         if (event.touches.length > 1) {
+        //             event.preventDefault();
+        //             event.stopPropagation(); // maybe useless
+        //         }
+        //     },
+        //     {passive: false}
+        // );
     }
 
     componentDidUpdate() {
@@ -64,7 +64,7 @@ class RootApp extends App {
     }
 
     componentWillUnmount() {
-        document.removeEventListener("touchstart");
+        // document.removeEventListener("touchstart");
     }
 
     render() {

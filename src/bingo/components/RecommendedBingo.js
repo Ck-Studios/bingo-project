@@ -32,6 +32,9 @@ const Title = styled.p`
     font-size: ${mobile(35)};
     color: ${pointColor.gray7};
     font-weight: 700;
+    @media ${breakPoints.web} {
+        font-size: 2.5rem;
+    }
 `;
 
 const ItemFrame = styled.div`

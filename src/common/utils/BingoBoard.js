@@ -3,7 +3,7 @@ import _ from "lodash";
 import styled from "styled-components";
 import {Lottie} from "@crello/react-lottie";
 import {useDispatch, useSelector} from "react-redux";
-import {mobile, pointColor, breakPoints, Image} from "common/theme/theme";
+import {mobile, pointColor, breakPoints, Image, desktop} from "common/theme/theme";
 import * as animationData from "common/animation/lottie/pencil";
 import {commitCounts} from "modules/bingo";
 
@@ -21,11 +21,7 @@ export default function BingoBoard(props) {
 
     const gameObjects = useSelector(state => state.bingo.gameObjects);
 
-    useEffect(() => {
-        dispatch(commitCounts(count));
-    }, [count]);
-
-    useEffect(() => {
+    const initialize = () => {
         const size = props.size ? Math.pow(props.size) : 25;
         const _tempArray = [];
         for (let i = 0; i < size; ++i) {
@@ -43,7 +39,24 @@ export default function BingoBoard(props) {
 
         updateBoard(_tempArray3);
         setLoading(false);
+    };
+
+    useEffect(() => {
+        dispatch(commitCounts(count));
+    }, [count]);
+
+
+    useEffect(() => {
+        initialize();
     }, []);
+
+    useEffect(() => {
+        if(props.gameStatus === "reset") {
+            initialize();
+            updateCount(0);
+            props.setGameStatus("running");
+        }
+    }, [props.gameStatus]);
 
     const markItem = (id) => {
         const _tempBoard = board.map(row => {
@@ -66,7 +79,8 @@ export default function BingoBoard(props) {
         :
         (
             <ContainerFrame
-                size={mobile(props.boardSize)}
+                className="board"
+                size={props.boardSize}
             >
                 {
                     board?.map((row, rowIndex) => (
@@ -76,6 +90,7 @@ export default function BingoBoard(props) {
                             {
                                 row?.map((item, itemIndex) => (
                                     <BingoItem
+                                        className="item"
                                         onClick={() => markItem(item.id)}
                                         key={itemIndex.toString()}
                                         boardSize={props.boardSize}
@@ -87,6 +102,7 @@ export default function BingoBoard(props) {
                                             gameObjects.ring === "default" ?
                                                 <AnimationFrame>
                                                     <Lottie
+                                                        className="ring"
                                                         playingState={
                                                             item.marked ?
                                                                 "playing"
@@ -105,8 +121,9 @@ export default function BingoBoard(props) {
                                                 :
                                                 item.marked ?
                                                     <RingFrame
-                                                        width={mobile((props.boardSize / row.length) - 20)}
-                                                        height={mobile((props.boardSize / row.length) - 20)}
+                                                        className="ring"
+                                                        width={(props.boardSize / row.length) - 20}
+                                                        height={(props.boardSize / row.length) - 20}
                                                     >
                                                         <Ring
                                                             src={gameObjects.ring}
@@ -132,11 +149,23 @@ const AnimationFrame = styled.div`
 `;
 
 const RingFrame = styled.div`
-    width: ${({width}) => width};
-    height: ${({height}) => height};
+    width: ${({width}) => mobile(width)};
+    height: ${({height}) => mobile(height)};
+    
+    @media ${breakPoints.web} {
+        width: ${({width}) => desktop(width - 30)};
+        height: ${({height}) => desktop(height - 30)};
+    }
 `;
 
 const Ring = styled(Image)`
+    width: ${({width}) => mobile(width)};
+    height: ${({height}) => mobile(height)};
+    
+    @media ${breakPoints.web} {
+        width: ${({width}) => desktop(width)};
+        height: ${({height}) => desktop(height)};
+    }
 `;
 
 const BingoItem = styled.div`
@@ -148,6 +177,11 @@ const BingoItem = styled.div`
     background: transparent;
     position: relative;
     
+    @media ${breakPoints.web} {
+        width: 129.5px;
+        height: 129.5px;
+    }
+    
 `;
 
 const RowFrame = styled.div`
@@ -155,6 +189,10 @@ const RowFrame = styled.div`
 `;
 
 const ContainerFrame = styled.div`
-    width: ${({size}) => size || "100%"};
-    height: ${({size}) => size || "100%"};
+    width: ${({size}) => mobile(size) || "100%"};
+    height: ${({size}) => mobile(size) || "100%"};
+    @media ${breakPoints.web} {
+        width: 648px;
+        height: 648px;
+    }
 `;

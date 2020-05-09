@@ -13,16 +13,7 @@ class MainContainer extends Component {
         const {router} = this.props;
         return (
             <ContainerFrame>
-                <Header
-                    rightContent={
-                        <Image
-                            width={mobile(55)}
-                            height={mobile(55)}
-                            cover
-                            src={`${PREFIX}/static/images/icons/search_icon.png`}
-                        />
-                    }
-                />
+                <Header/>
                 <ContentListFrame>
                     {
                         [1, 2, 3, 4, 5].map((item, index) => (
