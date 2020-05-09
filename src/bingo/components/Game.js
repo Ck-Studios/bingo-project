@@ -56,7 +56,7 @@ export default function Game(props) {
 
         domtoimage.toBlob(node)
             .then((blob) => {
-                saveAs(blob, "bingoring.png");
+                window.saveAs(blob, "bingoring.png");
             })
             .catch((err) => {
                 console.log(err);
