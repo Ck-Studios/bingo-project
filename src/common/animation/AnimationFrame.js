@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { pointColor } from "common/theme/Theme";
+import { pointColor } from "common/theme/theme";
 
 export default function AnimationFrame(props) {
     const { variants, noFlexShrink, background } = props;
