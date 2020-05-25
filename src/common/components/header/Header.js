@@ -24,9 +24,9 @@ export default function Header({leftContent, title, titleContent, rightContent, 
                                 title ? (<HeaderTitle>{title}</HeaderTitle>) :
                                     <Image
                                         className="logo"
-                                        width={mobile(120)}
+                                        width={mobile(115)}
                                         height={mobile(40)}
-                                        cover
+                                        contain
                                         src={`${PREFIX}/static/images/logo/logo.svg`}
                                         onClick={() => router.push("/")}
                                     />

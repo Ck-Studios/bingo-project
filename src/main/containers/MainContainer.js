@@ -7,32 +7,57 @@ import Header from "common/components/header/Header";
 import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
 import {PREFIX} from "client/constants";
+import loadDB from "client/firebase/firebase";
+import {loadBingos} from "modules/bingo";
 
 class MainContainer extends Component {
+    componentDidMount() {
+        this.props.loadBingos();
+    }
+
     render() {
-        const {router} = this.props;
-        return (
-            <ContainerFrame>
-                <Header/>
-                <ContentListFrame>
-                    {
-                        [1, 2, 3, 4, 5].map((item, index) => (
-                            <ItemFrame
-                                key={index.toString()}
-                                onClick={() => router.push("/bingo")}
-                            >
-                                <ContentCard/>
-                            </ItemFrame>
-                        ))
-                    }
-                </ContentListFrame>
-                <Footer/>
-            </ContainerFrame>
-        );
+        const {router, games} = this.props;
+        console.log("main:: ", games);
+        return games ?
+            (
+                <ContainerFrame>
+                    <Header/>
+                    <ContentListFrame>
+                        {
+                            games.map((game, index) => (
+                                <ItemFrame
+                                    key={index.toString()}
+                                    onClick={() => router.push({
+                                        pathname: "/bingo",
+                                        query: {
+                                            id: game._id,
+                                        }
+                                    })}
+                                >
+                                    <ContentCard
+                                        game={game}
+                                    />
+                                </ItemFrame>
+                            ))
+                        }
+                    </ContentListFrame>
+                    <Footer/>
+                </ContainerFrame>
+            )
+            :
+            null
     }
 }
 
-export default withRouter(connect()(MainContainer));
+const mapStateToProps = state => ({
+    games: state.bingo.games,
+});
+
+const mapDispatchToProps = {
+    loadBingos,
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainContainer));
 
 const ContainerFrame = styled.div`
     background: ${pointColor.gray0};
@@ -40,15 +65,14 @@ const ContainerFrame = styled.div`
 `;
 
 const ItemFrame = styled.div`
-    margin-top: ${mobile(50)};
+    margin-top: ${mobile(80)};
     @media ${breakPoints.web} {
         margin-top: 3rem;
     }
 `;
 
 const ContentListFrame = styled.div`
-    padding: 0 ${mobile(50)};
-    
+    padding: 0 ${mobile(36)};
     @media ${breakPoints.web} {
         padding: 0 80px;
     }

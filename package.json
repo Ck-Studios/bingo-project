@@ -38,6 +38,7 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.4.0",
     "file-saver": "^2.0.2",
+    "firebase": "^7.2.3",
     "framer-motion": "^1.8.4",
     "google-map-react": "^1.1.6",
     "immer": "^5.3.6",

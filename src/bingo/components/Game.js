@@ -3,43 +3,56 @@ import {mobile, pointColor, Image, breakPoints, IconFrame, desktop} from "common
 import styled from "styled-components";
 import BingoBoard from "common/utils/BingoBoard";
 import {useDispatch, useSelector} from "react-redux";
-import {Modal} from "react-responsive-modal";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {PREFIX} from "client/constants";
-import {resetCounts} from "modules/bingo";
+import {loadBingos, resetCounts} from "modules/bingo";
 import domtoimage from "dom-to-image";
 import {saveAs} from "file-saver";
+import {useRouter} from "next/router";
 
 export default function Game(props) {
     const dispatch = useDispatch();
+    const router = useRouter();
+
+    const gameId = router.query.id;
+
+    const games = useSelector(state => state.bingo.games);
+
     const [showResultImage, toggleResultImage] = useState(false);
     const [gameStatus, setGameStatus] = useState("running");
-    const gameObjects = useSelector(state => state.bingo.gameObjects);
     const markedCounts = useSelector(state => state.bingo.counts);
+    const [matchedGame, setMatchedGame] = useState(null);
+
+    useEffect(() => {
+            dispatch(loadBingos());
+            const _matchedGame = games?.find(item => item._id === parseInt(gameId))
+            setMatchedGame(_matchedGame);
+    }, []);
+
 
     const getResult = () => {
         if (markedCounts <= 5) {
             return (
                 <Image
-                    src={gameObjects.result1}
+                    src={matchedGame?.result_images[0]}
                 />
             )
         } else if (markedCounts >= 6 && markedCounts <= 14) {
             return (
                 <Image
-                    src={gameObjects.result2}
+                    src={matchedGame?.result_images[1]}
                 />
             )
         } else if (markedCounts >= 15 && markedCounts <= 21) {
             return (
                 <Image
-                    src={gameObjects.result3}
+                    src={matchedGame?.result_images[2]}
                 />
             )
         } else if (markedCounts >= 22 && markedCounts <= 25) {
             return (
                 <Image
-                    src={gameObjects.result4}
+                    src={matchedGame?.result_images[3]}
                 />
             )
         }
@@ -54,35 +67,44 @@ export default function Game(props) {
     const saveImage = () => {
         const node = document.getElementById("bingo");
 
-        domtoimage.toBlob(node)
-            .then((blob) => {
-                saveAs(blob, "bingoring.png");
+        domtoimage.toJpeg(node, {quality: 0.95})
+            .then((dataUrl) => {
+                const link = document.createElement("a");
+                link.href = dataUrl;
+
+                const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
+                const x = window.open();
+                x.document.open();
+                x.document.write(iframe);
+                x.document.close();
             })
             .catch((err) => {
-                console.log(err);
+                console.log("저장중에 에러::", err);
             })
     }
 
     return (
         <ContainerFrame>
-            <div id="bingo">
+            <ContentWrapper>
+            <BingoFrame id="bingo">
                 <Image
-                    src={gameObjects.board}
+                    src={matchedGame?.board}
                 />
-                <BoardFrame>
+                <BoardFrame className="board-frame-container">
                     <BingoBoard
                         boardSize={props.boardSize}
                         gameStatus={gameStatus}
+                        game={matchedGame}
                         setGameStatus={setGameStatus}
                     />
                 </BoardFrame>
                 {
                     showResultImage &&
-                    <div className="result-image">
+                    <div className="result-image" style={{marginTop: mobile(-10)}}>
                         {getResult()}
                     </div>
                 }
-            </div>
+            </BingoFrame>
             {
                 showResultImage ?
                     <ResultContent>
@@ -148,19 +170,25 @@ export default function Game(props) {
                         </ShareButton>
                     </ButtonFrame>
             }
+            </ContentWrapper>
         </ContainerFrame>
     )
 }
+const ContentWrapper = styled.div`
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
+`;
+const BingoFrame = styled.div`
+`;
 
 const SaveButton = styled.div`
-    width: 55%;
-    height: ${mobile(70)};
-    background: linear-gradient(170deg, ${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 45%);
+    width: ${mobile(350)};
+    height: ${mobile(80)};
+    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: ${mobile(50)};
-    box-shadow: 0 5px 7px 1px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
     
     @media ${breakPoints.web} {
         height: 70px;
@@ -170,15 +198,15 @@ const SaveButton = styled.div`
 
 const RestartButton = styled(SaveButton)`
     display: flex;
-    width: 40%;
+    width: ${mobile(210)};
     background: ${pointColor.white};
     
 `;
 
 const Message = styled.p`
-    margin-top: ${mobile(20)};
-    font-size: ${mobile(20)};
-    color: ${pointColor.gray7};
+    margin-top: 0;
+    font-size: ${mobile(24)};
+    color: ${pointColor.gray8};
     
     @media ${breakPoints.web} {
         font-size: 25px;
@@ -186,8 +214,8 @@ const Message = styled.p`
 `;
 
 const ButtonText = styled.p`
-    font-size: ${mobile(30)};
-    font-weight: 500;
+    font-size: ${mobile(28)};
+    font-weight: bold;
     color: ${({color}) => color || pointColor.white};
     
     @media ${breakPoints.web} {
@@ -208,13 +236,13 @@ const ResultContent = styled.div`
 const ResultButton = styled.div`
     margin-top: ${mobile(20)};
     width: 70%;
-    height: ${mobile(70)};
-    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 50%);
+    height: ${mobile(80)};
+    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: ${mobile(50)};
-    box-shadow: 0 5px 7px 1px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.2);
     
     @media ${breakPoints.web} {
         height: 70px;
@@ -232,7 +260,8 @@ const ButtonFrame = styled.div`
     align-items: center;
     width: 100%;
     background: ${pointColor.white};
-    padding-bottom: ${mobile(50)};
+    padding-top: ${mobile(10)};
+    padding-bottom: ${mobile(70)};
     border-bottom: ${mobile(1)} solid ${pointColor.gray1};
 `;
 
@@ -247,20 +276,25 @@ const ResultButtonFrame = styled.div`
 `;
 
 const BoardFrame = styled.div`
+    width: ${mobile(560)};
+    height: ${mobile(560)};
     position: absolute;
-    top: ${mobile(220)};
+    top: ${mobile(185)};
     left: 50%;
     transform: translateX(-50%);
     z-index: 0;
     
     @media ${breakPoints.web} {
-        top: 220px;
+        top: 170px;
+        width: 500px;
+        height: 500px;
     }
     
 `;
 
 const ContainerFrame = styled.div`
     width: 100%;
+    padding: 0 ${mobile(36)};
     position: relative;
     display: flex;
     flex-direction: column;
@@ -273,6 +307,8 @@ const ContainerFrame = styled.div`
     }
     
     @media ${breakPoints.web} {
+        padding: 0 80px;
+        
         .ring-wrapper {
             width: ${desktop(20)};
             height: ${desktop(20)};

@@ -19,20 +19,20 @@ export default function Footer() {
 const Text = styled.span`
     display: inline-block;
     margin-right: ${({marginRight}) => marginRight || 0};
-    font-size: ${mobile(25)};
+    font-size: ${mobile(23)};
     color: ${pointColor.white};
     @media ${breakPoints.web} {
-        font-size: ${desktop(25)};
+        font-size: ${desktop(23)};
     }
 `;
 
 const ContainerFrame = styled.div`
-    margin-top: ${mobile(30)};
+    margin-top: ${mobile(80)};
     display: flex;
     align-items: center;
     justify-content: center;
-    height: ${mobile(100)};
-    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 50%);
+    height: ${mobile(110)};
+    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     @media ${breakPoints.web} {
         margin-top: ${desktop(30)};
         height: ${desktop(100)};

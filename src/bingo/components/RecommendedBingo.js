@@ -2,9 +2,21 @@ import styled from "styled-components";
 import ContentCard from "main/components/card/ContentCard";
 import {mobile, pointColor, Image, breakPoints} from "common/theme/theme";
 import {useRouter} from "next/router";
+import {useEffect} from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {loadBingos} from "modules/bingo";
 
 export default function RecommendedBingo(props) {
     const router = useRouter();
+    const dispatch = useDispatch();
+    const games = useSelector(state => state.bingo.games);
+
+    useEffect(() => {
+        if(!games) {
+            dispatch(loadBingos());
+        }
+    }, []);
+
     return (
         <ContainerFrame>
             <Title>
@@ -12,12 +24,14 @@ export default function RecommendedBingo(props) {
             </Title>
             <ContentListFrame>
                 {
-                    [1, 2, 3, 4, 5].map((item, index) => (
+                    games?.map((game, index) => (
                         <ItemFrame
                             key={index.toString()}
+                            index={index}
                             onClick={() => router.push("/bingo")}
                         >
                             <ContentCard
+                                game={game}
                                 type="short"
                             />
                         </ItemFrame>
@@ -29,7 +43,7 @@ export default function RecommendedBingo(props) {
 }
 
 const Title = styled.p`
-    font-size: ${mobile(35)};
+    font-size: ${mobile(36)};
     color: ${pointColor.gray7};
     font-weight: 700;
     @media ${breakPoints.web} {
@@ -38,7 +52,7 @@ const Title = styled.p`
 `;
 
 const ItemFrame = styled.div`
-    margin-top: ${mobile(30)};
+    margin-top: ${({index}) => index > 0 ? mobile(60) : mobile(30)};
     @media ${breakPoints.web} {
         margin-top: 3rem;
     }

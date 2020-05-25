@@ -4,19 +4,20 @@ import {useSelector} from "react-redux";
 import {PREFIX} from "client/constants";
 
 export default function ContentCard(props) {
-    const gameObjects = useSelector(state => state.bingo.gameObjects);
+    const {game} = props;
+    console.log("hihi, ", game);
 
     return props.type === "short" ?
         <ShortContainerFrame>
             <ImageFrame type="short">
                 <Image
                     cover
-                    src={gameObjects.thumbnail}
+                    src={game.thumbnail}
                 />
             </ImageFrame>
             <ContentFrame type="short">
-                <Title>
-                    {gameObjects.title}
+                <Title style={{fontSize: mobile(36)}}>
+                    {game.title}
                 </Title>
                     <Image
                         className="next-icon"
@@ -30,13 +31,13 @@ export default function ContentCard(props) {
         <ContainerFrame>
             <ImageFrame>
                 <Image
-                    cover
-                    src={gameObjects.board}
+                    contain
+                    src={game.thumbnail}
                 />
             </ImageFrame>
             <ContentFrame>
                 <Title>
-                    {gameObjects.title}
+                    {game.title}
                 </Title>
                 <ButtonFrame>
                     <StartButton>
@@ -73,8 +74,8 @@ export default function ContentCard(props) {
 
 
 const ButtonText = styled.p`
-    font-size: ${mobile(30)};
-    font-weight: 500;
+    font-size: ${mobile(28)};
+    font-weight: bold;
     color: ${({color}) => color || pointColor.white};
     
     @media ${breakPoints.web} {
@@ -83,14 +84,14 @@ const ButtonText = styled.p`
 `;
 
 const StartButton = styled.div`
-    width: 55%;
-    height: ${mobile(70)};
-    background: linear-gradient(170deg, ${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 45%);
+    width: ${mobile(350)};
+    height: ${mobile(80)};
+    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: ${mobile(50)};
-    box-shadow: 0 5px 7px 1px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
     
     @media ${breakPoints.web} {
         height: 70px;
@@ -100,7 +101,7 @@ const StartButton = styled.div`
 
 const ShareButton = styled(StartButton)`
     display: flex;
-    width: 40%;
+    width: ${mobile(210)};
     background: ${pointColor.white};
     
 `;
@@ -116,9 +117,9 @@ const ButtonFrame = styled.div`
 `;
 
 const Title = styled.p`
-    font-size: ${mobile(35)};
+    font-size: ${mobile(38)};
     font-weight: bold;
-    color: ${pointColor.gray5};
+    color: ${pointColor.gray7};
     
     @media ${breakPoints.web} {
         font-size: 2rem;
@@ -126,9 +127,9 @@ const Title = styled.p`
 `;
 
 const ContentFrame = styled.div`
-    height: ${({type}) => type === "short" ? mobile(100) : mobile(220)};
+    height: ${({type}) => type === "short" ? mobile(100) : mobile(240)};
     background: ${pointColor.white};
-    padding: ${({type}) => type === "short" ? 0 : mobile(30)} ${mobile(25)};
+    padding: ${({type}) => type === "short" ? 0 : mobile(30)} ${mobile(30)};
     display: ${({type}) => type === "short" ? "flex" : "block"};
     justify-content: ${({type}) => type === "short" ? "space-between" : "flex-start"};
     align-items: ${({type}) => type === "short" ? "center" : "flex-start"}; 
@@ -141,7 +142,7 @@ const ContentFrame = styled.div`
 
 const ImageFrame = styled.div`
     width: 100%;
-    height: ${({type}) => type === "short" ? mobile(250) : mobile(720)};
+    height: ${mobile(500)};
     background: pink;
     
     @media ${breakPoints.web} {
@@ -151,9 +152,9 @@ const ImageFrame = styled.div`
 
 const ContainerFrame = styled.div`
     width: 100%;
-    height: ${mobile(940)};
+    height: ${mobile(740)};
     overflow: hidden;
-    box-shadow: 0 5px 10px 3px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
     
     @media ${breakPoints.web} {
         height: 800px;
@@ -161,7 +162,7 @@ const ContainerFrame = styled.div`
 `;
 
 const ShortContainerFrame = styled(ContainerFrame)`
-    height: ${mobile(350)};
+    height: ${mobile(600)};
     border: ${mobile(1)} solid ${pointColor.white};
     
     @media ${breakPoints.web} {

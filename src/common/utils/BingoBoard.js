@@ -3,7 +3,7 @@ import _ from "lodash";
 import styled from "styled-components";
 import {Lottie} from "@crello/react-lottie";
 import {useDispatch, useSelector} from "react-redux";
-import {mobile, pointColor, breakPoints, Image, desktop} from "common/theme/theme";
+import {mobile, breakPoints, Image, desktop} from "common/theme/theme";
 import * as animationData from "common/animation/lottie/pencil";
 import {commitCounts} from "modules/bingo";
 
@@ -18,8 +18,9 @@ export default function BingoBoard(props) {
     const [board, updateBoard] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [count, updateCount] = useState(0);
+    const {game} = props;
 
-    const gameObjects = useSelector(state => state.bingo.gameObjects);
+    // const gameObjects = useSelector(state => state.bingo.gameObjects);
 
     const initialize = () => {
         const size = props.size ? Math.pow(props.size) : 25;
@@ -99,7 +100,7 @@ export default function BingoBoard(props) {
                                         marked={item.marked}
                                     >
                                         {
-                                            gameObjects.ring === "default" ?
+                                            game?.ring === "default" ?
                                                 <AnimationFrame>
                                                     <Lottie
                                                         className="ring"
@@ -126,7 +127,7 @@ export default function BingoBoard(props) {
                                                         height={(props.boardSize / row.length) - 20}
                                                     >
                                                         <Ring
-                                                            src={gameObjects.ring}
+                                                            src={game.ring}
                                                             contain
                                                         />
                                                     </RingFrame>
@@ -159,18 +160,13 @@ const RingFrame = styled.div`
 `;
 
 const Ring = styled(Image)`
-    width: ${({width}) => mobile(width)};
-    height: ${({height}) => mobile(height)};
-    
-    @media ${breakPoints.web} {
-        width: ${({width}) => desktop(width)};
-        height: ${({height}) => desktop(height)};
-    }
+    width: 100%;
+    height: 100%;
 `;
 
 const BingoItem = styled.div`
     width: ${props => mobile(props.boardSize / props.columnCount)};
-    height: ${props => mobile(props.boardSize / props.columnCount)};
+    height: ${props => mobile(props.boardSize / props.columnCount - 3)};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -178,8 +174,8 @@ const BingoItem = styled.div`
     position: relative;
     
     @media ${breakPoints.web} {
-        width: 129.5px;
-        height: 129.5px;
+        width: 100px;
+        height: 100px;
     }
     
 `;
@@ -189,10 +185,9 @@ const RowFrame = styled.div`
 `;
 
 const ContainerFrame = styled.div`
-    width: ${({size}) => mobile(size) || "100%"};
-    height: ${({size}) => mobile(size) || "100%"};
+    width: 100%;
+    height: 100%;
     @media ${breakPoints.web} {
-        width: 648px;
-        height: 648px;
+        
     }
 `;
