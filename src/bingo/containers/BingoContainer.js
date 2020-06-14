@@ -16,7 +16,7 @@ class BingoContainer extends Component {
             <ContainerFrame>
                 <Header/>
                 <Game
-                    boardSize={560}
+                    boardSize={580}
                 />
                 <RecommendedBingo/>
                 <Footer/>

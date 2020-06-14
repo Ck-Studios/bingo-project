@@ -28,7 +28,13 @@ export default function RecommendedBingo(props) {
                         <ItemFrame
                             key={index.toString()}
                             index={index}
-                            onClick={() => router.push("/bingo")}
+
+                            onClick={() => router.push({
+                                pathname: "/bingo",
+                                query: {
+                                    id: game._id
+                                }
+                            })}
                         >
                             <ContentCard
                                 game={game}

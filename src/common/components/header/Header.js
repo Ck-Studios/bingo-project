@@ -2,6 +2,17 @@ import styled from "styled-components";
 import {mobile, pointColor, Layout, Image, breakPoints, desktop} from "common/theme/theme";
 import {useRouter} from "next/router";
 import {PREFIX} from "client/constants";
+import {motion} from "framer-motion";
+
+// 로고 이미지 원본
+// <Image
+//     className="logo"
+//     width={mobile(115)}
+//     height={mobile(40)}
+//     contain
+//     src={`${PREFIX}/static/images/logo/logo.svg`}
+//     onClick={() => router.push("/")}
+// />
 
 export default function Header({leftContent, title, titleContent, rightContent, children, withoutBackButton, withoutLogo, backButtonColor, onPressBackButton, ...others}) {
     const router = useRouter();

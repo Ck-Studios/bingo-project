@@ -8,6 +8,7 @@ import {PREFIX} from "client/constants";
 import {loadBingos, resetCounts} from "modules/bingo";
 import domtoimage from "dom-to-image";
 import {saveAs} from "file-saver";
+import Share from "../../common/components/share/Share";
 import {useRouter} from "next/router";
 
 export default function Game(props) {
@@ -24,11 +25,19 @@ export default function Game(props) {
     const [matchedGame, setMatchedGame] = useState(null);
 
     useEffect(() => {
-            dispatch(loadBingos());
-            const _matchedGame = games?.find(item => item._id === parseInt(gameId))
-            setMatchedGame(_matchedGame);
+        dispatch(loadBingos());
     }, []);
 
+    useEffect(() => {
+        const _matchedGame = games?.find(item => item._id === parseInt(gameId));
+        setMatchedGame(_matchedGame);
+        window.scrollTo(0, 1);
+    }, [gameId, games]);
+
+    const showResults = () => {
+        toggleResultImage(true);
+        setGameStatus("stop");
+    };
 
     const getResult = () => {
         if (markedCounts <= 5) {
@@ -81,95 +90,96 @@ export default function Game(props) {
             .catch((err) => {
                 console.log("저장중에 에러::", err);
             })
-    }
+    };
 
     return (
         <ContainerFrame>
             <ContentWrapper>
-            <BingoFrame id="bingo">
-                <Image
-                    src={matchedGame?.board}
-                />
-                <BoardFrame className="board-frame-container">
-                    <BingoBoard
-                        boardSize={props.boardSize}
-                        gameStatus={gameStatus}
-                        game={matchedGame}
-                        setGameStatus={setGameStatus}
+                <BingoFrame id="bingo">
+                    <Image
+                        src={matchedGame?.board}
                     />
-                </BoardFrame>
+                    <BoardFrame className="board-frame-container">
+                        <BingoBoard
+                            boardSize={props.boardSize}
+                            gameStatus={gameStatus}
+                            game={matchedGame}
+                            setGameStatus={setGameStatus}
+                        />
+                    </BoardFrame>
+                    {
+                        showResultImage &&
+                        <div className="result-image" style={{marginTop: mobile(-10)}}>
+                            {getResult()}
+                        </div>
+                    }
+                </BingoFrame>
                 {
-                    showResultImage &&
-                    <div className="result-image" style={{marginTop: mobile(-10)}}>
-                        {getResult()}
-                    </div>
+                    showResultImage ?
+                        <ResultContent>
+                            <ResultButtonFrame>
+                                <SaveButton onClick={() => saveImage()}>
+                                    <IconFrame
+                                        size={mobile(20)}
+                                        marginRight={mobile(10)}
+                                    >
+                                        <Image
+                                            src={`${PREFIX}/static/images/icons/download.svg`}
+                                        />
+                                    </IconFrame>
+                                    <ButtonText>
+                                        이미지로 저장
+                                    </ButtonText>
+                                </SaveButton>
+                                <RestartButton onClick={() => replayGame()}>
+                                    <IconFrame
+                                        size={mobile(25)}
+                                        marginRight={mobile(10)}
+                                    >
+                                        <Image
+                                            src={`${PREFIX}/static/images/icons/play2.svg`}
+                                        />
+                                    </IconFrame>
+                                    <ButtonText color={pointColor.purpleDark}>
+                                        다시하기
+                                    </ButtonText>
+                                </RestartButton>
+                            </ResultButtonFrame>
+                            <Share/>
+                        </ResultContent>
+                        :
+                        <ButtonFrame>
+                            <Message>
+                                체크하려면 해당하는 칸을 클릭하세요.
+                            </Message>
+                            <ResultButton onClick={() => showResults()}>
+                                <IconFrame
+                                    size={mobile(20)}
+                                    marginRight={mobile(10)}
+                                >
+                                    <Image
+                                        src={`${PREFIX}/static/images/icons/play.svg`}
+                                    />
+                                </IconFrame>
+                                <ButtonText>
+                                    결과보기
+                                </ButtonText>
+                            </ResultButton>
+                            <ShareButton>
+                                <IconFrame
+                                    size={mobile(25)}
+                                    marginRight={mobile(10)}
+                                >
+                                    <Image
+                                        src={`${PREFIX}/static/images/icons/share.svg`}
+                                    />
+                                </IconFrame>
+                                <ButtonText color={pointColor.purpleDark}>
+                                    공유하기
+                                </ButtonText>
+                            </ShareButton>
+                        </ButtonFrame>
                 }
-            </BingoFrame>
-            {
-                showResultImage ?
-                    <ResultContent>
-                    <ResultButtonFrame>
-                        <SaveButton onClick={() => saveImage()}>
-                            <IconFrame
-                                size={mobile(20)}
-                                marginRight={mobile(10)}
-                            >
-                                <Image
-                                    src={`${PREFIX}/static/images/icons/download.svg`}
-                                />
-                            </IconFrame>
-                            <ButtonText>
-                                이미지로 저장
-                            </ButtonText>
-                        </SaveButton>
-                        <RestartButton onClick={() => replayGame()}>
-                            <IconFrame
-                                size={mobile(25)}
-                                marginRight={mobile(10)}
-                            >
-                                <Image
-                                    src={`${PREFIX}/static/images/icons/play2.svg`}
-                                />
-                            </IconFrame>
-                            <ButtonText color={pointColor.purpleDark}>
-                                다시하기
-                            </ButtonText>
-                        </RestartButton>
-                    </ResultButtonFrame>
-                    </ResultContent>
-                    :
-                    <ButtonFrame>
-                        <Message>
-                            체크하려면 해당하는 칸을 클릭하세요.
-                        </Message>
-                        <ResultButton onClick={() => toggleResultImage(true)}>
-                            <IconFrame
-                                size={mobile(20)}
-                                marginRight={mobile(10)}
-                            >
-                                <Image
-                                    src={`${PREFIX}/static/images/icons/play.svg`}
-                                />
-                            </IconFrame>
-                            <ButtonText>
-                                결과보기
-                            </ButtonText>
-                        </ResultButton>
-                        <ShareButton>
-                            <IconFrame
-                                size={mobile(25)}
-                                marginRight={mobile(10)}
-                            >
-                                <Image
-                                    src={`${PREFIX}/static/images/icons/share.svg`}
-                                />
-                            </IconFrame>
-                            <ButtonText color={pointColor.purpleDark}>
-                                공유하기
-                            </ButtonText>
-                        </ShareButton>
-                    </ButtonFrame>
-            }
             </ContentWrapper>
         </ContainerFrame>
     )
@@ -276,10 +286,8 @@ const ResultButtonFrame = styled.div`
 `;
 
 const BoardFrame = styled.div`
-    width: ${mobile(560)};
-    height: ${mobile(560)};
     position: absolute;
-    top: ${mobile(185)};
+    top: ${mobile(200)};
     left: 50%;
     transform: translateX(-50%);
     z-index: 0;

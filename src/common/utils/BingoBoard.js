@@ -87,16 +87,17 @@ export default function BingoBoard(props) {
                     board?.map((row, rowIndex) => (
                         <RowFrame
                             key={rowIndex.toString()}
+                            index={rowIndex}
                         >
                             {
                                 row?.map((item, itemIndex) => (
                                     <BingoItem
                                         className="item"
-                                        onClick={() => markItem(item.id)}
+                                        onClick={props.gameStatus === "stop" ? null : () => markItem(item.id)}
                                         key={itemIndex.toString()}
                                         boardSize={props.boardSize}
                                         columnCount={row.length}
-                                        index={itemIndex + 1}
+                                        index={itemIndex}
                                         marked={item.marked}
                                     >
                                         {
@@ -127,7 +128,7 @@ export default function BingoBoard(props) {
                                                         height={(props.boardSize / row.length) - 20}
                                                     >
                                                         <Ring
-                                                            src={game.ring}
+                                                            src={game?.ring}
                                                             contain
                                                         />
                                                     </RingFrame>
@@ -165,13 +166,14 @@ const Ring = styled(Image)`
 `;
 
 const BingoItem = styled.div`
-    width: ${props => mobile(props.boardSize / props.columnCount)};
+    width: ${props => mobile(props.boardSize / props.columnCount - 4)};
     height: ${props => mobile(props.boardSize / props.columnCount - 3)};
     display: flex;
     justify-content: center;
     align-items: center;
     background: transparent;
     position: relative;
+    margin-left: ${({index}) => index > 0 ? mobile(4) : 0};
     
     @media ${breakPoints.web} {
         width: 100px;
@@ -182,11 +184,14 @@ const BingoItem = styled.div`
 
 const RowFrame = styled.div`
     display: flex;
+    justify-content: center;
+    margin-top: ${({index}) => index > 0 ? mobile(3) : 0};
 `;
 
 const ContainerFrame = styled.div`
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
     @media ${breakPoints.web} {
         
     }
