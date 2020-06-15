@@ -8,7 +8,9 @@ import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
 import {PREFIX} from "client/constants";
 import loadDB from "client/firebase/firebase";
+import {motion} from "framer-motion";
 import {loadBingos} from "modules/bingo";
+import {SLIDE_UP} from "common/animation/AnimationVariants";
 
 class MainContainer extends Component {
     componentDidMount() {
@@ -17,7 +19,6 @@ class MainContainer extends Component {
 
     render() {
         const {router, games} = this.props;
-        console.log("main:: ", games);
         return games ?
             (
                 <ContainerFrame>
@@ -26,6 +27,10 @@ class MainContainer extends Component {
                         {
                             games.map((game, index) => (
                                 <ItemFrame
+                                    initial="initial"
+                                    exit="exit"
+                                    animate="enter"
+                                    variants={SLIDE_UP}
                                     key={index.toString()}
                                     onClick={() => router.push({
                                         pathname: "/bingo",
@@ -64,7 +69,7 @@ const ContainerFrame = styled.div`
     min-height: 100vh;
 `;
 
-const ItemFrame = styled.div`
+const ItemFrame = styled(motion.div)`
     margin-top: ${mobile(80)};
     @media ${breakPoints.web} {
         margin-top: 3rem;

@@ -8,16 +8,23 @@ import Game from "bingo/components/Game";
 import Header from "common/components/header/Header";
 import RecommendedBingo from "bingo/components/RecommendedBingo";
 import Footer from "common/components/footer/Footer";
+import {motion} from "framer-motion";
 import {PREFIX} from "client/constants";
+import {SLIDE_UP} from "common/animation/AnimationVariants";
+import AnimationFrame from "common/animation/AnimationFrame";
 
 class BingoContainer extends Component {
     render() {
         return (
             <ContainerFrame>
                 <Header/>
-                <Game
-                    boardSize={580}
-                />
+                <AnimationFrame
+                    variants={SLIDE_UP}
+                >
+                    <Game
+                        boardSize={580}
+                    />
+                </AnimationFrame>
                 <RecommendedBingo/>
                 <Footer/>
             </ContainerFrame>

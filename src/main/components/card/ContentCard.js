@@ -143,7 +143,6 @@ const ContentFrame = styled.div`
 const ImageFrame = styled.div`
     width: 100%;
     height: ${mobile(500)};
-    background: pink;
     
     @media ${breakPoints.web} {
         height: ${({type}) => type === "short" ? desktop(250) : "580px"};

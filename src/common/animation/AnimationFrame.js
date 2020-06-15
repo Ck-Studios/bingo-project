@@ -7,7 +7,6 @@ export default function AnimationFrame(props) {
         <motion.div
             className="animation-frame"
             style={{
-                width: "100%",
                 background: background || "transparent",
             }}
             initial="initial"

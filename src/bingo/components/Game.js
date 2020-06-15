@@ -188,6 +188,8 @@ const ContentWrapper = styled.div`
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
 `;
 const BingoFrame = styled.div`
+    min-width: ${mobile(600)};
+    min-height: ${mobile(720)};
 `;
 
 const SaveButton = styled.div`

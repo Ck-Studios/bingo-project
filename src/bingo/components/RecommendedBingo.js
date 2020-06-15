@@ -5,6 +5,8 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {loadBingos} from "modules/bingo";
+import AnimationFrame from "common/animation/AnimationFrame";
+import {SLIDE_UP} from "common/animation/AnimationVariants";
 
 export default function RecommendedBingo(props) {
     const router = useRouter();
@@ -12,7 +14,7 @@ export default function RecommendedBingo(props) {
     const games = useSelector(state => state.bingo.games);
 
     useEffect(() => {
-        if(!games) {
+        if (!games) {
             dispatch(loadBingos());
         }
     }, []);
@@ -25,22 +27,26 @@ export default function RecommendedBingo(props) {
             <ContentListFrame>
                 {
                     games?.map((game, index) => (
-                        <ItemFrame
+                        <AnimationFrame
                             key={index.toString()}
-                            index={index}
-
-                            onClick={() => router.push({
-                                pathname: "/bingo",
-                                query: {
-                                    id: game._id
-                                }
-                            })}
+                            variants={SLIDE_UP}
                         >
-                            <ContentCard
-                                game={game}
-                                type="short"
-                            />
-                        </ItemFrame>
+                            <ItemFrame
+                                index={index}
+
+                                onClick={() => router.push({
+                                    pathname: "/bingo",
+                                    query: {
+                                        id: game._id
+                                    }
+                                })}
+                            >
+                                <ContentCard
+                                    game={game}
+                                    type="short"
+                                />
+                            </ItemFrame>
+                        </AnimationFrame>
                     ))
                 }
             </ContentListFrame>
