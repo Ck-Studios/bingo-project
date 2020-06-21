@@ -14,6 +14,7 @@ export default function Share(props) {
                         >
                             <SNSIconFrame
                                 background={sns.background}
+                                src={sns.image}
                             />
                             <SNSTitle>
                                 {sns.sns}
@@ -50,7 +51,7 @@ const SNSFrame = styled.div`
     align-items: center;
 `;
 
-const SNSIconFrame = styled.div`
+const SNSIconFrame = styled.img`
     width: ${mobile(100)};
     height: ${mobile(100)};
     border-radius: 50%;

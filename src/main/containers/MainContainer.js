@@ -1,4 +1,4 @@
-import {Component} from "react";
+import {useEffect} from "react";
 import {connect} from "react-redux";
 import styled from "styled-components";
 import {pointColor, mobile, Image, breakPoints} from "common/theme/theme";
@@ -7,62 +7,67 @@ import Header from "common/components/header/Header";
 import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
 import {PREFIX} from "client/constants";
-import loadDB from "client/firebase/firebase";
 import {motion} from "framer-motion";
-import {loadBingos} from "modules/bingo";
 import {SLIDE_UP} from "common/animation/AnimationVariants";
+import {useQuery} from "@apollo/react-hooks";
+import gql from "graphql-tag"
+import {LOAD_BINGO} from "modules/scheme";
 
-class MainContainer extends Component {
-    componentDidMount() {
-        this.props.loadBingos();
-    }
 
-    render() {
-        const {router, games} = this.props;
-        return games ?
-            (
-                <ContainerFrame>
-                    <Header/>
-                    <ContentListFrame>
-                        {
-                            games.map((game, index) => (
-                                <ItemFrame
-                                    initial="initial"
-                                    exit="exit"
-                                    animate="enter"
-                                    variants={SLIDE_UP}
-                                    key={index.toString()}
-                                    onClick={() => router.push({
-                                        pathname: "/bingo",
-                                        query: {
-                                            id: game._id,
-                                        }
-                                    })}
-                                >
-                                    <ContentCard
-                                        game={game}
-                                    />
-                                </ItemFrame>
-                            ))
-                        }
-                    </ContentListFrame>
-                    <Footer/>
-                </ContainerFrame>
-            )
-            :
-            null
-    }
+function MainContainer(props) {
+  // componentDidMount() {
+  //     // this.props.loadBingos();
+  // }
+  const {loading, error, data} = useQuery(LOAD_BINGO);
+
+  console.log("data", data);
+
+  if (loading) return "loading...";
+  if (error) return "에러";
+
+  const {allBingos} = data;
+  const {edges} = allBingos;
+  const {router} = props;
+  return (
+    <ContainerFrame>
+      <Header/>
+      <ContentListFrame>
+        {
+          edges.map((game, index) => (
+            <ItemFrame
+              initial="initial"
+              exit="exit"
+              animate="enter"
+              variants={SLIDE_UP}
+              key={index.toString()}
+              onClick={() => router.push({
+                pathname: "/bingo",
+                query: {
+                  id: game.node.id,
+                }
+              })}
+            >
+              <ContentCard
+                game={game.node}
+              />
+            </ItemFrame>
+          ))
+        }
+      </ContentListFrame>
+      <Footer/>
+    </ContainerFrame>
+  )
 }
 
-const mapStateToProps = state => ({
-    games: state.bingo.games,
-});
+// const mapStateToProps = state => ({
+//     games: state.bingo.games,
+// });
+//
+// const mapDispatchToProps = {
+//     loadBingos,
+// };
 
-const mapDispatchToProps = {
-    loadBingos,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainContainer));
+export default withRouter(MainContainer);
 
 const ContainerFrame = styled.div`
     background: ${pointColor.gray0};
@@ -70,15 +75,9 @@ const ContainerFrame = styled.div`
 `;
 
 const ItemFrame = styled(motion.div)`
-    margin-top: ${mobile(80)};
-    @media ${breakPoints.web} {
-        margin-top: 3rem;
-    }
+    margin-top: 30px;
 `;
 
 const ContentListFrame = styled.div`
-    padding: 0 ${mobile(36)};
-    @media ${breakPoints.web} {
-        padding: 0 80px;
-    }
+    padding: 0 30px;
 `;

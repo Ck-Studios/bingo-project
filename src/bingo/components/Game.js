@@ -8,181 +8,181 @@ import {PREFIX} from "client/constants";
 import {loadBingos, resetCounts} from "modules/bingo";
 import domtoimage from "dom-to-image";
 import {saveAs} from "file-saver";
-import Share from "../../common/components/share/Share";
+import Share from "common/components/share/Share";
 import {useRouter} from "next/router";
 
 export default function Game(props) {
-    const dispatch = useDispatch();
-    const router = useRouter();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-    const gameId = router.query.id;
+  const gameId = router.query.id;
 
-    const games = useSelector(state => state.bingo.games);
+  const games = useSelector(state => state.bingo.games);
 
-    const [showResultImage, toggleResultImage] = useState(false);
-    const [gameStatus, setGameStatus] = useState("running");
-    const markedCounts = useSelector(state => state.bingo.counts);
-    const [matchedGame, setMatchedGame] = useState(null);
+  const [showResultImage, toggleResultImage] = useState(false);
+  const [gameStatus, setGameStatus] = useState("running");
+  const markedCounts = useSelector(state => state.bingo.counts);
+  const [matchedGame, setMatchedGame] = useState(null);
 
-    useEffect(() => {
-        dispatch(loadBingos());
-    }, []);
+  useEffect(() => {
+    // dispatch(loadBingos());
+  }, []);
 
-    useEffect(() => {
-        const _matchedGame = games?.find(item => item._id === parseInt(gameId));
-        setMatchedGame(_matchedGame);
-        window.scrollTo(0, 1);
-    }, [gameId, games]);
+  useEffect(() => {
+    const _matchedGame = games?.find(item => item._id === parseInt(gameId));
+    setMatchedGame(_matchedGame);
+    window.scrollTo(0, 1);
+  }, [gameId, games]);
 
-    const showResults = () => {
-        toggleResultImage(true);
-        setGameStatus("stop");
-    };
+  const showResults = () => {
+    toggleResultImage(true);
+    setGameStatus("stop");
+  };
 
-    const getResult = () => {
-        if (markedCounts <= 5) {
-            return (
-                <Image
-                    src={matchedGame?.result_images[0]}
-                />
-            )
-        } else if (markedCounts >= 6 && markedCounts <= 14) {
-            return (
-                <Image
-                    src={matchedGame?.result_images[1]}
-                />
-            )
-        } else if (markedCounts >= 15 && markedCounts <= 21) {
-            return (
-                <Image
-                    src={matchedGame?.result_images[2]}
-                />
-            )
-        } else if (markedCounts >= 22 && markedCounts <= 25) {
-            return (
-                <Image
-                    src={matchedGame?.result_images[3]}
-                />
-            )
-        }
-    };
+  const getResult = () => {
+    if (markedCounts <= 5) {
+      return (
+        <Image
+          src={matchedGame?.result_images[0]}
+        />
+      )
+    } else if (markedCounts >= 6 && markedCounts <= 14) {
+      return (
+        <Image
+          src={matchedGame?.result_images[1]}
+        />
+      )
+    } else if (markedCounts >= 15 && markedCounts <= 21) {
+      return (
+        <Image
+          src={matchedGame?.result_images[2]}
+        />
+      )
+    } else if (markedCounts >= 22 && markedCounts <= 25) {
+      return (
+        <Image
+          src={matchedGame?.result_images[3]}
+        />
+      )
+    }
+  };
 
-    const replayGame = () => {
-        toggleResultImage(false);
-        dispatch(resetCounts());
-        setGameStatus("reset");
-    };
+  const replayGame = () => {
+    toggleResultImage(false);
+    dispatch(resetCounts());
+    setGameStatus("reset");
+  };
 
-    const saveImage = () => {
-        const node = document.getElementById("bingo");
+  const saveImage = () => {
+    const node = document.getElementById("bingo");
 
-        domtoimage.toJpeg(node, {quality: 0.95})
-            .then((dataUrl) => {
-                const link = document.createElement("a");
-                link.href = dataUrl;
+    domtoimage.toJpeg(node, {quality: 0.95})
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.href = dataUrl;
 
-                const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
-                const x = window.open();
-                x.document.open();
-                x.document.write(iframe);
-                x.document.close();
-            })
-            .catch((err) => {
-                console.log("저장중에 에러::", err);
-            })
-    };
+        const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
+        const x = window.open();
+        x.document.open();
+        x.document.write(iframe);
+        x.document.close();
+      })
+      .catch((err) => {
+        console.log("저장중에 에러::", err);
+      })
+  };
 
-    return (
-        <ContainerFrame>
-            <ContentWrapper>
-                <BingoFrame id="bingo">
+  return (
+    <ContainerFrame>
+      <ContentWrapper>
+        <BingoFrame id="bingo">
+          <Image
+            src={matchedGame?.board}
+          />
+          <BoardFrame className="board-frame-container">
+            <BingoBoard
+              boardSize={props.boardSize}
+              gameStatus={gameStatus}
+              game={matchedGame}
+              setGameStatus={setGameStatus}
+            />
+          </BoardFrame>
+          {
+            showResultImage &&
+            <div className="result-image" style={{marginTop: mobile(-10)}}>
+              {getResult()}
+            </div>
+          }
+        </BingoFrame>
+        {
+          showResultImage ?
+            <ResultContent>
+              <ResultButtonFrame>
+                <SaveButton onClick={() => saveImage()}>
+                  <IconFrame
+                    size={mobile(20)}
+                    marginRight={mobile(10)}
+                  >
                     <Image
-                        src={matchedGame?.board}
+                      src={`${PREFIX}/static/images/icons/download.svg`}
                     />
-                    <BoardFrame className="board-frame-container">
-                        <BingoBoard
-                            boardSize={props.boardSize}
-                            gameStatus={gameStatus}
-                            game={matchedGame}
-                            setGameStatus={setGameStatus}
-                        />
-                    </BoardFrame>
-                    {
-                        showResultImage &&
-                        <div className="result-image" style={{marginTop: mobile(-10)}}>
-                            {getResult()}
-                        </div>
-                    }
-                </BingoFrame>
-                {
-                    showResultImage ?
-                        <ResultContent>
-                            <ResultButtonFrame>
-                                <SaveButton onClick={() => saveImage()}>
-                                    <IconFrame
-                                        size={mobile(20)}
-                                        marginRight={mobile(10)}
-                                    >
-                                        <Image
-                                            src={`${PREFIX}/static/images/icons/download.svg`}
-                                        />
-                                    </IconFrame>
-                                    <ButtonText>
-                                        이미지로 저장
-                                    </ButtonText>
-                                </SaveButton>
-                                <RestartButton onClick={() => replayGame()}>
-                                    <IconFrame
-                                        size={mobile(25)}
-                                        marginRight={mobile(10)}
-                                    >
-                                        <Image
-                                            src={`${PREFIX}/static/images/icons/play2.svg`}
-                                        />
-                                    </IconFrame>
-                                    <ButtonText color={pointColor.purpleDark}>
-                                        다시하기
-                                    </ButtonText>
-                                </RestartButton>
-                            </ResultButtonFrame>
-                            <Share/>
-                        </ResultContent>
-                        :
-                        <ButtonFrame>
-                            <Message>
-                                체크하려면 해당하는 칸을 클릭하세요.
-                            </Message>
-                            <ResultButton onClick={() => showResults()}>
-                                <IconFrame
-                                    size={mobile(20)}
-                                    marginRight={mobile(10)}
-                                >
-                                    <Image
-                                        src={`${PREFIX}/static/images/icons/play.svg`}
-                                    />
-                                </IconFrame>
-                                <ButtonText>
-                                    결과보기
-                                </ButtonText>
-                            </ResultButton>
-                            <ShareButton>
-                                <IconFrame
-                                    size={mobile(25)}
-                                    marginRight={mobile(10)}
-                                >
-                                    <Image
-                                        src={`${PREFIX}/static/images/icons/share.svg`}
-                                    />
-                                </IconFrame>
-                                <ButtonText color={pointColor.purpleDark}>
-                                    공유하기
-                                </ButtonText>
-                            </ShareButton>
-                        </ButtonFrame>
-                }
-            </ContentWrapper>
-        </ContainerFrame>
-    )
+                  </IconFrame>
+                  <ButtonText>
+                    이미지로 저장
+                  </ButtonText>
+                </SaveButton>
+                <RestartButton onClick={() => replayGame()}>
+                  <IconFrame
+                    size={mobile(25)}
+                    marginRight={mobile(10)}
+                  >
+                    <Image
+                      src={`${PREFIX}/static/images/icons/play2.svg`}
+                    />
+                  </IconFrame>
+                  <ButtonText color={pointColor.purpleDark}>
+                    다시하기
+                  </ButtonText>
+                </RestartButton>
+              </ResultButtonFrame>
+              <Share/>
+            </ResultContent>
+            :
+            <ButtonFrame>
+              <Message>
+                체크하려면 해당하는 칸을 클릭하세요.
+              </Message>
+              <ResultButton onClick={() => showResults()}>
+                <IconFrame
+                  size={mobile(20)}
+                  marginRight={mobile(10)}
+                >
+                  <Image
+                    src={`${PREFIX}/static/images/icons/play.svg`}
+                  />
+                </IconFrame>
+                <ButtonText>
+                  결과보기
+                </ButtonText>
+              </ResultButton>
+              <ShareButton>
+                <IconFrame
+                  size={mobile(25)}
+                  marginRight={mobile(10)}
+                >
+                  <Image
+                    src={`${PREFIX}/static/images/icons/share.svg`}
+                  />
+                </IconFrame>
+                <ButtonText color={pointColor.purpleDark}>
+                  공유하기
+                </ButtonText>
+              </ShareButton>
+            </ButtonFrame>
+        }
+      </ContentWrapper>
+    </ContainerFrame>
+  )
 }
 const ContentWrapper = styled.div`
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);

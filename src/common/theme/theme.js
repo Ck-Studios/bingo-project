@@ -70,8 +70,8 @@ export const mobile = value => `${(value / 720) * 100}vw`;
 export const desktop = value => `${(value / 720) * 1000}px`;
 
 export const IconFrame = styled.div`
-    width: ${({size}) => size || mobile(30)};
-    height: ${({size}) => size || mobile(30)};
+    width: ${({size}) => size || '18px'};
+    height: ${({size}) => size || '18px'};
     margin-top: ${({marginTop}) => marginTop || 0};
     margin-right: ${({marginRight}) => marginRight || 0};
     margin-bottom: ${({marginBottom}) => marginBottom || 0};
@@ -79,12 +79,6 @@ export const IconFrame = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    @media ${breakPoints.web} {
-        width: 30px;
-        height: 30px;
-    }
-    
 `;
 
 export const Layout = {

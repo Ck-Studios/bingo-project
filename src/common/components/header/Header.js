@@ -15,39 +15,39 @@ import {motion} from "framer-motion";
 // />
 
 export default function Header({leftContent, title, titleContent, rightContent, children, withoutBackButton, withoutLogo, backButtonColor, onPressBackButton, ...others}) {
-    const router = useRouter();
-    return (
-        <Wrapper>
-            <ContainerFrame {...others} className="header-container-frame">
-                {leftContent ? (
-                    <LeftContentFrame>{leftContent || null}</LeftContentFrame>
-                ) : <div/>
-                }
+  const router = useRouter();
+  return (
+    <Wrapper>
+      <ContainerFrame {...others} className="header-container-frame">
+        {leftContent ? (
+          <LeftContentFrame>{leftContent || null}</LeftContentFrame>
+        ) : <div/>
+        }
 
-                <CenterContentFrame>
-                    {
-                        withoutLogo ?
-                            <div/>
-                            :
-                            titleContent ?
-                                titleContent
-                                :
-                                title ? (<HeaderTitle>{title}</HeaderTitle>) :
-                                    <Image
-                                        className="logo"
-                                        width={mobile(115)}
-                                        height={mobile(40)}
-                                        contain
-                                        src={`${PREFIX}/static/images/logo/logo.svg`}
-                                        onClick={() => router.push("/")}
-                                    />
-                    }
-                </CenterContentFrame>
+        <CenterContentFrame>
+          {
+            withoutLogo ?
+              <div/>
+              :
+              titleContent ?
+                titleContent
+                :
+                title ? (<HeaderTitle>{title}</HeaderTitle>) :
+                  <Image
+                    className="logo"
+                    width={mobile(115)}
+                    height={mobile(40)}
+                    contain
+                    src={`${PREFIX}/static/images/logo/logo.svg`}
+                    onClick={() => router.push("/")}
+                  />
+          }
+        </CenterContentFrame>
 
-                <RightContentFrame>{rightContent || null}</RightContentFrame>
-            </ContainerFrame>
-        </Wrapper>
-    )
+        <RightContentFrame>{rightContent || null}</RightContentFrame>
+      </ContainerFrame>
+    </Wrapper>
+  )
 }
 
 const HeaderTitle = styled.p`
@@ -67,14 +67,7 @@ const BackButtonFrame = styled.div`
 const CenterContentFrame = styled.div`
     display: flex;
     justify-content: center;
-    align-self: stretch;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    left: ${Layout.indent};
-    right: ${Layout.indent};
-    transform: translateY(-50%);
-    z-index: 0;
 `;
 
 const RightContentFrame = styled.div`

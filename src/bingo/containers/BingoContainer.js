@@ -1,5 +1,4 @@
 import {Component} from "react";
-import {connect} from "react-redux";
 import BingoBoard from "common/utils/BingoBoard";
 import styled from "styled-components";
 import {Image, mobile} from "common/theme/theme";
@@ -32,7 +31,7 @@ class BingoContainer extends Component {
     }
 }
 
-export default connect()(BingoContainer);
+export default BingoContainer;
 
 const ContainerFrame = styled.div`
     width: 100%;
