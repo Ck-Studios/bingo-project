@@ -24,3 +24,28 @@ export const LOAD_BINGO = gql`
     }
   }
 `;
+
+export const LOAD_LOCAL_BINGO = gql`
+    {
+        allBingos @client {
+            edges {
+                node {
+                    id
+                    title
+                    boardTheme {
+                        id
+                        size
+                        boardImage
+                        ringImage
+                    }
+                    bingoResults {
+                        id
+                        type
+                        text
+                        image
+                    }
+                }
+            }
+        }
+    }
+`;

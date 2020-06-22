@@ -10,26 +10,32 @@ import domtoimage from "dom-to-image";
 import {saveAs} from "file-saver";
 import Share from "common/components/share/Share";
 import {useRouter} from "next/router";
+import {useQuery} from "@apollo/react-hooks";
+import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
+
 
 export default function Game(props) {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const gameId = router.query.id;
 
-  const games = useSelector(state => state.bingo.games);
+  const {data} = useQuery(LOAD_BINGO);
+
+  console.log("data:::::", data);
+  const games = data?.allBingos?.edges;
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
-  const markedCounts = useSelector(state => state.bingo.counts);
+  // const markedCounts = useSelector(state => state.bingo.counts);
   const [matchedGame, setMatchedGame] = useState(null);
 
-  useEffect(() => {
-    // dispatch(loadBingos());
-  }, []);
+  // useEffect(() => {
+  //   setGames(data?.allBingos?.edges?.node)
+  // }, [data?.allBingos]);
 
   useEffect(() => {
-    const _matchedGame = games?.find(item => item._id === parseInt(gameId));
+    const _matchedGame = games?.find(item => item.node.id === gameId);
+    console.log("matched game::: ", _matchedGame);
     setMatchedGame(_matchedGame);
     window.scrollTo(0, 1);
   }, [gameId, games]);
@@ -40,36 +46,36 @@ export default function Game(props) {
   };
 
   const getResult = () => {
-    if (markedCounts <= 5) {
-      return (
-        <Image
-          src={matchedGame?.result_images[0]}
-        />
-      )
-    } else if (markedCounts >= 6 && markedCounts <= 14) {
-      return (
-        <Image
-          src={matchedGame?.result_images[1]}
-        />
-      )
-    } else if (markedCounts >= 15 && markedCounts <= 21) {
-      return (
-        <Image
-          src={matchedGame?.result_images[2]}
-        />
-      )
-    } else if (markedCounts >= 22 && markedCounts <= 25) {
-      return (
-        <Image
-          src={matchedGame?.result_images[3]}
-        />
-      )
-    }
+    // if (markedCounts <= 5) {
+    //   return (
+    //     <Image
+    //       src={matchedGame?.result_images[0]}
+    //     />
+    //   )
+    // } else if (markedCounts >= 6 && markedCounts <= 14) {
+    //   return (
+    //     <Image
+    //       src={matchedGame?.result_images[1]}
+    //     />
+    //   )
+    // } else if (markedCounts >= 15 && markedCounts <= 21) {
+    //   return (
+    //     <Image
+    //       src={matchedGame?.result_images[2]}
+    //     />
+    //   )
+    // } else if (markedCounts >= 22 && markedCounts <= 25) {
+    //   return (
+    //     <Image
+    //       src={matchedGame?.result_images[3]}
+    //     />
+    //   )
+    // }
   };
 
   const replayGame = () => {
     toggleResultImage(false);
-    dispatch(resetCounts());
+    // dispatch(resetCounts());
     setGameStatus("reset");
   };
 
@@ -97,13 +103,13 @@ export default function Game(props) {
       <ContentWrapper>
         <BingoFrame id="bingo">
           <Image
-            src={matchedGame?.board}
+            src={matchedGame?.node?.boardTheme?.boardImage}
           />
           <BoardFrame className="board-frame-container">
             <BingoBoard
               boardSize={props.boardSize}
               gameStatus={gameStatus}
-              game={matchedGame}
+              game={matchedGame?.node}
               setGameStatus={setGameStatus}
             />
           </BoardFrame>

@@ -14,7 +14,7 @@ const animationConfig = {
 };
 
 export default function BingoBoard(props) {
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [board, updateBoard] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [count, updateCount] = useState(0);
@@ -43,7 +43,7 @@ export default function BingoBoard(props) {
     };
 
     useEffect(() => {
-        dispatch(commitCounts(count));
+        // dispatch(commitCounts(count));
     }, [count]);
 
 
@@ -101,7 +101,7 @@ export default function BingoBoard(props) {
                                         marked={item.marked}
                                     >
                                         {
-                                            game?.ring === "default" ?
+                                            game?.boardTheme?.ringImage === "default" ?
                                                 <AnimationFrame>
                                                     <Lottie
                                                         className="ring"
@@ -128,7 +128,7 @@ export default function BingoBoard(props) {
                                                         height={(props.boardSize / row.length) - 20}
                                                     >
                                                         <Ring
-                                                            src={game?.ring}
+                                                            src={game?.boardTheme?.ringImage}
                                                             contain
                                                         />
                                                     </RingFrame>

@@ -10,13 +10,14 @@ import {SLIDE_UP} from "common/animation/AnimationVariants";
 
 export default function RecommendedBingo(props) {
     const router = useRouter();
-    const dispatch = useDispatch();
-    const games = useSelector(state => state.bingo.games);
+    // const dispatch = useDispatch();
+    // const games = useSelector(state => state.bingo.games);
+  const games = null;
 
     useEffect(() => {
-        if (!games) {
-            dispatch(loadBingos());
-        }
+        // if (!games) {
+            // dispatch(loadBingos());
+        // }
     }, []);
 
     return (
