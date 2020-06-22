@@ -2,9 +2,6 @@ import React, {useState, useEffect} from "react";
 import Head from "next/head";
 import "swiper/css/swiper.css";
 import "react-responsive-modal/styles.css";
-import {Provider} from "react-redux";
-import withReduxSaga from "next-redux-saga";
-import withRedux from "next-redux-wrapper";
 import {AnimatePresence} from "framer-motion";
 import {ApolloProvider} from "@apollo/react-hooks";
 import {useApolloClient} from "@apollo/react-hooks";
@@ -35,7 +32,7 @@ export default function App({Component, pageProps, store, router, status}) {
         {`
             body {
                 margin: 0 auto;
-                max-width: 480px !important;
+                max-width: 756px !important;
                 height: 100%;
             }
             

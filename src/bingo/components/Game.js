@@ -12,13 +12,13 @@ import Share from "common/components/share/Share";
 import {useRouter} from "next/router";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
+import {useGetClientWidth} from "common/hooks/common";
+import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 
 
 export default function Game(props) {
   const router = useRouter();
-
   const gameId = router.query.id;
-
   const {data} = useQuery(LOAD_BINGO);
 
   console.log("data:::::", data);
@@ -26,12 +26,22 @@ export default function Game(props) {
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
-  // const markedCounts = useSelector(state => state.bingo.counts);
   const [matchedGame, setMatchedGame] = useState(null);
+  const [clientWidth, setClientWidth] = useState(null);
+  // const markedCounts = useSelector(state => state.bingo.counts);
 
   // useEffect(() => {
   //   setGames(data?.allBingos?.edges?.node)
   // }, [data?.allBingos]);
+
+  useEffect(() => {
+    if(window) {
+      const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
+      console.log("clientWidth::: ", _clientWidth);
+      setClientWidth(_clientWidth);
+    }
+  }, []);
+
 
   useEffect(() => {
     const _matchedGame = games?.find(item => item.node.id === gameId);
@@ -105,7 +115,7 @@ export default function Game(props) {
           <Image
             src={matchedGame?.node?.boardTheme?.boardImage}
           />
-          <BoardFrame className="board-frame-container">
+          <BoardFrame className="board-frame-container" width={clientWidth}>
             <BingoBoard
               boardSize={props.boardSize}
               gameStatus={gameStatus}
@@ -115,7 +125,7 @@ export default function Game(props) {
           </BoardFrame>
           {
             showResultImage &&
-            <div className="result-image" style={{marginTop: mobile(-10)}}>
+            <div className="result-image" style={{marginTop: -5}}>
               {getResult()}
             </div>
           }
@@ -126,8 +136,8 @@ export default function Game(props) {
               <ResultButtonFrame>
                 <SaveButton onClick={() => saveImage()}>
                   <IconFrame
-                    size={mobile(20)}
-                    marginRight={mobile(10)}
+                    size="10px"
+                    marginRight="5px"
                   >
                     <Image
                       src={`${PREFIX}/static/images/icons/download.svg`}
@@ -139,8 +149,8 @@ export default function Game(props) {
                 </SaveButton>
                 <RestartButton onClick={() => replayGame()}>
                   <IconFrame
-                    size={mobile(25)}
-                    marginRight={mobile(10)}
+                    size="12.5px"
+                    marginRight="5px"
                   >
                     <Image
                       src={`${PREFIX}/static/images/icons/play2.svg`}
@@ -160,8 +170,8 @@ export default function Game(props) {
               </Message>
               <ResultButton onClick={() => showResults()}>
                 <IconFrame
-                  size={mobile(20)}
-                  marginRight={mobile(10)}
+                  size="10px"
+                  marginRight="5px"
                 >
                   <Image
                     src={`${PREFIX}/static/images/icons/play.svg`}
@@ -173,8 +183,8 @@ export default function Game(props) {
               </ResultButton>
               <ShareButton>
                 <IconFrame
-                  size={mobile(25)}
-                  marginRight={mobile(10)}
+                  size="12.5px"
+                  marginRight="10px"
                 >
                   <Image
                     src={`${PREFIX}/static/images/icons/share.svg`}
@@ -194,18 +204,17 @@ const ContentWrapper = styled.div`
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
 `;
 const BingoFrame = styled.div`
-    min-width: ${mobile(600)};
-    min-height: ${mobile(720)};
+    
 `;
 
 const SaveButton = styled.div`
-    width: ${mobile(350)};
-    height: ${mobile(80)};
+    width: 175px;
+    height: 40px;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: ${mobile(50)};
+    border-radius: 25px;
     box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
     
     @media ${breakPoints.web} {
@@ -216,14 +225,14 @@ const SaveButton = styled.div`
 
 const RestartButton = styled(SaveButton)`
     display: flex;
-    width: ${mobile(210)};
+    width: 105px;
     background: ${pointColor.white};
     
 `;
 
 const Message = styled.p`
     margin-top: 0;
-    font-size: ${mobile(24)};
+    font-size: 12px;
     color: ${pointColor.gray8};
     
     @media ${breakPoints.web} {
@@ -232,34 +241,30 @@ const Message = styled.p`
 `;
 
 const ButtonText = styled.p`
-    font-size: ${mobile(28)};
+    font-size: 14px;
     font-weight: bold;
     color: ${({color}) => color || pointColor.white};
     
     @media ${breakPoints.web} {
-        font-size: 2rem;
+        font-size: 18px;
     }
 `;
 
 const ResultContent = styled.div`
     width: 100%;
     background: ${pointColor.white};
-    padding: ${mobile(30)} ${mobile(30)} ${mobile(40)} ${mobile(30)};
-    
-    @media ${breakPoints.web} {
-        padding: 30px 25px;
-    }
+    padding: 15px 15px 20px 15px;
 `;
 
 const ResultButton = styled.div`
-    margin-top: ${mobile(20)};
+    margin-top: 10px;
     width: 70%;
-    height: ${mobile(80)};
+    height: 40px;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: ${mobile(50)};
+    border-radius: 25px;
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.2);
     
     @media ${breakPoints.web} {
@@ -278,9 +283,9 @@ const ButtonFrame = styled.div`
     align-items: center;
     width: 100%;
     background: ${pointColor.white};
-    padding-top: ${mobile(10)};
-    padding-bottom: ${mobile(70)};
-    border-bottom: ${mobile(1)} solid ${pointColor.gray1};
+    padding-top: 5px;
+    padding-bottom: 35px;
+    border-bottom: 1px solid ${pointColor.gray1};
 `;
 
 const ResultButtonFrame = styled.div`
@@ -295,22 +300,20 @@ const ResultButtonFrame = styled.div`
 
 const BoardFrame = styled.div`
     position: absolute;
-    top: ${mobile(200)};
+    top: ${({width}) => (width * 0.30) - 8}px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 0;
     
     @media ${breakPoints.web} {
-        top: 170px;
-        width: 500px;
-        height: 500px;
+        top: ${({width}) => (width * 0.30)}px;
     }
     
 `;
 
 const ContainerFrame = styled.div`
     width: 100%;
-    padding: 0 ${mobile(36)};
+    padding: 0 18px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -319,19 +322,6 @@ const ContainerFrame = styled.div`
     z-index: 10;
     
     .result-image {
-        margin-top: ${mobile(-8)};
-    }
-    
-    @media ${breakPoints.web} {
-        padding: 0 80px;
-        
-        .ring-wrapper {
-            width: ${desktop(20)};
-            height: ${desktop(20)};
-        }
-        
-        .result-image {
-            margin-top: -10px;
-        }
+        margin-top: -4px;
     }
 `;

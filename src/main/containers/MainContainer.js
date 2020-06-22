@@ -15,9 +15,6 @@ import {LOAD_BINGO} from "modules/scheme";
 
 
 function MainContainer(props) {
-  // componentDidMount() {
-  //     // this.props.loadBingos();
-  // }
   const {loading, error, data} = useQuery(LOAD_BINGO);
 
   console.log("data", data);
@@ -58,14 +55,6 @@ function MainContainer(props) {
     </ContainerFrame>
   )
 }
-
-// const mapStateToProps = state => ({
-//     games: state.bingo.games,
-// });
-//
-// const mapDispatchToProps = {
-//     loadBingos,
-// };
 
 export default withRouter(MainContainer);
 

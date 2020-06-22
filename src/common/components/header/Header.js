@@ -35,8 +35,8 @@ export default function Header({leftContent, title, titleContent, rightContent, 
                 title ? (<HeaderTitle>{title}</HeaderTitle>) :
                   <Image
                     className="logo"
-                    width={mobile(115)}
-                    height={mobile(40)}
+                    width="57.5px"
+                    height="20px"
                     contain
                     src={`${PREFIX}/static/images/logo/logo.svg`}
                     onClick={() => router.push("/")}
@@ -59,8 +59,8 @@ const HeaderTitle = styled.p`
 `;
 
 const BackButtonFrame = styled.div`
-    width: ${mobile(35)};
-    height: ${mobile(35)};
+    width: 17.5px;
+    height: 17.5px;
     background: pink;
 `;
 
@@ -89,20 +89,20 @@ const ContainerFrame = styled.div`
     position: ${({fixed}) => (fixed ? "sticky" : "relative")};
     top: 0;
     z-index: 100;
-    height: ${mobile(100)};
+    height: 50px;
     padding: ${Layout.indent};
     background: ${({background}) => background || pointColor.white};
-    border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : mobile(1))} solid ${pointColor.gray1};
+    border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : 1)}px solid ${pointColor.gray1};
 `;
 
 const Wrapper = styled.div`
     @media ${breakPoints.web} {
         .header-container-frame {
-            height: ${desktop(100)};
+            height: 80px;
             padding: 30px;
             .logo {
-                width: ${desktop(100)};
-                height: ${desktop(30)};
+                width: 100px;
+                height: 30px;
                 object-fit: contain;
             }
         }

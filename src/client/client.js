@@ -2,7 +2,7 @@ import {useMemo} from "react";
 import {ApolloClient} from "apollo-client";
 import {InMemoryCache} from "apollo-cache-inmemory";
 import {HttpLink} from "apollo-link-http";
-
+import fetch from "isomorphic-fetch";
 let apolloClient;
 
 function createApolloClient() {
@@ -11,8 +11,10 @@ function createApolloClient() {
         link: new HttpLink({
             uri: "https://bingoring.me/api",
             credentials: "same-origin",
+            fetch,
         }),
         cache: new InMemoryCache(),
+
     })
 }
 

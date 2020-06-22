@@ -24,13 +24,13 @@ export default function ContentCard(props) {
         />
       </ImageFrame>
       <ContentFrame type="short">
-        <Title style={{fontSize: mobile(36)}}>
+        <Title style={{fontSize: 18}}>
           {game.title}
         </Title>
         <Image
           className="next-icon"
-          width={mobile(25)}
-          height={mobile(25)}
+          width="12.5px"
+          height="12.5px"
           src={`${PREFIX}/static/images/icons/next.svg`}
         />
       </ContentFrame>
@@ -50,7 +50,7 @@ export default function ContentCard(props) {
         <ButtonFrame>
           <StartButton>
             <IconFrame
-              marginRight={'5px'}
+              marginRight="5px"
             >
               <Image
                 src={`${PREFIX}/static/images/icons/play.svg`}
@@ -62,7 +62,7 @@ export default function ContentCard(props) {
           </StartButton>
           <ShareButton>
             <IconFrame
-              marginRight={'5px'}
+              marginRight="5px"
             >
               <Image
                 src={`${PREFIX}/static/images/icons/share.svg`}
@@ -78,7 +78,7 @@ export default function ContentCard(props) {
 }
 
 const ButtonText = styled.p`
-    font-size: 1.0rem;
+    font-size: 1rem;
     font-weight: bold;
     color: ${({color}) => color || pointColor.white};
 `;
@@ -121,8 +121,8 @@ const ContentFrame = styled.div`
 `;
 
 const ImageFrame = styled.div`
-    width: ${({width}) => (width - 60)};
-    height: ${({width}) => ((width - 60) * 1.25)};
+    width: ${({width}) => (width - 60)}px;
+    height: ${({width}) => ((width - 60) * 1.25)}px;
 `;
 
 const ContainerFrame = styled.div`
@@ -132,6 +132,6 @@ const ContainerFrame = styled.div`
 `;
 
 const ShortContainerFrame = styled(ContainerFrame)`
-    height: ${mobile(600)};
-    border: ${mobile(1)} solid ${pointColor.white};
+    height: 300px;
+    border: 1px solid ${pointColor.white};
 `;

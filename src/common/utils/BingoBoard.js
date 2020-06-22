@@ -6,143 +6,152 @@ import {useDispatch, useSelector} from "react-redux";
 import {mobile, breakPoints, Image, desktop} from "common/theme/theme";
 import * as animationData from "common/animation/lottie/pencil";
 import {commitCounts} from "modules/bingo";
+import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 
 const animationConfig = {
-    loop: false,
-    autoplay: false,
-    animationData: animationData.default
+  loop: false,
+  autoplay: false,
+  animationData: animationData.default
 };
 
 export default function BingoBoard(props) {
-    // const dispatch = useDispatch();
-    const [board, updateBoard] = useState(null);
-    const [isLoading, setLoading] = useState(true);
-    const [count, updateCount] = useState(0);
-    const {game} = props;
+  const [board, updateBoard] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const [count, updateCount] = useState(0);
+  const [clientWidth, setClientWidth] = useState(null);
+  const {game} = props;
 
-    // const gameObjects = useSelector(state => state.bingo.gameObjects);
-
-    const initialize = () => {
-        const size = props.size ? Math.pow(props.size) : 25;
-        const _tempArray = [];
-        for (let i = 0; i < size; ++i) {
-            _tempArray[i] = i + 1;
-        }
-
-        const _tempArray2 = _tempArray?.map((item, index) => {
-            return {
-                id: index + 1,
-                marked: false,
-            }
-        });
-
-        const _tempArray3 = _.chunk(_tempArray2, 5);
-
-        updateBoard(_tempArray3);
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        // dispatch(commitCounts(count));
-    }, [count]);
+  // const gameObjects = useSelector(state => state.bingo.gameObjects);
 
 
-    useEffect(() => {
-        initialize();
-    }, []);
+  const initialize = () => {
+    const size = props.size ? Math.pow(props.size) : 25;
+    const _tempArray = [];
+    for (let i = 0; i < size; ++i) {
+      _tempArray[i] = i + 1;
+    }
 
-    useEffect(() => {
-        if(props.gameStatus === "reset") {
-            initialize();
-            updateCount(0);
-            props.setGameStatus("running");
-        }
-    }, [props.gameStatus]);
+    const _tempArray2 = _tempArray?.map((item, index) => {
+      return {
+        id: index + 1,
+        marked: false,
+      }
+    });
 
-    const markItem = (id) => {
-        const _tempBoard = board.map(row => {
-            return row.map(item => {
-                return item.id === id ?
-                    Object.assign({}, item, {marked: !item.marked})
-                    :
-                    item;
-            })
-        });
+    const _tempArray3 = _.chunk(_tempArray2, 5);
 
-        const markedCounts = _.flattenDeep(_tempBoard).filter(item => item.marked).length;
-        updateCount(markedCounts);
-        updateBoard(_tempBoard);
-    };
+    updateBoard(_tempArray3);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    // dispatch(commitCounts(count));
+  }, [count]);
 
 
-    return isLoading ?
-        null
-        :
-        (
-            <ContainerFrame
-                className="board"
-                size={props.boardSize}
+  useEffect(() => {
+    initialize();
+
+    if(window) {
+      const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
+
+      setClientWidth(_clientWidth);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (props.gameStatus === "reset") {
+      initialize();
+      updateCount(0);
+      props.setGameStatus("running");
+    }
+  }, [props.gameStatus]);
+
+  const markItem = (id) => {
+    const _tempBoard = board.map(row => {
+      return row.map(item => {
+        return item.id === id ?
+          Object.assign({}, item, {marked: !item.marked})
+          :
+          item;
+      })
+    });
+
+    const markedCounts = _.flattenDeep(_tempBoard).filter(item => item.marked).length;
+    updateCount(markedCounts);
+    updateBoard(_tempBoard);
+  };
+
+
+  return isLoading ?
+    null
+    :
+    (
+      <ContainerFrame
+        className="board"
+        width={clientWidth}
+        size={props.boardSize}
+      >
+        {
+          board?.map((row, rowIndex) => (
+            <RowFrame
+              key={rowIndex.toString()}
+              index={rowIndex}
             >
-                {
-                    board?.map((row, rowIndex) => (
-                        <RowFrame
-                            key={rowIndex.toString()}
-                            index={rowIndex}
-                        >
-                            {
-                                row?.map((item, itemIndex) => (
-                                    <BingoItem
-                                        className="item"
-                                        onClick={props.gameStatus === "stop" ? null : () => markItem(item.id)}
-                                        key={itemIndex.toString()}
-                                        boardSize={props.boardSize}
-                                        columnCount={row.length}
-                                        index={itemIndex}
-                                        marked={item.marked}
-                                    >
-                                        {
-                                            game?.boardTheme?.ringImage === "default" ?
-                                                <AnimationFrame>
-                                                    <Lottie
-                                                        className="ring"
-                                                        playingState={
-                                                            item.marked ?
-                                                                "playing"
-                                                                :
-                                                                "stopped"
-                                                        }
-                                                        config={animationConfig}
-                                                        width={mobile(props.boardSize / row.length)}
-                                                        height={mobile(props.boardSize / row.length)}
-                                                        speed={0.7}
-                                                        isClickToPauseDisabled={false}
-                                                        isStopped={!item.marked}
-                                                        isPaused={!item.marked}
-                                                    />
-                                                </AnimationFrame>
-                                                :
-                                                item.marked ?
-                                                    <RingFrame
-                                                        className="ring"
-                                                        width={(props.boardSize / row.length) - 20}
-                                                        height={(props.boardSize / row.length) - 20}
-                                                    >
-                                                        <Ring
-                                                            src={game?.boardTheme?.ringImage}
-                                                            contain
-                                                        />
-                                                    </RingFrame>
-                                                    :
-                                                    null
-                                        }
-                                    </BingoItem>
-                                ))
+              {
+                row?.map((item, itemIndex) => (
+                  <BingoItem
+                    className="item"
+                    onClick={props.gameStatus === "stop" ? null : () => markItem(item.id)}
+                    key={itemIndex.toString()}
+                    boardSize={clientWidth}
+                    columnCount={row.length}
+                    index={itemIndex}
+                    marked={item.marked}
+                  >
+                    {
+                      game?.boardTheme?.ringImage === "default" ?
+                        <AnimationFrame>
+                          <Lottie
+                            className="ring"
+                            playingState={
+                              item.marked ?
+                                "playing"
+                                :
+                                "stopped"
                             }
-                        </RowFrame>
-                    ))
-                }
-            </ContainerFrame>
-        )
+                            config={animationConfig}
+                            width={clientWidth / row.length}
+                            height={clientWidth / row.length}
+                            speed={0.7}
+                            isClickToPauseDisabled={false}
+                            isStopped={!item.marked}
+                            isPaused={!item.marked}
+                          />
+                        </AnimationFrame>
+                        :
+                        item.marked ?
+                          <RingFrame
+                            className="ring"
+                            width={(clientWidth / row.length) - 20}
+                            height={(clientWidth / row.length) - 20}
+                          >
+                            <Ring
+                              src={game?.boardTheme?.ringImage}
+                              contain
+                            />
+                          </RingFrame>
+                          :
+                          null
+                    }
+                  </BingoItem>
+                ))
+              }
+            </RowFrame>
+          ))
+        }
+      </ContainerFrame>
+    )
 }
 
 const AnimationFrame = styled.div`
@@ -151,12 +160,12 @@ const AnimationFrame = styled.div`
 `;
 
 const RingFrame = styled.div`
-    width: ${({width}) => mobile(width)};
-    height: ${({height}) => mobile(height)};
+    width: ${({width}) => width}px;
+    height: ${({height}) => height}px;
     
     @media ${breakPoints.web} {
-        width: ${({width}) => desktop(width - 30)};
-        height: ${({height}) => desktop(height - 30)};
+        width: ${({width}) => width - 30}px;
+        height: ${({height}) => height - 30}px;
     }
 `;
 
@@ -166,14 +175,14 @@ const Ring = styled(Image)`
 `;
 
 const BingoItem = styled.div`
-    width: ${props => mobile(props.boardSize / props.columnCount - 4)};
-    height: ${props => mobile(props.boardSize / props.columnCount - 3)};
+    width: ${props => (props.boardSize / props.columnCount) - 10}px;
+    height: ${props => (props.boardSize / props.columnCount) - 10}px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: transparent;
     position: relative;
-    margin-left: ${({index}) => index > 0 ? mobile(4) : 0};
+    margin-left: ${({index}) => index > 0 ? 2 : 0}px;
     
     @media ${breakPoints.web} {
         width: 100px;
@@ -185,13 +194,14 @@ const BingoItem = styled.div`
 const RowFrame = styled.div`
     display: flex;
     justify-content: center;
-    margin-top: ${({index}) => index > 0 ? mobile(3) : 0};
+    margin-top: ${({index}) => index > 0 ? 1.5 : 0}px;
 `;
 
 const ContainerFrame = styled.div`
-    width: 100%;
-    height: 100%;
+    width: ${({width}) => width - 70}px;
+    height: ${({width}) => width - 70}px;
     box-sizing: border-box;
+    
     @media ${breakPoints.web} {
         
     }
