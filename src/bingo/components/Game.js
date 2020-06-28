@@ -2,7 +2,6 @@ import {useState, useEffect} from "react";
 import {mobile, pointColor, Image, breakPoints, IconFrame, desktop} from "common/theme/theme";
 import styled from "styled-components";
 import BingoBoard from "common/utils/BingoBoard";
-import {useDispatch, useSelector} from "react-redux";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {PREFIX} from "client/constants";
 import {loadBingos, resetCounts} from "modules/bingo";
@@ -21,13 +20,13 @@ export default function Game(props) {
   const gameId = router.query.id;
   const {data} = useQuery(LOAD_BINGO);
 
-  console.log("data:::::", data);
   const games = data?.allBingos?.edges;
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
   const [matchedGame, setMatchedGame] = useState(null);
   const [clientWidth, setClientWidth] = useState(null);
+  const [markedCounts, setMarkedCounts] = useState(0);
   // const markedCounts = useSelector(state => state.bingo.counts);
 
   // useEffect(() => {
@@ -117,6 +116,7 @@ export default function Game(props) {
           />
           <BoardFrame className="board-frame-container" width={clientWidth}>
             <BingoBoard
+              setMarkedCounts={setMarkedCounts}
               boardSize={props.boardSize}
               gameStatus={gameStatus}
               game={matchedGame?.node}
@@ -266,11 +266,6 @@ const ResultButton = styled.div`
     align-items: center;
     border-radius: 25px;
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.2);
-    
-    @media ${breakPoints.web} {
-        height: 70px;
-        border-radius: 50px;
-    }
 `;
 
 const ShareButton = styled(ResultButton)`
@@ -293,20 +288,16 @@ const ResultButtonFrame = styled.div`
     justify-content: space-between;
     align-items: center;
     
-    @media ${breakPoints.web} {
-        margin-top: 30px;
-    }
 `;
 
 const BoardFrame = styled.div`
     position: absolute;
-    top: ${({width}) => (width * 0.30) - 8}px;
+    top: ${({width}) => ((width - 36) * 0.30) + 5}px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 0;
     
     @media ${breakPoints.web} {
-        top: ${({width}) => (width * 0.30)}px;
     }
     
 `;

@@ -19,6 +19,7 @@ export default function BingoBoard(props) {
   const [isLoading, setLoading] = useState(true);
   const [count, updateCount] = useState(0);
   const [clientWidth, setClientWidth] = useState(null);
+  const [boardContainerSize, setBoardContainerSize] = useState(null);
   const {game} = props;
 
   // const gameObjects = useSelector(state => state.bingo.gameObjects);
@@ -46,6 +47,7 @@ export default function BingoBoard(props) {
 
   useEffect(() => {
     // dispatch(commitCounts(count));
+    props.setMarkedCounts(count);
   }, [count]);
 
 
@@ -54,8 +56,10 @@ export default function BingoBoard(props) {
 
     if(window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
+      const _boardContainerSize = Math.round(_clientWidth * 0.895) - 34;
 
       setClientWidth(_clientWidth);
+      setBoardContainerSize(_boardContainerSize)
     }
   }, []);
 
@@ -89,13 +93,13 @@ export default function BingoBoard(props) {
     (
       <ContainerFrame
         className="board"
-        width={clientWidth}
-        size={props.boardSize}
+        size={boardContainerSize}
       >
         {
           board?.map((row, rowIndex) => (
             <RowFrame
               key={rowIndex.toString()}
+              boardSize={boardContainerSize}
               index={rowIndex}
             >
               {
@@ -104,7 +108,7 @@ export default function BingoBoard(props) {
                     className="item"
                     onClick={props.gameStatus === "stop" ? null : () => markItem(item.id)}
                     key={itemIndex.toString()}
-                    boardSize={clientWidth}
+                    boardSize={boardContainerSize}
                     columnCount={row.length}
                     index={itemIndex}
                     marked={item.marked}
@@ -133,8 +137,8 @@ export default function BingoBoard(props) {
                         item.marked ?
                           <RingFrame
                             className="ring"
-                            width={(clientWidth / row.length) - 20}
-                            height={(clientWidth / row.length) - 20}
+                            width={(boardContainerSize / row.length) - 10}
+                            height={(boardContainerSize / row.length) - 10}
                           >
                             <Ring
                               src={game?.boardTheme?.ringImage}
@@ -175,33 +179,28 @@ const Ring = styled(Image)`
 `;
 
 const BingoItem = styled.div`
-    width: ${props => (props.boardSize / props.columnCount) - 10}px;
-    height: ${props => (props.boardSize / props.columnCount) - 10}px;
+    box-sizing: border-box;
+    width: ${props => Math.round((props.boardSize / props.columnCount)) - 2}px;
+    height: ${props => Math.round((props.boardSize / props.columnCount)) - 2}px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: transparent;
     position: relative;
-    margin-left: ${({index}) => index > 0 ? 2 : 0}px;
-    
-    @media ${breakPoints.web} {
-        width: 100px;
-        height: 100px;
-    }
-    
+    margin-left: ${({index, boardSize}) => index > 0 ? Math.round(boardSize * 0.00689) : 0}px;
 `;
 
 const RowFrame = styled.div`
     display: flex;
     justify-content: center;
-    margin-top: ${({index}) => index > 0 ? 1.5 : 0}px;
+    margin-top: ${({index, boardSize}) => index > 0 ? Math.round(boardSize * 0.0068) : 0}px;
+    
 `;
 
 const ContainerFrame = styled.div`
-    width: ${({width}) => width - 70}px;
-    height: ${({width}) => width - 70}px;
+    width: ${({size}) => size}px;
+    height: ${({size}) => size}px;
     box-sizing: border-box;
-    
     @media ${breakPoints.web} {
         
     }
