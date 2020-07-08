@@ -34,7 +34,7 @@ export default function Game(props) {
   // }, [data?.allBingos]);
 
   useEffect(() => {
-    if(window) {
+    if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
       console.log("clientWidth::: ", _clientWidth);
       setClientWidth(_clientWidth);
@@ -112,6 +112,7 @@ export default function Game(props) {
       <ContentWrapper>
         <BingoFrame id="bingo">
           <Image
+            crossorigin
             src={matchedGame?.node?.boardTheme?.boardImage}
           />
           <BoardFrame className="board-frame-container" width={clientWidth}>
