@@ -31,7 +31,7 @@ export default function ContentCard(props) {
           className="next-icon"
           width="12.5px"
           height="12.5px"
-          src={`${PREFIX}/static/images/icons/next.svg`}
+          src={`/static/images/icons/next.svg`}
         />
       </ContentFrame>
     </ShortContainerFrame>
@@ -53,7 +53,7 @@ export default function ContentCard(props) {
               marginRight="5px"
             >
               <Image
-                src={`${PREFIX}/static/images/icons/play.svg`}
+                src={`/static/images/icons/play.svg`}
               />
             </IconFrame>
             <ButtonText>
@@ -65,7 +65,7 @@ export default function ContentCard(props) {
               marginRight="5px"
             >
               <Image
-                src={`${PREFIX}/static/images/icons/share.svg`}
+                src={`/static/images/icons/share.svg`}
               />
             </IconFrame>
             <ButtonText color={pointColor.purpleDark}>

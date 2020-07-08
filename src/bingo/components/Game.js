@@ -141,7 +141,7 @@ export default function Game(props) {
                     marginRight="5px"
                   >
                     <Image
-                      src={`${PREFIX}/static/images/icons/download.svg`}
+                      src={`/static/images/icons/download.svg`}
                     />
                   </IconFrame>
                   <ButtonText>
@@ -154,7 +154,7 @@ export default function Game(props) {
                     marginRight="5px"
                   >
                     <Image
-                      src={`${PREFIX}/static/images/icons/play2.svg`}
+                      src={`/static/images/icons/play2.svg`}
                     />
                   </IconFrame>
                   <ButtonText color={pointColor.purpleDark}>
@@ -175,7 +175,7 @@ export default function Game(props) {
                   marginRight="5px"
                 >
                   <Image
-                    src={`${PREFIX}/static/images/icons/play.svg`}
+                    src={`/static/images/icons/play.svg`}
                   />
                 </IconFrame>
                 <ButtonText>
@@ -188,7 +188,7 @@ export default function Game(props) {
                   marginRight="10px"
                 >
                   <Image
-                    src={`${PREFIX}/static/images/icons/share.svg`}
+                    src={`/static/images/icons/share.svg`}
                   />
                 </IconFrame>
                 <ButtonText color={pointColor.purpleDark}>

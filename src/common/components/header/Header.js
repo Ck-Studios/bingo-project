@@ -10,7 +10,7 @@ import {motion} from "framer-motion";
 //     width={mobile(115)}
 //     height={mobile(40)}
 //     contain
-//     src={`${PREFIX}/static/images/logo/logo.svg`}
+//     src={`/static/images/logo/logo.svg`}
 //     onClick={() => router.push("/")}
 // />
 
@@ -38,7 +38,7 @@ export default function Header({leftContent, title, titleContent, rightContent, 
                     width="57.5px"
                     height="20px"
                     contain
-                    src={`${PREFIX}/static/images/logo/logo.svg`}
+                    src={`/static/images/logo/logo.svg`}
                     onClick={() => router.push("/")}
                   />
           }
