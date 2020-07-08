@@ -2,16 +2,10 @@ import {useState, useEffect} from "react";
 import {mobile, pointColor, Image, breakPoints, IconFrame, desktop} from "common/theme/theme";
 import styled from "styled-components";
 import BingoBoard from "common/utils/BingoBoard";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {PREFIX} from "client/constants";
-import {loadBingos, resetCounts} from "modules/bingo";
-import domtoimage from "dom-to-image";
-import {saveAs} from "file-saver";
 import Share from "common/components/share/Share";
 import {useRouter} from "next/router";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
-import {useGetClientWidth} from "common/hooks/common";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 
 
@@ -27,6 +21,9 @@ export default function Game(props) {
   const [matchedGame, setMatchedGame] = useState(null);
   const [clientWidth, setClientWidth] = useState(null);
   const [markedCounts, setMarkedCounts] = useState(0);
+  // const [html2canvas, setHtml2canvas] = useState(null);
+
+
   // const markedCounts = useSelector(state => state.bingo.counts);
 
   // useEffect(() => {
@@ -39,6 +36,9 @@ export default function Game(props) {
       console.log("clientWidth::: ", _clientWidth);
       setClientWidth(_clientWidth);
     }
+
+    // const _html2canvas = require('html2canvas');
+    // setHtml2canvas(_html2canvas);
   }, []);
 
 
@@ -91,20 +91,22 @@ export default function Game(props) {
   const saveImage = () => {
     const node = document.getElementById("bingo");
 
-    domtoimage.toJpeg(node, {quality: 0.95})
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.href = dataUrl;
+    alert('아직 지원하지 않는 기능입니다.');
 
-        const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
-        const x = window.open();
-        x.document.open();
-        x.document.write(iframe);
-        x.document.close();
-      })
-      .catch((err) => {
-        console.log("저장중에 에러::", err);
-      })
+    // domtoimage.toJpeg(node, {quality: 0.95})
+    //   .then((dataUrl) => {
+    //     const link = document.createElement("a");
+    //     link.href = dataUrl;
+    //
+    //     const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
+    //     const x = window.open();
+    //     x.document.open();
+    //     x.document.write(iframe);
+    //     x.document.close();
+    //   })
+    //   .catch((err) => {
+    //     console.log("저장중에 에러::", err);
+    //   })
   };
 
   return (

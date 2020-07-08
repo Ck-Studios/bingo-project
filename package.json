@@ -49,6 +49,7 @@
     "google-map-react": "^1.1.6",
     "graphql": "^15.1.0",
     "graphql-tag": "^2.10.3",
+    "html2canvas": "^1.0.0-rc.5",
     "immer": "^5.3.6",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.15",
