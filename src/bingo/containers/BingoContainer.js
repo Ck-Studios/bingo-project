@@ -13,22 +13,27 @@ import {SLIDE_UP} from "common/animation/AnimationVariants";
 import AnimationFrame from "common/animation/AnimationFrame";
 
 class BingoContainer extends Component {
-    render() {
-        return (
-            <ContainerFrame>
-                <Header/>
-                <AnimationFrame
-                    variants={SLIDE_UP}
-                >
-                    <Game
-                        boardSize={580}
-                    />
-                </AnimationFrame>
-                <RecommendedBingo/>
-                <Footer/>
-            </ContainerFrame>
-        )
-    }
+  // componentDidMount() {
+  //   window?.Kakao?.init("0185f6f7559b47d51755762445e60ca0");
+  //   window?.Kakao?.isInitialized();
+  // }
+
+  render() {
+    return (
+      <ContainerFrame>
+        <Header/>
+        <AnimationFrame
+          variants={SLIDE_UP}
+        >
+          <Game
+            boardSize={360}
+          />
+        </AnimationFrame>
+        <RecommendedBingo/>
+        <Footer/>
+      </ContainerFrame>
+    )
+  }
 }
 
 export default BingoContainer;

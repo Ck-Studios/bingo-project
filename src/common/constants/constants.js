@@ -1,1 +1,1 @@
-export const MAX_CLIENT_WIDTH = 720;
+export const MAX_CLIENT_WIDTH = 540;

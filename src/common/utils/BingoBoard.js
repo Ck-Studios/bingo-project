@@ -56,7 +56,7 @@ export default function BingoBoard(props) {
 
     if(window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
-      const _boardContainerSize = Math.round(_clientWidth * 0.895) - 34;
+      const _boardContainerSize = Math.round(_clientWidth * 0.86) + 15;
 
       setClientWidth(_clientWidth);
       setBoardContainerSize(_boardContainerSize)
@@ -140,8 +140,12 @@ export default function BingoBoard(props) {
                             width={(boardContainerSize / row.length) - 10}
                             height={(boardContainerSize / row.length) - 10}
                           >
+                            {/*<Ring*/}
+                            {/*  src={game?.boardTheme?.ringImage}*/}
+                            {/*  contain*/}
+                            {/*/>*/}
                             <Ring
-                              src={game?.boardTheme?.ringImage}
+                              src={game?.ring}
                               contain
                             />
                           </RingFrame>
@@ -201,7 +205,5 @@ const ContainerFrame = styled.div`
     width: ${({size}) => size}px;
     height: ${({size}) => size}px;
     box-sizing: border-box;
-    @media ${breakPoints.web} {
-        
-    }
+   
 `;

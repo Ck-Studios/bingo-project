@@ -17,20 +17,20 @@ export default function ContentCard(props) {
 
   return props.type === "short" ?
     <ShortContainerFrame>
-      <ImageFrame type="short" width={clientWidth}>
+      <ImageFrame type="short">
         <Image
           cover
-          src={game.boardTheme.boardImage}
+          src={game.board}
         />
       </ImageFrame>
       <ContentFrame type="short">
-        <Title style={{fontSize: 18}}>
+        <Title style={{fontSize: 20}}>
           {game.title}
         </Title>
         <Image
           className="next-icon"
-          width="12.5px"
-          height="12.5px"
+          width="14px"
+          height="14px"
           src={`/static/images/icons/next.svg`}
         />
       </ContentFrame>
@@ -39,8 +39,8 @@ export default function ContentCard(props) {
     <ContainerFrame>
       <ImageFrame>
         <Image
-          contain
-          src={game.boardTheme.boardImage}
+          cover
+          src={game.thumbnail}
         />
       </ImageFrame>
       <ContentFrame>
@@ -65,12 +65,10 @@ export default function ContentCard(props) {
               marginRight="5px"
             >
               <Image
+                contain
                 src={`/static/images/icons/share.svg`}
               />
             </IconFrame>
-            <ButtonText color={pointColor.purpleDark}>
-              공유하기
-            </ButtonText>
           </ShareButton>
         </ButtonFrame>
       </ContentFrame>
@@ -78,16 +76,15 @@ export default function ContentCard(props) {
 }
 
 const ButtonText = styled.p`
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: bold;
     color: ${({color}) => color || pointColor.white};
 `;
 
 const StartButton = styled.div`
-    padding: 10px 0;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
-    flex: 3;
+    width: 80%;
     justify-content: center;
     align-items: center;
     border-radius: 40px;
@@ -96,42 +93,45 @@ const StartButton = styled.div`
 
 const ShareButton = styled(StartButton)`
     display: flex;
-    flex: 2;
     background: ${pointColor.white};
-    
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
 `;
 
 const ButtonFrame = styled.div`
     display: flex;
     margin-top: 20px;
+    justify-content: space-between;
 `;
 
 const Title = styled.p`
-    font-size: 1.4rem;
+    font-size: 22px;
     font-weight: bold;
     color: ${pointColor.gray7};
 `;
 
 const ContentFrame = styled.div`
     background: ${pointColor.white};
-    padding: 15px 20px;
+    padding: 18px 16px 22px 16px;
     display: ${({type}) => type === "short" ? "flex" : "block"};
     justify-content: ${({type}) => type === "short" ? "space-between" : "flex-start"};
     align-items: ${({type}) => type === "short" ? "center" : "flex-start"}; 
 `;
 
 const ImageFrame = styled.div`
-    width: ${({width}) => (width - 60)}px;
-    height: ${({width}) => ((width - 60) * 1.25)}px;
+    width: ${({width}) => width ? (width - 60) + "px" : 100 + "%"};
+    height: ${({width, type}) => type === "short" ? "250px": width ?  ((width - 60) * 1.25) + "px" : "100%"};
+    overflow: hidden;
 `;
 
 const ContainerFrame = styled.div`
     width: 100%;
     overflow: hidden;
-    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.16);
 `;
 
 const ShortContainerFrame = styled(ContainerFrame)`
-    height: 300px;
-    border: 1px solid ${pointColor.white};
+   box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.16);
 `;

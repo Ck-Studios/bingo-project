@@ -10,10 +10,11 @@ export const pointColor = {
     gray4: "#33363b",
     gray5: "#202225",
     gray6: "#484848",
-    gray7: "#333333",
+    gray7: "#222222",
     gray8: "#6E6D79",
     gray9: "#6E6D79",
     gray10: "#999999",
+    gray11: "#777777",
     mainColor: "#0067ff",
     activeColor: "#003cff",
     activeColorLight: "#e5f0ff",
@@ -56,14 +57,15 @@ export const pointColor = {
 };
 
 export const breakPoints = {
-    web: "screen and (min-width: 768px)",
-    mobile: "screen and (max-width: 767px)"
+    web: "screen and (min-width: 540px)",
+    mobile: "screen and (max-width: 539px)"
 };
 
 export const Image = styled.img`
     width: ${({width}) => width || '100%'};
     height: ${({height}) => height || '100%'};
     object-fit: ${({cover}) => cover ? 'cover' : 'contain'};
+    object-position: top;
 `;
 
 export const mobile = value => `${(value / 720) * 100}vw`;

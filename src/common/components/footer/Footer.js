@@ -5,37 +5,41 @@ export default function Footer() {
     return (
         <ContainerFrame>
             <div style={{opacity: 0.7}}>
-                <Text marginRight={mobile(20)}>
-                    ABOUT US
+                <Text marginRight="18px">
+                    팀 소개
                 </Text>
                 <Text>
                     광고문의
                 </Text>
             </div>
+            <Copyrights>
+                © 2020 Synapse Corporation Inc.
+            </Copyrights>
         </ContainerFrame>
     )
 }
 
+const Copyrights = styled.p`
+  font-size: 12px;
+  line-height: 1.08;
+  color: ${pointColor.white};
+  margin-top: 10px;
+`;
+
 const Text = styled.span`
     display: inline-block;
     margin-right: ${({marginRight}) => marginRight || 0};
-    font-size: ${mobile(23)};
+    font-size: 14px;
     color: ${pointColor.white};
-    @media ${breakPoints.web} {
-        font-size: ${desktop(23)};
-    }
 `;
 
 const ContainerFrame = styled.div`
-    margin-top: ${mobile(80)};
+    margin-top: 60px;
+    height: 80px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    height: ${mobile(110)};
-    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
-    @media ${breakPoints.web} {
-        margin-top: ${desktop(30)};
-        height: ${desktop(100)};
-        padding: 30px;
-    }
+    align-items: center;
+    background: ${pointColor.gray11};
+   
 `;

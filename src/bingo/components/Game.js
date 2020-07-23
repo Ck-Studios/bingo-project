@@ -7,14 +7,15 @@ import {useRouter} from "next/router";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
+import {GAMES} from "mock/data";
 
 
 export default function Game(props) {
   const router = useRouter();
   const gameId = router.query.id;
-  const {data} = useQuery(LOAD_BINGO);
+  // const {data} = useQuery(LOAD_BINGO);
 
-  const games = data?.allBingos?.edges;
+  // const games = data?.allBingos?.edges;
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
@@ -42,12 +43,19 @@ export default function Game(props) {
   }, []);
 
 
+  // useEffect(() => {
+  //   const _matchedGame = games?.find(item => item.id === gameId);
+  //   console.log("matched game::: ", _matchedGame);
+  //   setMatchedGame(_matchedGame);
+  //   window.scrollTo(0, 1);
+  // }, [gameId, games]);
+
   useEffect(() => {
-    const _matchedGame = games?.find(item => item.node.id === gameId);
+    const _matchedGame = GAMES?.find(item => item.id === parseInt(gameId));
     console.log("matched game::: ", _matchedGame);
     setMatchedGame(_matchedGame);
     window.scrollTo(0, 1);
-  }, [gameId, games]);
+  }, [gameId]);
 
   const showResults = () => {
     toggleResultImage(true);
@@ -55,31 +63,31 @@ export default function Game(props) {
   };
 
   const getResult = () => {
-    // if (markedCounts <= 5) {
-    //   return (
-    //     <Image
-    //       src={matchedGame?.result_images[0]}
-    //     />
-    //   )
-    // } else if (markedCounts >= 6 && markedCounts <= 14) {
-    //   return (
-    //     <Image
-    //       src={matchedGame?.result_images[1]}
-    //     />
-    //   )
-    // } else if (markedCounts >= 15 && markedCounts <= 21) {
-    //   return (
-    //     <Image
-    //       src={matchedGame?.result_images[2]}
-    //     />
-    //   )
-    // } else if (markedCounts >= 22 && markedCounts <= 25) {
-    //   return (
-    //     <Image
-    //       src={matchedGame?.result_images[3]}
-    //     />
-    //   )
-    // }
+    if (markedCounts <= 5) {
+      return (
+        <Image
+          src={matchedGame?.result_images[0]}
+        />
+      )
+    } else if (markedCounts >= 6 && markedCounts <= 14) {
+      return (
+        <Image
+          src={matchedGame?.result_images[1]}
+        />
+      )
+    } else if (markedCounts >= 15 && markedCounts <= 21) {
+      return (
+        <Image
+          src={matchedGame?.result_images[2]}
+        />
+      )
+    } else if (markedCounts >= 22 && markedCounts <= 25) {
+      return (
+        <Image
+          src={matchedGame?.result_images[3]}
+        />
+      )
+    }
   };
 
   const replayGame = () => {
@@ -113,16 +121,27 @@ export default function Game(props) {
     <ContainerFrame>
       <ContentWrapper>
         <BingoFrame id="bingo">
+          {/*<Image*/}
+          {/*  crossorigin*/}
+          {/*  src={matchedGame?.node?.boardTheme?.boardImage}*/}
+          {/*/>*/}
           <Image
             crossorigin
-            src={matchedGame?.node?.boardTheme?.boardImage}
+            src={matchedGame?.board}
           />
           <BoardFrame className="board-frame-container" width={clientWidth}>
+            {/*<BingoBoard*/}
+            {/*  setMarkedCounts={setMarkedCounts}*/}
+            {/*  boardSize={props.boardSize}*/}
+            {/*  gameStatus={gameStatus}*/}
+            {/*  game={matchedGame?.node}*/}
+            {/*  setGameStatus={setGameStatus}*/}
+            {/*/>*/}
             <BingoBoard
               setMarkedCounts={setMarkedCounts}
               boardSize={props.boardSize}
               gameStatus={gameStatus}
-              game={matchedGame?.node}
+              game={matchedGame}
               setGameStatus={setGameStatus}
             />
           </BoardFrame>
@@ -211,40 +230,33 @@ const BingoFrame = styled.div`
 `;
 
 const SaveButton = styled.div`
-    width: 175px;
-    height: 40px;
+    width: 52.8%;
+    height: 46px;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 25px;
-    box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
-    
-    @media ${breakPoints.web} {
-        height: 70px;
-        border-radius: 50px;
-    }
+    border-radius: 23px;
+     box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);   
 `;
 
 const RestartButton = styled(SaveButton)`
     display: flex;
-    width: 105px;
+    width: 34.4%;
     background: ${pointColor.white};
     
 `;
 
 const Message = styled.p`
     margin-top: 0;
-    font-size: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
     color: ${pointColor.gray8};
-    
-    @media ${breakPoints.web} {
-        font-size: 25px;
-    }
+   
 `;
 
 const ButtonText = styled.p`
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: ${({color}) => color || pointColor.white};
     
@@ -256,13 +268,13 @@ const ButtonText = styled.p`
 const ResultContent = styled.div`
     width: 100%;
     background: ${pointColor.white};
-    padding: 15px 15px 20px 15px;
+    padding: 22px 18px 30px 18px;
 `;
 
 const ResultButton = styled.div`
     margin-top: 10px;
-    width: 70%;
-    height: 40px;
+    width: 100%;
+    height: 46px;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
@@ -281,8 +293,7 @@ const ButtonFrame = styled.div`
     align-items: center;
     width: 100%;
     background: ${pointColor.white};
-    padding-top: 5px;
-    padding-bottom: 35px;
+    padding: 5px 30px 35px 30px;
     border-bottom: 1px solid ${pointColor.gray1};
 `;
 
@@ -295,7 +306,7 @@ const ResultButtonFrame = styled.div`
 
 const BoardFrame = styled.div`
     position: absolute;
-    top: ${({width}) => ((width - 36) * 0.30) + 5}px;
+    top: ${({width}) => ((width) * 0.30) + 3}px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 0;
@@ -307,7 +318,6 @@ const BoardFrame = styled.div`
 
 const ContainerFrame = styled.div`
     width: 100%;
-    padding: 0 18px;
     position: relative;
     display: flex;
     flex-direction: column;

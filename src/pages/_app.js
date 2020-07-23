@@ -17,6 +17,11 @@ export default function App({Component, pageProps, store, router, status}) {
     <>
       <Head>
         <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'/>
+        <script type="text/javascript" src="/static/scripts/kakao_sdk.js"/>
+        <script type="text/javascript">
+          Kakao.init('e81eae6e644074fa4932b6658d4c5883');
+
+        </script>
       </Head>
       <ApolloProvider client={apolloClient}>
         <>
@@ -30,9 +35,10 @@ export default function App({Component, pageProps, store, router, status}) {
       </ApolloProvider>
       <style global jsx>
         {`
+        @font-face { font-family: 'NanumSquareRound'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff'); font-weight: normal; font-style: normal; }
             body {
                 margin: 0 auto;
-                max-width: 756px !important;
+                max-width: 540px !important;
                 height: 100%;
             }
             
@@ -40,6 +46,10 @@ export default function App({Component, pageProps, store, router, status}) {
                 box-sizing: border-box;
                 height: 100%;
                 font-size: 16px;
+            }
+            
+            #__next {
+              height: 100%;
             }
             
             * { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans KR', 'Sans-serif'; }

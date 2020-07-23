@@ -31,7 +31,8 @@ export default class Document extends NextDocument {
     render() {
         return (
             <html>
-            <Head />
+            <Head>
+            </Head>
             <body>
             <Main />
             <div id="modal" />

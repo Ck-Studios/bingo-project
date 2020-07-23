@@ -11,5 +11,6 @@ export default function ContainerLayout(props) {
 
 const ContainerFrame = styled.div`
     width: 100%;
+    height: 100%;
     background: ${({background}) => background || "transparent"};
 `;

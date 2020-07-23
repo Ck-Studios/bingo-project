@@ -7,6 +7,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {loadBingos} from "modules/bingo";
 import AnimationFrame from "common/animation/AnimationFrame";
 import {SLIDE_UP} from "common/animation/AnimationVariants";
+import {GAMES} from "mock/data";
 
 export default function RecommendedBingo(props) {
     const router = useRouter();
@@ -27,7 +28,7 @@ export default function RecommendedBingo(props) {
             </Title>
             <ContentListFrame>
                 {
-                    games?.map((game, index) => (
+                  GAMES?.map((game, index) => (
                         <AnimationFrame
                             key={index.toString()}
                             variants={SLIDE_UP}
@@ -38,7 +39,7 @@ export default function RecommendedBingo(props) {
                                 onClick={() => router.push({
                                     pathname: "/bingo",
                                     query: {
-                                        id: game._id
+                                        id: game.id
                                     }
                                 })}
                             >
@@ -56,19 +57,14 @@ export default function RecommendedBingo(props) {
 }
 
 const Title = styled.p`
-    font-size: ${mobile(36)};
+    font-size: 22px;
     color: ${pointColor.gray7};
     font-weight: 700;
-    @media ${breakPoints.web} {
-        font-size: 2.5rem;
-    }
+    
 `;
 
 const ItemFrame = styled.div`
-    margin-top: ${({index}) => index > 0 ? mobile(60) : mobile(30)};
-    @media ${breakPoints.web} {
-        margin-top: 3rem;
-    }
+    margin-top: ${({index}) => index > 0 ? 20 : 30}px;
 `;
 
 const ContentListFrame = styled.div`
@@ -76,10 +72,8 @@ const ContentListFrame = styled.div`
 `;
 
 const ContainerFrame = styled.div`
-    margin-top: ${mobile(50)};
-    padding: 0 ${mobile(50)};
+    margin-top: 30px;
+    padding: 0 18px;
     
-    @media ${breakPoints.web} {
-        padding: 0 80px;
-    }
+   
 `;

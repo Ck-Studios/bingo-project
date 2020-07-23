@@ -12,45 +12,49 @@ import {SLIDE_UP} from "common/animation/AnimationVariants";
 import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag"
 import {LOAD_BINGO} from "modules/scheme";
+import {useRouter} from "next/router";
+import {GAMES} from "mock/data";
 
 
 function MainContainer(props) {
-  const {loading, error, data} = useQuery(LOAD_BINGO);
+  // const {loading, error, data} = useQuery(LOAD_BINGO);
+  //
+  // console.log("data", data);
 
-  console.log("data", data);
+  // if (loading) return "loading...";
+  // if (error) return "에러";
 
-  if (loading) return "loading...";
-  if (error) return "에러";
-
-  const {allBingos} = data;
-  const {edges} = allBingos;
-  const {router} = props;
+  // const {allBingos} = data;
+  // const {edges} = allBingos;
+  const router = useRouter();
   return (
     <ContainerFrame>
-      <Header/>
-      <ContentListFrame>
-        {
-          edges.map((game, index) => (
-            <ItemFrame
-              initial="initial"
-              exit="exit"
-              animate="enter"
-              variants={SLIDE_UP}
-              key={index.toString()}
-              onClick={() => router.push({
-                pathname: "/bingo",
-                query: {
-                  id: game.node.id,
-                }
-              })}
-            >
-              <ContentCard
-                game={game.node}
-              />
-            </ItemFrame>
-          ))
-        }
-      </ContentListFrame>
+      <div>
+        <Header/>
+        <ContentListFrame>
+          {
+            GAMES.map((game, index) => (
+              <ItemFrame
+                initial="initial"
+                exit="exit"
+                animate="enter"
+                variants={SLIDE_UP}
+                key={index.toString()}
+                onClick={() => router.push({
+                  pathname: "/bingo",
+                  query: {
+                    id: game.id,
+                  }
+                })}
+              >
+                <ContentCard
+                  game={game}
+                />
+              </ItemFrame>
+            ))
+          }
+        </ContentListFrame>
+      </div>
       <Footer/>
     </ContainerFrame>
   )
@@ -60,7 +64,10 @@ export default withRouter(MainContainer);
 
 const ContainerFrame = styled.div`
     background: ${pointColor.gray0};
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 `;
 
 const ItemFrame = styled(motion.div)`

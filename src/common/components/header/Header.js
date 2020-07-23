@@ -35,8 +35,8 @@ export default function Header({leftContent, title, titleContent, rightContent, 
                 title ? (<HeaderTitle>{title}</HeaderTitle>) :
                   <Image
                     className="logo"
-                    width="57.5px"
-                    height="20px"
+                    width="50px"
+                    height="22px"
                     contain
                     src={`/static/images/logo/logo.svg`}
                     onClick={() => router.push("/")}
@@ -89,22 +89,17 @@ const ContainerFrame = styled.div`
     position: ${({fixed}) => (fixed ? "sticky" : "relative")};
     top: 0;
     z-index: 100;
-    height: 50px;
-    padding: ${Layout.indent};
     background: ${({background}) => background || pointColor.white};
     border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : 1)}px solid ${pointColor.gray1};
 `;
 
 const Wrapper = styled.div`
-    @media ${breakPoints.web} {
         .header-container-frame {
-            height: 80px;
-            padding: 30px;
+            height: 46px;
             .logo {
-                width: 100px;
-                height: 30px;
+                width: 60px;
+                height: 25px;
                 object-fit: contain;
             }
         }
-    }
 `;
