@@ -1,17 +1,19 @@
 import styled from "styled-components";
 import {pointColor, Layout, mobile, Image, breakPoints, IconFrame, desktop} from "common/theme/theme";
-import {useSelector} from "react-redux";
-import {PREFIX} from "client/constants";
 import {useState, useEffect} from "react";
+import {MAX_CLIENT_WIDTH} from "common/constants/constants";
+import {motion} from "framer-motion";
 
 export default function ContentCard(props) {
   const {game} = props;
-  console.log("hihi, ", game);
   const [clientWidth, setClientWidth] = useState(null);
 
   useEffect(() => {
-    if (window) {
-      setClientWidth(window.innerWidth);
+    if(window) {
+      const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
+      const _boardContainerSize = Math.round(_clientWidth * 0.86) + 15;
+
+      setClientWidth(_clientWidth);
     }
   }, []);
 
@@ -20,7 +22,7 @@ export default function ContentCard(props) {
       <ImageFrame type="short">
         <Image
           cover
-          src={game.board}
+          src={game?.boardTheme?.boardImage}
         />
       </ImageFrame>
       <ContentFrame type="short">
@@ -37,36 +39,42 @@ export default function ContentCard(props) {
     </ShortContainerFrame>
     :
     <ContainerFrame>
-      <ImageFrame>
+      <ImageFrame
+        width={clientWidth}
+      >
         <Image
           cover
-          src={game.thumbnail}
+          src={game?.boardTheme?.boardImage}
         />
       </ImageFrame>
       <ContentFrame>
         <Title>
-          {game.title}
+          {game?.title}
         </Title>
         <ButtonFrame>
-          <StartButton>
+          <StartButton
+            whileTap={{ scale: 0.95 }}
+          >
             <IconFrame
               marginRight="5px"
             >
               <Image
-                src={`/static/images/icons/play.svg`}
+                src="/static/images/icons/play.svg"
               />
             </IconFrame>
             <ButtonText>
               시작하기
             </ButtonText>
           </StartButton>
-          <ShareButton>
+          <ShareButton
+            whileTap={{ scale: 0.95 }}
+          >
             <IconFrame
               marginRight="5px"
             >
               <Image
                 contain
-                src={`/static/images/icons/share.svg`}
+                src="/static/images/icons/share.svg"
               />
             </IconFrame>
           </ShareButton>
@@ -81,7 +89,7 @@ const ButtonText = styled.p`
     color: ${({color}) => color || pointColor.white};
 `;
 
-const StartButton = styled.div`
+const StartButton = styled(motion.div)`
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     width: 80%;
@@ -121,7 +129,7 @@ const ContentFrame = styled.div`
 
 const ImageFrame = styled.div`
     width: ${({width}) => width ? (width - 60) + "px" : 100 + "%"};
-    height: ${({width, type}) => type === "short" ? "250px": width ?  ((width - 60) * 1.25) + "px" : "100%"};
+    height: ${({width, type}) => type === "short" ? "250px": width ? ((width - 60) * 0.75) + "px" : "100%"};
     overflow: hidden;
 `;
 

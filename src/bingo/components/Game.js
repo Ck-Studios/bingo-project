@@ -13,49 +13,40 @@ import {GAMES} from "mock/data";
 export default function Game(props) {
   const router = useRouter();
   const gameId = router.query.id;
-  // const {data} = useQuery(LOAD_BINGO);
+  const {data} = useQuery(LOAD_BINGO);
 
-  // const games = data?.allBingos?.edges;
+  const games = data?.allBingos?.edges;
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
   const [matchedGame, setMatchedGame] = useState(null);
   const [clientWidth, setClientWidth] = useState(null);
   const [markedCounts, setMarkedCounts] = useState(0);
-  // const [html2canvas, setHtml2canvas] = useState(null);
+  const [resultImagePath, setResultImagePath] = useState(null);
 
-
-  // const markedCounts = useSelector(state => state.bingo.counts);
-
-  // useEffect(() => {
-  //   setGames(data?.allBingos?.edges?.node)
-  // }, [data?.allBingos]);
+  const [resultBoardArray, setResultBoardArray] = useState(null);
 
   useEffect(() => {
     if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
-      console.log("clientWidth::: ", _clientWidth);
       setClientWidth(_clientWidth);
     }
-
-    // const _html2canvas = require('html2canvas');
-    // setHtml2canvas(_html2canvas);
   }, []);
 
 
+  useEffect(() => {
+    console.log(_matchedGame);
+    const _matchedGame = games?.find(item => item.node.id === gameId);
+    setMatchedGame(_matchedGame);
+    window.scrollTo(0, 1);
+  }, [gameId, games]);
+
   // useEffect(() => {
-  //   const _matchedGame = games?.find(item => item.id === gameId);
+  //   const _matchedGame = GAMES?.find(item => item.id === parseInt(gameId));
   //   console.log("matched game::: ", _matchedGame);
   //   setMatchedGame(_matchedGame);
   //   window.scrollTo(0, 1);
-  // }, [gameId, games]);
-
-  useEffect(() => {
-    const _matchedGame = GAMES?.find(item => item.id === parseInt(gameId));
-    console.log("matched game::: ", _matchedGame);
-    setMatchedGame(_matchedGame);
-    window.scrollTo(0, 1);
-  }, [gameId]);
+  // }, [gameId]);
 
   const showResults = () => {
     toggleResultImage(true);
@@ -63,32 +54,44 @@ export default function Game(props) {
   };
 
   const getResult = () => {
-    if (markedCounts <= 5) {
+    if (markedCounts <= 6) {
       return (
         <Image
-          src={matchedGame?.result_images[0]}
+          src={matchedGame?.node?.bingoResults[0]?.image}
         />
       )
-    } else if (markedCounts >= 6 && markedCounts <= 14) {
+    } else if (markedCounts >= 7 && markedCounts <= 13) {
       return (
         <Image
-          src={matchedGame?.result_images[1]}
+          src={matchedGame?.node?.bingoResults[1]?.image}
         />
       )
-    } else if (markedCounts >= 15 && markedCounts <= 21) {
+    } else if (markedCounts >= 14 && markedCounts <= 19) {
       return (
         <Image
-          src={matchedGame?.result_images[2]}
+          src={matchedGame?.node?.bingoResults[2]?.image}
         />
       )
-    } else if (markedCounts >= 22 && markedCounts <= 25) {
+    } else if (markedCounts >= 20 && markedCounts <= 25) {
       return (
         <Image
-          src={matchedGame?.result_images[3]}
+          src={matchedGame?.node?.bingoResults[3]?.image}
         />
       )
     }
   };
+
+  useEffect(() => {
+    if (markedCounts <= 6) {
+      setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
+    } else if (markedCounts >= 7 && markedCounts <= 13) {
+      setResultImagePath(matchedGame?.node?.bingoResults[1]?.image);
+    } else if (markedCounts >= 14 && markedCounts <= 19) {
+      setResultImagePath(matchedGame?.node?.bingoResults[2]?.image);
+    } else if (markedCounts >= 20 && markedCounts <= 25) {
+      setResultImagePath(matchedGame?.node?.bingoResults[3]?.image);
+    }
+  }, [markedCounts]);
 
   const replayGame = () => {
     toggleResultImage(false);
@@ -97,9 +100,34 @@ export default function Game(props) {
   };
 
   const saveImage = () => {
-    const node = document.getElementById("bingo");
+    // const node = document.getElementById("bingo");
 
-    alert('아직 지원하지 않는 기능입니다.');
+    // alert('아직 지원하지 않는 기능입니다.');
+    const boardImage = document.createElement("img");
+    const resultImage = document.createElement("img");
+    const ring = document.createElement("img");
+
+    const _boardHeight = clientWidth * 1.25;
+    const _resultHeight = clientWidth * 0.23;
+    const canvas = `<canvas id='canvas' width='${clientWidth}' height='${_boardHeight + _resultHeight}'></canvas>`
+
+    boardImage.src = matchedGame?.node?.boardTheme?.boardImage;
+    resultImage.src = resultImagePath ?? "";
+
+    const x = window.open();
+    x.document.open();
+
+    x.document.write(canvas);
+    const _xCanvas = x.document.getElementById("canvas").getContext("2d");
+    boardImage.onload = function() {
+      _xCanvas.drawImage(boardImage, 0, 0, clientWidth,  _boardHeight);
+    };
+
+    resultImage.onload = function() {
+      _xCanvas.drawImage(resultImage, 0, _boardHeight, clientWidth, _resultHeight);
+    };
+
+    x.document.close();
 
     // domtoimage.toJpeg(node, {quality: 0.95})
     //   .then((dataUrl) => {
@@ -121,34 +149,26 @@ export default function Game(props) {
     <ContainerFrame>
       <ContentWrapper>
         <BingoFrame id="bingo">
-          {/*<Image*/}
-          {/*  crossorigin*/}
-          {/*  src={matchedGame?.node?.boardTheme?.boardImage}*/}
-          {/*/>*/}
           <Image
             crossorigin
-            src={matchedGame?.board}
+            src={matchedGame?.node?.boardTheme?.boardImage}
           />
           <BoardFrame className="board-frame-container" width={clientWidth}>
-            {/*<BingoBoard*/}
-            {/*  setMarkedCounts={setMarkedCounts}*/}
-            {/*  boardSize={props.boardSize}*/}
-            {/*  gameStatus={gameStatus}*/}
-            {/*  game={matchedGame?.node}*/}
-            {/*  setGameStatus={setGameStatus}*/}
-            {/*/>*/}
             <BingoBoard
               setMarkedCounts={setMarkedCounts}
               boardSize={props.boardSize}
               gameStatus={gameStatus}
-              game={matchedGame}
+              game={matchedGame?.node}
               setGameStatus={setGameStatus}
+              setResultBoard={setResultBoardArray}
             />
           </BoardFrame>
           {
             showResultImage &&
             <div className="result-image" style={{marginTop: -5}}>
-              {getResult()}
+              <Image
+                src={resultImagePath}
+              />
             </div>
           }
         </BingoFrame>

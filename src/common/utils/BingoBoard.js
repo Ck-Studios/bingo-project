@@ -30,16 +30,29 @@ export default function BingoBoard(props) {
     const _tempArray = [];
     for (let i = 0; i < size; ++i) {
       _tempArray[i] = i + 1;
+
     }
 
     const _tempArray2 = _tempArray?.map((item, index) => {
       return {
         id: index + 1,
         marked: false,
+        location: {
+          x: 0,
+          y: 0,
+        }
       }
     });
 
-    const _tempArray3 = _.chunk(_tempArray2, 5);
+
+    const _tempArray3 = _.chunk(_tempArray2, props?.size || 5);
+
+    for(let i = 0; i < _tempArray3.length; ++i) {
+      for(let j = 0; j < _tempArray3.length; ++j) {
+        _tempArray3[i][j].location.x = i;
+        _tempArray3[i][j].location.y = j;
+      }
+    }
 
     updateBoard(_tempArray3);
     setLoading(false);
@@ -80,8 +93,11 @@ export default function BingoBoard(props) {
           item;
       })
     });
+    const filteredItems = _.flattenDeep(_tempBoard).filter(item => item.marked);
+    const markedCounts = filteredItems.length;
 
-    const markedCounts = _.flattenDeep(_tempBoard).filter(item => item.marked).length;
+    // props.setResultBoard(filteredItems);
+
     updateCount(markedCounts);
     updateBoard(_tempBoard);
   };
@@ -140,12 +156,8 @@ export default function BingoBoard(props) {
                             width={(boardContainerSize / row.length) - 10}
                             height={(boardContainerSize / row.length) - 10}
                           >
-                            {/*<Ring*/}
-                            {/*  src={game?.boardTheme?.ringImage}*/}
-                            {/*  contain*/}
-                            {/*/>*/}
                             <Ring
-                              src={game?.ring}
+                              src={game?.boardTheme?.ringImage}
                               contain
                             />
                           </RingFrame>

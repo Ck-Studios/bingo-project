@@ -8,7 +8,7 @@ import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
 import {PREFIX} from "client/constants";
 import {motion} from "framer-motion";
-import {SLIDE_UP} from "common/animation/AnimationVariants";
+import {CHILDREN_DELAY, SLIDE_UP_2} from "common/animation/AnimationVariants";
 import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag"
 import {LOAD_BINGO} from "modules/scheme";
@@ -17,38 +17,43 @@ import {GAMES} from "mock/data";
 
 
 function MainContainer(props) {
-  // const {loading, error, data} = useQuery(LOAD_BINGO);
-  //
-  // console.log("data", data);
-
-  // if (loading) return "loading...";
-  // if (error) return "에러";
-
-  // const {allBingos} = data;
-  // const {edges} = allBingos;
+  const {loading, error, data} = useQuery(LOAD_BINGO);
   const router = useRouter();
+
+  if (loading) return "loading...";
+  if (error) return "에러";
+
+
+  console.log("data", data);
+
+  const {allBingos} = data;
+  const {edges} = allBingos;
+
   return (
     <ContainerFrame>
       <div>
         <Header/>
-        <ContentListFrame>
+        <ContentListFrame
+          initial="closed"
+          animate="open"
+          exit="closed"
+          variants={CHILDREN_DELAY}
+        >
           {
-            GAMES.map((game, index) => (
+            edges?.map((game, index) => (
               <ItemFrame
-                initial="initial"
-                exit="exit"
-                animate="enter"
-                variants={SLIDE_UP}
+                variants={SLIDE_UP_2}
+                whileTap={{ scale: 0.95 }}
                 key={index.toString()}
                 onClick={() => router.push({
                   pathname: "/bingo",
                   query: {
-                    id: game.id,
+                    id: game?.node?.id,
                   }
                 })}
               >
                 <ContentCard
-                  game={game}
+                  game={game.node}
                 />
               </ItemFrame>
             ))
@@ -72,8 +77,9 @@ const ContainerFrame = styled.div`
 
 const ItemFrame = styled(motion.div)`
     margin-top: 30px;
+    width: 100%;
 `;
 
-const ContentListFrame = styled.div`
+const ContentListFrame = styled(motion.div)`
     padding: 0 30px;
 `;

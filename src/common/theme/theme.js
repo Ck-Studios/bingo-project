@@ -65,7 +65,7 @@ export const Image = styled.img`
     width: ${({width}) => width || '100%'};
     height: ${({height}) => height || '100%'};
     object-fit: ${({cover}) => cover ? 'cover' : 'contain'};
-    object-position: top;
+    object-position: ${({objectPosition}) => objectPosition || "top"};
 `;
 
 export const mobile = value => `${(value / 720) * 100}vw`;

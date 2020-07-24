@@ -2,58 +2,55 @@ import styled from "styled-components";
 import ContentCard from "main/components/card/ContentCard";
 import {mobile, pointColor, Image, breakPoints} from "common/theme/theme";
 import {useRouter} from "next/router";
-import {useEffect} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {loadBingos} from "modules/bingo";
 import AnimationFrame from "common/animation/AnimationFrame";
 import {SLIDE_UP} from "common/animation/AnimationVariants";
 import {GAMES} from "mock/data";
+import {useQuery} from "@apollo/react-hooks";
+import {LOAD_BINGO} from "modules/scheme";
 
 export default function RecommendedBingo(props) {
-    const router = useRouter();
-    // const dispatch = useDispatch();
-    // const games = useSelector(state => state.bingo.games);
-  const games = null;
+  const router = useRouter();
 
-    useEffect(() => {
-        // if (!games) {
-            // dispatch(loadBingos());
-        // }
-    }, []);
+  const {loading, error, data} = useQuery(LOAD_BINGO);
 
-    return (
-        <ContainerFrame>
-            <Title>
-                추천 빙고
-            </Title>
-            <ContentListFrame>
-                {
-                  GAMES?.map((game, index) => (
-                        <AnimationFrame
-                            key={index.toString()}
-                            variants={SLIDE_UP}
-                        >
-                            <ItemFrame
-                                index={index}
+  if (loading) return "loading...";
+  if (error) return "에러";
 
-                                onClick={() => router.push({
-                                    pathname: "/bingo",
-                                    query: {
-                                        id: game.id
-                                    }
-                                })}
-                            >
-                                <ContentCard
-                                    game={game}
-                                    type="short"
-                                />
-                            </ItemFrame>
-                        </AnimationFrame>
-                    ))
-                }
-            </ContentListFrame>
-        </ContainerFrame>
-    )
+  const {allBingos} = data;
+  const {edges} = allBingos;
+
+  return (
+    <ContainerFrame>
+      <Title>
+        추천 빙고
+      </Title>
+      <ContentListFrame>
+        {
+          edges?.map((game, index) => (
+            <AnimationFrame
+              key={index.toString()}
+              variants={SLIDE_UP}
+            >
+              <ItemFrame
+                index={index}
+                onClick={() => router.push({
+                  pathname: "/bingo",
+                  query: {
+                    id: game.node.id
+                  }
+                })}
+              >
+                <ContentCard
+                  game={game.node}
+                  type="short"
+                />
+              </ItemFrame>
+            </AnimationFrame>
+          ))
+        }
+      </ContentListFrame>
+    </ContainerFrame>
+  )
 }
 
 const Title = styled.p`
