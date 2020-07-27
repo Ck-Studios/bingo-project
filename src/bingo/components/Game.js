@@ -8,6 +8,8 @@ import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 import {GAMES} from "mock/data";
+import {motion} from "framer-motion";
+import Modal from "common/components/modal/Modal";
 
 
 export default function Game(props) {
@@ -23,6 +25,7 @@ export default function Game(props) {
   const [clientWidth, setClientWidth] = useState(null);
   const [markedCounts, setMarkedCounts] = useState(0);
   const [resultImagePath, setResultImagePath] = useState(null);
+  const [showShareModal, toggleShareModal] = useState(false);
 
   const [resultBoardArray, setResultBoardArray] = useState(null);
 
@@ -37,6 +40,7 @@ export default function Game(props) {
   useEffect(() => {
     console.log(_matchedGame);
     const _matchedGame = games?.find(item => item.node.id === gameId);
+    console.log(_matchedGame)
     setMatchedGame(_matchedGame);
     window.scrollTo(0, 1);
   }, [gameId, games]);
@@ -103,51 +107,118 @@ export default function Game(props) {
     // const node = document.getElementById("bingo");
 
     // alert('아직 지원하지 않는 기능입니다.');
-    const boardImage = document.createElement("img");
-    const resultImage = document.createElement("img");
-    const ring = document.createElement("img");
 
-    const _boardHeight = clientWidth * 1.25;
-    const _resultHeight = clientWidth * 0.23;
-    const canvas = `<canvas id='canvas' width='${clientWidth}' height='${_boardHeight + _resultHeight}'></canvas>`
+    const ABSOLUTE_BOARD_SIZE_X = 360;
+    const ABSOLUTE_BOARD_SIZE_Y = 450;
+    const _resultHeight = 80;
+    const canvas = `<canvas id='canvas' width='${ABSOLUTE_BOARD_SIZE_X}' height='${ABSOLUTE_BOARD_SIZE_Y + _resultHeight}'></canvas>`;
+
+
+
+    const RING_SIZE = 56;
+    const SIDE_WIDTH = 40;
+
+    const x = window.open("about:blank", "_blank");
+    x.document.open();
+    x.document.write(`<body style="margin: 0"><div id="container" ></div></body>`);
+    const boardImage = x.document.createElement("img");
+    const resultImage = x.document.createElement("img");
+    const ringImage = x.document.createElement("img");
+    const xContainer = x.document.getElementById("container");
+    let __loadedCounts = 0;
+
+    let __tmpCanvas = null;
 
     boardImage.src = matchedGame?.node?.boardTheme?.boardImage;
     resultImage.src = resultImagePath ?? "";
+    ringImage.src = matchedGame?.node?.boardTheme?.ringImage;
 
-    const x = window.open();
-    x.document.open();
+    console.log("xBody:: ", xContainer);
+    xContainer.innerHTML = canvas;
+    // x.document.write(canvas);
+    // x.document.innerHTML = canvas;
+    // xBody.innerHTML = canvas;
+    const __canvas = x.document.getElementById("canvas");
+    const _xCanvas = __canvas.getContext("2d");
+    // boardImage.onload = function () {
+    //   _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
+    // };
 
-    x.document.write(canvas);
-    const _xCanvas = x.document.getElementById("canvas").getContext("2d");
-    boardImage.onload = function() {
-      _xCanvas.drawImage(boardImage, 0, 0, clientWidth,  _boardHeight);
+    const images = [boardImage, resultImage, ringImage];
+
+    const calcLocation = (location) => {
+      const GAP = 9;
+      const positionY = 110;
+      return {
+        x: (SIDE_WIDTH / 2 + (location.x * RING_SIZE) + (location.x * GAP)) + 2,
+        y: (positionY + (location.y * RING_SIZE) + (location.y * GAP)) + 2
+      }
     };
 
-    resultImage.onload = function() {
-      _xCanvas.drawImage(resultImage, 0, _boardHeight, clientWidth, _resultHeight);
+    for(let i = 0; i < images.length; i++) {
+      images[i].onload = function() {
+        __loadedCounts++;
+        if(__loadedCounts === images.length) {
+          allLoaded();
+        }
+      }
+    }
+
+    // const checkImagesAreLoaded = () => {
+    // };
+
+    const allLoaded = () => {
+      _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
+      _xCanvas.drawImage(resultImage, 0, ABSOLUTE_BOARD_SIZE_Y, ABSOLUTE_BOARD_SIZE_X, _resultHeight);
+      for (let i = 0; i < resultBoardArray.length; ++i) {
+        const location = calcLocation(resultBoardArray[i].location);
+        _xCanvas.drawImage(ringImage, location.x, location.y, RING_SIZE, RING_SIZE)
+      }
+
+      const dataUrl = __canvas.toDataURL("image/png");
+
+      const __img = `<img src=${dataUrl} style="width: 100%; height: 100%;" crossorigin="anonymous">`;
+      xContainer.removeChild(__canvas);
+      xContainer.innerHTML = __img;
     };
+
+    // boardImage.addEventListener("load", function() {
+    //   _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
+    //
+    // });
+
+    // resultImage.onload = function () {
+    //    _xCanvas.drawImage(resultImage, 0, ABSOLUTE_BOARD_SIZE_Y, ABSOLUTE_BOARD_SIZE_X, _resultHeight);
+    // };
+
+    // ringImage.onload = function () {
+      // for (let i = 0; i < resultBoardArray.length; ++i) {
+      //   const location = calcLocation(resultBoardArray[i].location);
+      //   _xCanvas.drawImage(ringImage, location.x, location.y, RING_SIZE, RING_SIZE)
+      // }
+    // };
+
+    // const dataUrl = __canvas.toDataURL("image/png");
+    // __canvas.parentNode.removeChild(__canvas);
+    //
+    // const __img = `<img src=${dataUrl} width="360" height="450">`;
+    // xContainer.innerHTML = __img;
+    // const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
+    // __canvas.parentNode.removeChild(__canvas);
+    // x.document.write(iframe);
 
     x.document.close();
-
-    // domtoimage.toJpeg(node, {quality: 0.95})
-    //   .then((dataUrl) => {
-    //     const link = document.createElement("a");
-    //     link.href = dataUrl;
-    //
-    //     const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
-    //     const x = window.open();
-    //     x.document.open();
-    //     x.document.write(iframe);
-    //     x.document.close();
-    //   })
-    //   .catch((err) => {
-    //     console.log("저장중에 에러::", err);
-    //   })
   };
 
   return (
     <ContainerFrame>
       <ContentWrapper>
+        {
+          showShareModal &&
+            <Modal hideModal={() => toggleShareModal(false)}>
+              <Share/>
+            </Modal>
+        }
         <BingoFrame id="bingo">
           <Image
             crossorigin
@@ -159,6 +230,7 @@ export default function Game(props) {
               boardSize={props.boardSize}
               gameStatus={gameStatus}
               game={matchedGame?.node}
+              gameSize={matchedGame?.node?.boardTheme?.size}
               setGameStatus={setGameStatus}
               setResultBoard={setResultBoardArray}
             />
@@ -176,7 +248,10 @@ export default function Game(props) {
           showResultImage ?
             <ResultContent>
               <ResultButtonFrame>
-                <SaveButton onClick={() => saveImage()}>
+                <SaveButton
+                  onClick={() => saveImage()}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <IconFrame
                     size="10px"
                     marginRight="5px"
@@ -189,7 +264,10 @@ export default function Game(props) {
                     이미지로 저장
                   </ButtonText>
                 </SaveButton>
-                <RestartButton onClick={() => replayGame()}>
+                <RestartButton
+                  onClick={() => replayGame()}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <IconFrame
                     size="12.5px"
                     marginRight="5px"
@@ -203,14 +281,19 @@ export default function Game(props) {
                   </ButtonText>
                 </RestartButton>
               </ResultButtonFrame>
-              <Share/>
+              <div style={{paddingTop: 30}}>
+                <Share/>
+              </div>
             </ResultContent>
             :
             <ButtonFrame>
               <Message>
                 체크하려면 해당하는 칸을 클릭하세요.
               </Message>
-              <ResultButton onClick={() => showResults()}>
+              <ResultButton
+                onClick={() => markedCounts > 0 && showResults()}
+                whileTap={{ scale: 0.95 }}
+              >
                 <IconFrame
                   size="10px"
                   marginRight="5px"
@@ -223,7 +306,10 @@ export default function Game(props) {
                   결과보기
                 </ButtonText>
               </ResultButton>
-              <ShareButton>
+              <ShareButton
+                onClick={() => toggleShareModal(true)}
+                whileTap={{ scale: 0.95 }}
+              >
                 <IconFrame
                   size="12.5px"
                   marginRight="10px"
@@ -249,8 +335,8 @@ const BingoFrame = styled.div`
     
 `;
 
-const SaveButton = styled.div`
-    width: 52.8%;
+const SaveButton = styled(motion.div)`
+    width: 190px;
     height: 46px;
     background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
@@ -262,7 +348,7 @@ const SaveButton = styled.div`
 
 const RestartButton = styled(SaveButton)`
     display: flex;
-    width: 34.4%;
+    width: 124px;
     background: ${pointColor.white};
     
 `;
@@ -291,7 +377,7 @@ const ResultContent = styled.div`
     padding: 22px 18px 30px 18px;
 `;
 
-const ResultButton = styled.div`
+const ResultButton = styled(motion.div)`
     margin-top: 10px;
     width: 100%;
     height: 46px;

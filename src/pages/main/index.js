@@ -6,21 +6,21 @@ import {LOAD_BINGO} from "modules/scheme";
 import React from "react";
 
 export default function Index() {
-    return (
-        <ContainerLayout>
-            <AnimationFrame>
-                <MainContainer/>
-            </AnimationFrame>
-        </ContainerLayout>
-    )
+  return (
+    <ContainerLayout>
+      <AnimationFrame>
+        <MainContainer/>
+      </AnimationFrame>
+    </ContainerLayout>
+  )
 }
 
-Index.getInitialProps = async() => {
-    // const apolloClient = initializeApollo();
-    //
-    // const test = await apolloClient.query({
-    //     query: LOAD_BINGO
-    // });
-    //
-    // console.log(test);
+Index.getInitialProps = async () => {
+  // const apolloClient = initializeApollo();
+  //
+  // const test = await apolloClient.query({
+  //     query: LOAD_BINGO
+  // });
+  //
+  // console.log(test);
 };

@@ -88,7 +88,7 @@ const ContainerFrame = styled.div`
     justify-content: space-between;
     position: ${({fixed}) => (fixed ? "sticky" : "relative")};
     top: 0;
-    z-index: 100;
+    z-index: 10;
     background: ${({background}) => background || pointColor.white};
     border-bottom: ${({withoutBorder}) => (withoutBorder ? 0 : 1)}px solid ${pointColor.gray1};
 `;

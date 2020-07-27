@@ -111,7 +111,6 @@ const SNSIconFrame = styled.img`
 `;
 
 const Container = styled.div`
-    padding-top: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;

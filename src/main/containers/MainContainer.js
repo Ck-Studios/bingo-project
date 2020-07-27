@@ -81,5 +81,5 @@ const ItemFrame = styled(motion.div)`
 `;
 
 const ContentListFrame = styled(motion.div)`
-    padding: 0 30px;
+    padding: 0 18px;
 `;

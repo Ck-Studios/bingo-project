@@ -37,9 +37,9 @@ export default function App({Component, pageProps, store, router, status}) {
         {`
         @font-face { font-family: 'NanumSquareRound'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff'); font-weight: normal; font-style: normal; }
             body {
-                margin: 0 auto;
-                max-width: 540px !important;
-                height: 100%;
+                width: 100%;
+                min-height: 100%;
+                margin: 0;
             }
             
             html {
@@ -49,7 +49,9 @@ export default function App({Component, pageProps, store, router, status}) {
             }
             
             #__next {
+              max-width: 540px !important;
               height: 100%;
+              margin: 0 auto;
             }
             
             * { font-family: 'Spoqa Han Sans', 'Spoqa Han Sans KR', 'Sans-serif'; }

@@ -4,11 +4,11 @@ import AnimationFrame from "common/animation/AnimationFrame";
 
 
 export default function Index() {
-    return (
-        <ContainerLayout>
-            <AnimationFrame>
-                <BingoContainer/>
-            </AnimationFrame>
-        </ContainerLayout>
-    )
+  return (
+    <ContainerLayout>
+      <AnimationFrame>
+        <BingoContainer/>
+      </AnimationFrame>
+    </ContainerLayout>
+  )
 }

@@ -26,7 +26,7 @@ export default function BingoBoard(props) {
 
 
   const initialize = () => {
-    const size = props.size ? Math.pow(props.size) : 25;
+    const size = props.gameSize ? Math.pow(props.gameSize) : 25;
     const _tempArray = [];
     for (let i = 0; i < size; ++i) {
       _tempArray[i] = i + 1;
@@ -45,12 +45,12 @@ export default function BingoBoard(props) {
     });
 
 
-    const _tempArray3 = _.chunk(_tempArray2, props?.size || 5);
+    const _tempArray3 = _.chunk(_tempArray2, props?.gameSize || 5);
 
     for(let i = 0; i < _tempArray3.length; ++i) {
       for(let j = 0; j < _tempArray3.length; ++j) {
-        _tempArray3[i][j].location.x = i;
-        _tempArray3[i][j].location.y = j;
+        _tempArray3[i][j].location.x = j;
+        _tempArray3[i][j].location.y = i;
       }
     }
 
@@ -69,7 +69,7 @@ export default function BingoBoard(props) {
 
     if(window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
-      const _boardContainerSize = Math.round(_clientWidth * 0.86) + 15;
+      const _boardContainerSize = (_clientWidth * 0.89);
 
       setClientWidth(_clientWidth);
       setBoardContainerSize(_boardContainerSize)
@@ -100,6 +100,8 @@ export default function BingoBoard(props) {
 
     updateCount(markedCounts);
     updateBoard(_tempBoard);
+    console.log(filteredItems);
+    props.setResultBoard(filteredItems);
   };
 
 
@@ -116,6 +118,7 @@ export default function BingoBoard(props) {
             <RowFrame
               key={rowIndex.toString()}
               boardSize={boardContainerSize}
+              gameSize={props?.gameSize}
               index={rowIndex}
             >
               {
@@ -153,8 +156,7 @@ export default function BingoBoard(props) {
                         item.marked ?
                           <RingFrame
                             className="ring"
-                            width={(boardContainerSize / row.length) - 10}
-                            height={(boardContainerSize / row.length) - 10}
+                            size={(boardContainerSize / row.length) - 6}
                           >
                             <Ring
                               src={game?.boardTheme?.ringImage}
@@ -180,13 +182,8 @@ const AnimationFrame = styled.div`
 `;
 
 const RingFrame = styled.div`
-    width: ${({width}) => width}px;
-    height: ${({height}) => height}px;
-    
-    @media ${breakPoints.web} {
-        width: ${({width}) => width - 30}px;
-        height: ${({height}) => height - 30}px;
-    }
+    width: ${({size}) => size}px;
+    height: ${({size}) => size}px;
 `;
 
 const Ring = styled(Image)`
@@ -196,20 +193,23 @@ const Ring = styled(Image)`
 
 const BingoItem = styled.div`
     box-sizing: border-box;
-    width: ${props => Math.round((props.boardSize / props.columnCount)) - 2}px;
-    height: ${props => Math.round((props.boardSize / props.columnCount)) - 2}px;
+    width: ${props => ((props.boardSize / props.columnCount) - 5)}px;
+    height: ${props =>((props.boardSize / props.columnCount) - 5)}px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: transparent;
     position: relative;
-    margin-left: ${({index, boardSize}) => index > 0 ? Math.round(boardSize * 0.00689) : 0}px;
+    margin-left: ${({index, boardSize}) => index > 0 ? 5 : 0}px;
 `;
 
 const RowFrame = styled.div`
     display: flex;
+    height: ${({boardSize, gameSize}) => (boardSize / gameSize) - 4.5}px;
+    margin-top: ${({index, boardSize}) => index > 0 ? 5 : 0}px;
     justify-content: center;
-    margin-top: ${({index, boardSize}) => index > 0 ? Math.round(boardSize * 0.0068) : 0}px;
+    align-items: center;
+    padding: 0 1px;
     
 `;
 
