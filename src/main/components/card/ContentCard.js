@@ -20,14 +20,14 @@ export default function ContentCard(props) {
 
   return props.type === "short" ?
     <ShortContainerFrame>
-      <ImageFrame type="short">
+      <ImageFrame type="short" onClick={props.gameStart}>
         <Image
           cover
           src={game?.boardTheme?.boardImage}
         />
       </ImageFrame>
       <ContentFrame type="short">
-        <Title style={{fontSize: 20}}>
+        <Title style={{fontSize: 20}} onClick={props.gameStart}>
           {game.title}
         </Title>
         <Image
@@ -41,6 +41,7 @@ export default function ContentCard(props) {
     :
     <ContainerFrame>
       <ImageFrame
+        onClick={props.gameStart}
         width={clientWidth}
       >
         <Image
@@ -49,7 +50,7 @@ export default function ContentCard(props) {
         />
       </ImageFrame>
       <ContentFrame>
-        <Title>
+        <Title onClick={props.gameStart}>
           {game?.title}
         </Title>
         <ButtonFrame>
@@ -69,6 +70,7 @@ export default function ContentCard(props) {
           </StartButton>
           <ShareButton
             whileTap={{ scale: 0.95 }}
+            onClick={() => props.showShareModal()}
           >
             <IconFrame
               marginRight="5px"
@@ -98,6 +100,10 @@ const StartButton = styled(motion.div)`
     align-items: center;
     border-radius: 40px;
     box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);
+    
+    ${breakPoints.web} {
+      height: 54px;    
+    }
 `;
 
 const ShareButton = styled(StartButton)`
@@ -106,6 +112,11 @@ const ShareButton = styled(StartButton)`
     width: 46px;
     height: 46px;
     border-radius: 50%;
+    
+    ${breakPoints.web} {
+      width: 54px;
+      height: 54px;
+    }
 `;
 
 const ButtonFrame = styled.div`
@@ -118,6 +129,10 @@ const Title = styled.p`
     font-size: 22px;
     font-weight: bold;
     color: ${pointColor.gray7};
+    
+    ${breakPoints.web} {
+      font-size: 28px;    
+    }
 `;
 
 const ContentFrame = styled.div`
@@ -125,13 +140,23 @@ const ContentFrame = styled.div`
     padding: 18px 16px 22px 16px;
     display: ${({type}) => type === "short" ? "flex" : "block"};
     justify-content: ${({type}) => type === "short" ? "space-between" : "flex-start"};
-    align-items: ${({type}) => type === "short" ? "center" : "flex-start"}; 
+    align-items: ${({type}) => type === "short" ? "center" : "flex-start"};
+    
+    ${breakPoints.web} {
+      padding: ${({type}) => type === "short" ? "24px 30px 21px" : "26px 30px 32px"};
+    } 
 `;
 
 const ImageFrame = styled.div`
-    width: ${({width}) => width ? (width - 30) + "px" : 100 + "%"};
+    width: ${({width}) => width ? (width - 30) + "px" : "100%"};
     height: ${({width, type}) => type === "short" ? "250px": width ? ((width - 60) * 0.75) + "px" : "100%"};
     overflow: hidden;
+    
+    ${breakPoints.web} {
+      width: ${({width}) => width ? (width - 54) + "px" : "100%"};
+      height: ${({width, type}) => type === "short" ? "375px": width ? ((width - 40) * 0.75) + "px" : "100%"};
+    }
+    
 `;
 
 const ContainerFrame = styled.div`

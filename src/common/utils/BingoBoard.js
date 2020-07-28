@@ -22,18 +22,12 @@ export default function BingoBoard(props) {
   const [boardContainerSize, setBoardContainerSize] = useState(null);
   const {game} = props;
 
-  // const gameObjects = useSelector(state => state.bingo.gameObjects);
-
-
   const initialize = () => {
-    const size = props.gameSize ? Math.pow(props.gameSize) : 25;
-    const _tempArray = [];
-    for (let i = 0; i < size; ++i) {
-      _tempArray[i] = i + 1;
+    const size = props.gameSize;
+    const boardSize = Math.pow(size, 2);
 
-    }
-
-    const _tempArray2 = _tempArray?.map((item, index) => {
+    const _tempArray = _.fill(Array(boardSize), 0);
+    const _tempArray2 = _tempArray.map((item, index) => {
       return {
         id: index + 1,
         marked: false,
@@ -44,43 +38,40 @@ export default function BingoBoard(props) {
       }
     });
 
+    const _tempArray3 = _.chunk(_tempArray2, size).map((i, indexI) => {
+      i.map((j, indexJ) => {
+        i[indexJ].location.x = indexJ;
+        i[indexJ].location.y = indexI;
+        return j;
+      });
 
-    const _tempArray3 = _.chunk(_tempArray2, props?.gameSize || 5);
-
-    for(let i = 0; i < _tempArray3.length; ++i) {
-      for(let j = 0; j < _tempArray3.length; ++j) {
-        _tempArray3[i][j].location.x = j;
-        _tempArray3[i][j].location.y = i;
-      }
-    }
+      return i;
+    });
 
     updateBoard(_tempArray3);
     setLoading(false);
   };
 
   useEffect(() => {
-    // dispatch(commitCounts(count));
     props.setMarkedCounts(count);
   }, [count]);
 
-
   useEffect(() => {
-    initialize();
-
-    if(window) {
+    if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
       const _boardContainerSize = (_clientWidth * 0.89);
 
       setClientWidth(_clientWidth);
-      setBoardContainerSize(_boardContainerSize)
+      setBoardContainerSize(_boardContainerSize);
+      initialize();
     }
   }, []);
 
   useEffect(() => {
     if (props.gameStatus === "reset") {
-      initialize();
       updateCount(0);
       props.setGameStatus("running");
+      initialize();
     }
   }, [props.gameStatus]);
 
@@ -100,10 +91,8 @@ export default function BingoBoard(props) {
 
     updateCount(markedCounts);
     updateBoard(_tempBoard);
-    console.log(filteredItems);
     props.setResultBoard(filteredItems);
   };
-
 
   return isLoading ?
     null
@@ -125,7 +114,7 @@ export default function BingoBoard(props) {
                 row?.map((item, itemIndex) => (
                   <BingoItem
                     className="item"
-                    onClick={props.gameStatus === "stop" ? null : () => markItem(item.id)}
+                    onClick={props.gameStatus === "running" ? () => markItem(item.id) : null}
                     key={itemIndex.toString()}
                     boardSize={boardContainerSize}
                     columnCount={row.length}
@@ -194,7 +183,7 @@ const Ring = styled(Image)`
 const BingoItem = styled.div`
     box-sizing: border-box;
     width: ${props => ((props.boardSize / props.columnCount) - 5)}px;
-    height: ${props =>((props.boardSize / props.columnCount) - 5)}px;
+    height: ${props => ((props.boardSize / props.columnCount) - 5)}px;
     display: flex;
     justify-content: center;
     align-items: center;

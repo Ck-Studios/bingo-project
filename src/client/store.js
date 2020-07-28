@@ -1,26 +1,38 @@
-import { createStore, applyMiddleware } from "redux";
-import createSagaMiddleware from "redux-saga";
+import {useMemo} from "react";
+import {createStore, applyMiddleware} from "redux";
 import reducers from "client/reducers";
-import rootSaga from "client/rootSaga";
+import { composeWithDevTools } from 'redux-devtools-extension'
 
-const bindMiddleware = middleware => {
-    if (process.env.NODE_ENV !== 'production') {
-        const { composeWithDevTools } = require('redux-devtools-extension');
-        return composeWithDevTools(applyMiddleware(...middleware));
-    }
-    return applyMiddleware(...middleware);
+let store;
+const initialState = {};
+
+function initStore(preloadedState = initialState) {
+  return createStore(
+    reducers,
+    preloadedState,
+    composeWithDevTools(applyMiddleware())
+  )
+}
+
+export const initializeStore = (preloadedState) => {
+  let _store = store ?? initStore(preloadedState);
+
+  if (preloadedState && store) {
+    _store = initStore({
+      ...store.getState(),
+      ...preloadedState,
+    });
+
+    store = undefined;
+  }
+
+  if (typeof window === 'undefined') return _store;
+  if (!store) store = _store;
+
+  return _store;
 };
 
-export default function configureStore(preloadedState={}, { isServer, req = null }) {
-    const sagaMiddleware = createSagaMiddleware();
-
-    const store = createStore(
-        reducers,
-        preloadedState,
-        bindMiddleware([sagaMiddleware])
-    );
-
-    store.sagaTask = sagaMiddleware.run(rootSaga);
-
-    return store;
+export function useStore(initialState) {
+  const store = useMemo(() => initializeStore(initialState), [initialState]);
+  return store;
 }

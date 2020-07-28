@@ -57,8 +57,8 @@ export const pointColor = {
 };
 
 export const breakPoints = {
-    web: "screen and (min-width: 540px)",
-    mobile: "screen and (max-width: 539px)"
+    web: "@media screen and (min-width: 540px)",
+    mobile: "@media screen and (max-width: 539px)"
 };
 
 export const Image = styled.img`

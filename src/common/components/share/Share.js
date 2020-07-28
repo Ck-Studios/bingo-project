@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import {mobile, pointColor} from "../../theme/theme";
+import {breakPoints, mobile, pointColor} from "../../theme/theme";
 import {SNS_LIST} from "../../scheme/common";
 import Link from "next/link";
 
 export default function Share(props) {
-  const sendKakao = async() => {
+  const sendKakao = async () => {
     console.log("실행됨?");
     const _flag = await Kakao.isInitialized();
-    if(_flag) {
+    if (_flag) {
       await Kakao.Link.sendDefault({
         objectType: "feed",
         content: {
@@ -40,10 +40,10 @@ export default function Share(props) {
             },
           },
         ],
-        success: function(response) {
+        success: function (response) {
           console.log("success", response);
         },
-        fail: function(error) {
+        fail: function (error) {
           console.log("error", error);
         }
       });
@@ -51,26 +51,35 @@ export default function Share(props) {
     }
   };
 
+  const clickLink = (link) => {
+    window.open(link)
+  };
+
+
 
   return (
     <Container>
       <Title>빙고를 친구에게 공유하세요!</Title>
+      {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button"*/}
+      {/*     data-size="large"><a target="_blank"*/}
+      {/*                          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"*/}
+      {/*                          className="fb-xfbml-parse-ignore">공유하기</a></div>*/}
       <RowFrame>
         {
           SNS_LIST.map((sns, index) => (
-              <SNSFrame
-                key={index.toString()}
-                index={index}
-                onClick={() => sendKakao()}
-              >
-                <SNSIconFrame
-                  background={sns.background}
-                  src={sns.image}
-                />
-                <SNSTitle>
-                  {sns.sns}
-                </SNSTitle>
-              </SNSFrame>
+            <SNSFrame
+              key={index.toString()}
+              index={index}
+              onClick={sns.link ? () => clickLink(sns.link) : () => sendKakao()}
+            >
+              <SNSIconFrame
+                background={sns.background}
+                src={sns.image}
+              />
+              <SNSTitle>
+                {sns.sns}
+              </SNSTitle>
+            </SNSFrame>
           ))
         }
       </RowFrame>
@@ -81,12 +90,19 @@ export default function Share(props) {
 const SNSTitle = styled.p`
     font-size: 12px;
     color: ${pointColor.gray3};
+    ${breakPoints.web} {
+      margin-top: 12px;
+      font-size: 14px;
+    }
 `;
 
 const Title = styled.p`
     font-size: 16px;
     font-weight: 700;
     color: ${pointColor.mainPurple};
+    ${breakPoints.web} {
+      font-size: 18px;
+    }
 `;
 
 const RowFrame = styled.div`
@@ -101,6 +117,10 @@ const SNSFrame = styled.a`
     flex-direction: column;
     align-items: center;
     margin-left: ${({index}) => index > 0 ? 32 : 0}px;
+    ${breakPoints.web} {
+      font-size: 14px;
+      margin-left: ${({index}) => index > 0 ? 34 : 0}px;
+    }   
 `;
 
 const SNSIconFrame = styled.img`
@@ -108,13 +128,17 @@ const SNSIconFrame = styled.img`
     height: 46px;
     border-radius: 50%;
     background: ${({background}) => background || "transparent"};
+    
+    ${breakPoints.web} {
+      width: 54px;
+      height: 54px;
+    }
 `;
 
 const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    
+    width: 100%;    
 `;
 

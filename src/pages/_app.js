@@ -5,13 +5,15 @@ import "react-responsive-modal/styles.css";
 import {AnimatePresence} from "framer-motion";
 import {ApolloProvider} from "@apollo/react-hooks";
 import {useApolloClient} from "@apollo/react-hooks";
-import configureStore from "client/store";
+import {useStore} from "client/store";
+import {Provider} from "react-redux";
 import {useApollo} from "client/client";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-export default function App({Component, pageProps, store, router, status}) {
+export default function App({Component, pageProps, router, status}) {
   const apolloClient = useApollo(pageProps.initialApolloState);
+  const store = useStore(pageProps.initialReduxState);
 
   return (
     <>
@@ -20,19 +22,24 @@ export default function App({Component, pageProps, store, router, status}) {
         <script type="text/javascript" src="/static/scripts/kakao_sdk.js"/>
         <script type="text/javascript">
           Kakao.init('e81eae6e644074fa4932b6658d4c5883');
-
         </script>
       </Head>
-      <ApolloProvider client={apolloClient}>
-        <>
-          <AnimatePresence exitBeforeEnter>
-            <Component
-              {...pageProps}
-              key={router.route}
-            />
-          </AnimatePresence>
-        </>
-      </ApolloProvider>
+      <>
+        <div id="fb-root"></div>
+        <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v7.0"
+                nonce="13WcN22r">
+        </script>
+        <Provider store={store}>
+          <ApolloProvider client={apolloClient}>
+            <AnimatePresence exitBeforeEnter>
+              <Component
+                {...pageProps}
+                key={router.route}
+              />
+            </AnimatePresence>
+          </ApolloProvider>
+        </Provider>
+      </>
       <style global jsx>
         {`
         @font-face { font-family: 'NanumSquareRound'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff'); font-weight: normal; font-style: normal; }
@@ -40,6 +47,7 @@ export default function App({Component, pageProps, store, router, status}) {
                 width: 100%;
                 min-height: 100%;
                 margin: 0;
+                background: #f5f5f5;
             }
             
             html {

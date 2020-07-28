@@ -56,8 +56,11 @@ export default function RecommendedBingo(props) {
 const Title = styled.p`
     font-size: 22px;
     color: ${pointColor.gray7};
-    font-weight: 700;
+    font-weight: 800;
     
+    ${breakPoints.web} {
+      font-size: 28px;
+    }
 `;
 
 const ItemFrame = styled.div`
@@ -69,8 +72,6 @@ const ContentListFrame = styled.div`
 `;
 
 const ContainerFrame = styled.div`
-    margin-top: 30px;
-    padding: 0 18px;
-    
-   
+    padding: 30px 18px 0 18px;
+    background: ${pointColor.white};
 `;

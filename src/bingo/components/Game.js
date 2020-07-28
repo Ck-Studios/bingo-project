@@ -1,21 +1,19 @@
 import {useState, useEffect} from "react";
-import {mobile, pointColor, Image, breakPoints, IconFrame, desktop} from "common/theme/theme";
+import { pointColor, Image, breakPoints, IconFrame, } from "common/theme/theme";
 import styled from "styled-components";
 import BingoBoard from "common/utils/BingoBoard";
 import Share from "common/components/share/Share";
 import {useRouter} from "next/router";
 import {useQuery} from "@apollo/react-hooks";
-import {LOAD_BINGO, LOAD_LOCAL_BINGO} from "modules/scheme";
+import {LOAD_BINGO} from "modules/scheme";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
-import {GAMES} from "mock/data";
 import {motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
-
 
 export default function Game(props) {
   const router = useRouter();
   const gameId = router.query.id;
-  const {data} = useQuery(LOAD_BINGO);
+  const {loading, error, data} = useQuery(LOAD_BINGO);
 
   const games = data?.allBingos?.edges;
 
@@ -36,53 +34,15 @@ export default function Game(props) {
     }
   }, []);
 
-
   useEffect(() => {
-    console.log(_matchedGame);
     const _matchedGame = games?.find(item => item.node.id === gameId);
-    console.log(_matchedGame)
     setMatchedGame(_matchedGame);
     window.scrollTo(0, 1);
   }, [gameId, games]);
 
-  // useEffect(() => {
-  //   const _matchedGame = GAMES?.find(item => item.id === parseInt(gameId));
-  //   console.log("matched game::: ", _matchedGame);
-  //   setMatchedGame(_matchedGame);
-  //   window.scrollTo(0, 1);
-  // }, [gameId]);
-
   const showResults = () => {
     toggleResultImage(true);
     setGameStatus("stop");
-  };
-
-  const getResult = () => {
-    if (markedCounts <= 6) {
-      return (
-        <Image
-          src={matchedGame?.node?.bingoResults[0]?.image}
-        />
-      )
-    } else if (markedCounts >= 7 && markedCounts <= 13) {
-      return (
-        <Image
-          src={matchedGame?.node?.bingoResults[1]?.image}
-        />
-      )
-    } else if (markedCounts >= 14 && markedCounts <= 19) {
-      return (
-        <Image
-          src={matchedGame?.node?.bingoResults[2]?.image}
-        />
-      )
-    } else if (markedCounts >= 20 && markedCounts <= 25) {
-      return (
-        <Image
-          src={matchedGame?.node?.bingoResults[3]?.image}
-        />
-      )
-    }
   };
 
   useEffect(() => {
@@ -99,26 +59,20 @@ export default function Game(props) {
 
   const replayGame = () => {
     toggleResultImage(false);
-    // dispatch(resetCounts());
     setGameStatus("reset");
   };
 
   const saveImage = () => {
-    // const node = document.getElementById("bingo");
-
-    // alert('아직 지원하지 않는 기능입니다.');
-
     const ABSOLUTE_BOARD_SIZE_X = 360;
     const ABSOLUTE_BOARD_SIZE_Y = 450;
     const _resultHeight = 80;
     const canvas = `<canvas id='canvas' width='${ABSOLUTE_BOARD_SIZE_X}' height='${ABSOLUTE_BOARD_SIZE_Y + _resultHeight}'></canvas>`;
 
 
-
     const RING_SIZE = 56;
     const SIDE_WIDTH = 40;
 
-    const x = window.open("about:blank", "_blank");
+    const x = window.open("", "_blank");
     x.document.open();
     x.document.write(`<body style="margin: 0"><div id="container" ></div></body>`);
     const boardImage = x.document.createElement("img");
@@ -127,22 +81,18 @@ export default function Game(props) {
     const xContainer = x.document.getElementById("container");
     let __loadedCounts = 0;
 
-    let __tmpCanvas = null;
+    boardImage.crossOrigin = "anonymous";
+    resultImage.crossOrigin = "anonymous";
+    ringImage.crossOrigin = "anonymous";
 
-    boardImage.src = matchedGame?.node?.boardTheme?.boardImage;
-    resultImage.src = resultImagePath ?? "";
-    ringImage.src = matchedGame?.node?.boardTheme?.ringImage;
+    boardImage.src = matchedGame?.node?.boardTheme?.boardImage + "?" + performance.now();
+    resultImage.src = resultImagePath + "?" + performance.now();
+    ringImage.src = matchedGame?.node?.boardTheme?.ringImage + "?" + performance.now();
 
-    console.log("xBody:: ", xContainer);
-    xContainer.innerHTML = canvas;
     // x.document.write(canvas);
-    // x.document.innerHTML = canvas;
-    // xBody.innerHTML = canvas;
+    xContainer.innerHTML = canvas;
     const __canvas = x.document.getElementById("canvas");
     const _xCanvas = __canvas.getContext("2d");
-    // boardImage.onload = function () {
-    //   _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
-    // };
 
     const images = [boardImage, resultImage, ringImage];
 
@@ -155,69 +105,61 @@ export default function Game(props) {
       }
     };
 
-    for(let i = 0; i < images.length; i++) {
-      images[i].onload = function() {
+    for (let i = 0; i < images.length; i++) {
+      images[i].onload = function () {
         __loadedCounts++;
-        if(__loadedCounts === images.length) {
+        if (__loadedCounts === images.length) {
           allLoaded();
         }
       }
     }
 
-    // const checkImagesAreLoaded = () => {
-    // };
-
     const allLoaded = () => {
       _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
       _xCanvas.drawImage(resultImage, 0, ABSOLUTE_BOARD_SIZE_Y, ABSOLUTE_BOARD_SIZE_X, _resultHeight);
+
       for (let i = 0; i < resultBoardArray.length; ++i) {
         const location = calcLocation(resultBoardArray[i].location);
         _xCanvas.drawImage(ringImage, location.x, location.y, RING_SIZE, RING_SIZE)
       }
 
-      const dataUrl = __canvas.toDataURL("image/png");
+      let dataUrl = __canvas.toDataURL("image/png");
 
-      const __img = `<img src=${dataUrl} style="width: 100%; height: 100%;" crossorigin="anonymous">`;
-      xContainer.removeChild(__canvas);
-      xContainer.innerHTML = __img;
+      dataUrl = dataUrl.replace("image/png", 'image/octet-stream');
+      dataUrl = dataUrl.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
+
+      const __img = `<img src="" width="100%" height="100%" id="results" style="object-fit: contain;"/>`;
+      const __desktopImg = `<a id="link"><img src="" width="100%" height="100%" id="results" style="object-fit: contain;"/></a>`;
+      const isDesktop = window.innerWidth > 540;
+
+      xContainer.innerHTML = isDesktop ? __desktopImg : __img;
+
+      const _resultImage = x.document.getElementById("results");
+      if (isDesktop) {
+        const _link = x.document.getElementById("link");
+        _link.href = dataUrl;
+        _link.download = "빙고링.png";
+      }
+      _resultImage.src = dataUrl;
+
+      _resultImage.onload = function () {
+        x.document.close();
+      };
     };
 
-    // boardImage.addEventListener("load", function() {
-    //   _xCanvas.drawImage(boardImage, 0, 0, ABSOLUTE_BOARD_SIZE_X, ABSOLUTE_BOARD_SIZE_Y);
-    //
-    // });
-
-    // resultImage.onload = function () {
-    //    _xCanvas.drawImage(resultImage, 0, ABSOLUTE_BOARD_SIZE_Y, ABSOLUTE_BOARD_SIZE_X, _resultHeight);
-    // };
-
-    // ringImage.onload = function () {
-      // for (let i = 0; i < resultBoardArray.length; ++i) {
-      //   const location = calcLocation(resultBoardArray[i].location);
-      //   _xCanvas.drawImage(ringImage, location.x, location.y, RING_SIZE, RING_SIZE)
-      // }
-    // };
-
-    // const dataUrl = __canvas.toDataURL("image/png");
-    // __canvas.parentNode.removeChild(__canvas);
-    //
-    // const __img = `<img src=${dataUrl} width="360" height="450">`;
-    // xContainer.innerHTML = __img;
-    // const iframe = "<iframe style='border: none' width='100%' height='100%' src='" + dataUrl + "'></iframe>"
-    // __canvas.parentNode.removeChild(__canvas);
-    // x.document.write(iframe);
-
-    x.document.close();
   };
+
+  if (error) return "에러";
+  if (!matchedGame) return "loading...";
 
   return (
     <ContainerFrame>
       <ContentWrapper>
         {
           showShareModal &&
-            <Modal hideModal={() => toggleShareModal(false)}>
-              <Share/>
-            </Modal>
+          <Modal hideModal={() => toggleShareModal(false)}>
+            <Share/>
+          </Modal>
         }
         <BingoFrame id="bingo">
           <Image
@@ -250,32 +192,26 @@ export default function Game(props) {
               <ResultButtonFrame>
                 <SaveButton
                   onClick={() => saveImage()}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{scale: 0.95}}
                 >
-                  <IconFrame
-                    size="10px"
-                    marginRight="5px"
-                  >
+                  <SaveIcon>
                     <Image
                       src={`/static/images/icons/download.svg`}
                     />
-                  </IconFrame>
+                  </SaveIcon>
                   <ButtonText>
                     이미지로 저장
                   </ButtonText>
                 </SaveButton>
                 <RestartButton
                   onClick={() => replayGame()}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{scale: 0.95}}
                 >
-                  <IconFrame
-                    size="12.5px"
-                    marginRight="5px"
-                  >
+                  <PlayIcon>
                     <Image
                       src={`/static/images/icons/play2.svg`}
                     />
-                  </IconFrame>
+                  </PlayIcon>
                   <ButtonText color={pointColor.purpleDark}>
                     다시하기
                   </ButtonText>
@@ -292,32 +228,26 @@ export default function Game(props) {
               </Message>
               <ResultButton
                 onClick={() => markedCounts > 0 && showResults()}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{scale: 0.95}}
               >
-                <IconFrame
-                  size="10px"
-                  marginRight="5px"
-                >
+                <PlayIcon>
                   <Image
                     src={`/static/images/icons/play.svg`}
                   />
-                </IconFrame>
+                </PlayIcon>
                 <ButtonText>
                   결과보기
                 </ButtonText>
               </ResultButton>
               <ShareButton
                 onClick={() => toggleShareModal(true)}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{scale: 0.95}}
               >
-                <IconFrame
-                  size="12.5px"
-                  marginRight="10px"
-                >
+                <ShareIcon>
                   <Image
                     src={`/static/images/icons/share.svg`}
                   />
-                </IconFrame>
+                </ShareIcon>
                 <ButtonText color={pointColor.purpleDark}>
                   공유하기
                 </ButtonText>
@@ -328,9 +258,31 @@ export default function Game(props) {
     </ContainerFrame>
   )
 }
-const ContentWrapper = styled.div`
-    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.23);
+
+const SaveIcon = styled.div`
+  margin-right: 5px;
+  width: 12.5px;
+  height: 12.5px;
+  
+  ${breakPoints.web} {
+    width: 15px;
+    height: 15px;
+    margin-right: 8px;
+    margin-bottom: 5px;
+  }
 `;
+
+const PlayIcon = styled(SaveIcon)`
+`;
+
+const ShareIcon = styled(PlayIcon)`
+
+`;
+
+
+const ContentWrapper = styled.div`
+`;
+
 const BingoFrame = styled.div`
     
 `;
@@ -343,14 +295,21 @@ const SaveButton = styled(motion.div)`
     justify-content: center;
     align-items: center;
     border-radius: 23px;
-     box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);   
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);
+    ${breakPoints.web} {
+      width: 296px;
+      height: 54px;
+      border-radius: 35px;
+    }   
 `;
 
 const RestartButton = styled(SaveButton)`
     display: flex;
     width: 124px;
     background: ${pointColor.white};
-    
+    ${breakPoints.web} {
+      width: 170px;
+    }
 `;
 
 const Message = styled.p`
@@ -363,11 +322,11 @@ const Message = styled.p`
 
 const ButtonText = styled.p`
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
     color: ${({color}) => color || pointColor.white};
     
-    @media ${breakPoints.web} {
-        font-size: 18px;
+    ${breakPoints.web} {
+        font-size: 20px;
     }
 `;
 
@@ -387,6 +346,9 @@ const ResultButton = styled(motion.div)`
     align-items: center;
     border-radius: 25px;
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.2);
+    ${breakPoints.web} {
+      height: 54px;
+    }
 `;
 
 const ShareButton = styled(ResultButton)`
@@ -401,13 +363,15 @@ const ButtonFrame = styled.div`
     background: ${pointColor.white};
     padding: 5px 30px 35px 30px;
     border-bottom: 1px solid ${pointColor.gray1};
+    ${breakPoints.web} {
+      padding: 20px 90px 50px;
+    }
 `;
 
 const ResultButtonFrame = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
 `;
 
 const BoardFrame = styled.div`

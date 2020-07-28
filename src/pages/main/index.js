@@ -4,6 +4,7 @@ import AnimationFrame from "common/animation/AnimationFrame";
 import {initializeApollo} from "client/client";
 import {LOAD_BINGO} from "modules/scheme";
 import React from "react";
+import {initializeStore} from "client/store";
 
 export default function Index() {
   return (
@@ -16,8 +17,13 @@ export default function Index() {
 }
 
 Index.getInitialProps = async () => {
-  // const apolloClient = initializeApollo();
-  //
+  const reduxStore = initializeStore();
+  const apolloClient = initializeApollo();
+
+  return {
+    initialReduxState: reduxStore.getState(),
+    initialApolloState: apolloClient.cache.extract()
+  }
   // const test = await apolloClient.query({
   //     query: LOAD_BINGO
   // });

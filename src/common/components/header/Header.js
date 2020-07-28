@@ -102,4 +102,15 @@ const Wrapper = styled.div`
                 object-fit: contain;
             }
         }
+        
+        ${breakPoints.web} {
+               .header-container-frame {
+                  height: 64px;
+                  .logo {
+                     width: 75px;
+                     height: 33px;
+                     object-fit: contain;
+                  }
+               } 
+        }
 `;
