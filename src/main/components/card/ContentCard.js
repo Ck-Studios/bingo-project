@@ -27,13 +27,11 @@ export default function ContentCard(props) {
         />
       </ImageFrame>
       <ContentFrame type="short">
-        <Title style={{fontSize: 20}} onClick={props.gameStart} type="short">
+        <Title onClick={props.gameStart} type="short">
           {game.title}
         </Title>
-        <Image
+        <NextIcon
           className="next-icon"
-          width="14px"
-          height="14px"
           src={`/static/images/icons/next.svg`}
         />
       </ContentFrame>
@@ -81,6 +79,15 @@ export default function ContentCard(props) {
       </ContentFrame>
     </ContainerFrame>
 }
+
+const NextIcon = styled.img`
+  width: 14px;
+  height: 14px;
+  ${breakPoints.web} {
+    width: 21px;
+    height: 21px;
+  }
+`;
 
 const PlayIcon = styled.div`
   width: 14px;
@@ -155,10 +162,12 @@ const Title = styled.p`
     color: ${pointColor.gray7};
     height: ${({type}) => type === "short" ? "auto" : "60px"};
     margin-right: ${({type}) => type === "short" && "16px"};
+    word-break: break-all;
     
     ${breakPoints.web} {
-      margin: -6.5px 0;
-      font-size: 28px;
+      width: 380px;
+      margin: ${({type}) => type !== "short" && "-6.5px 0"};
+      font-size: ${({type}) => type === "short" ? "26px" : "28px"};
       height: 80px;    
       height: ${({type}) => type === "short" ? "auto" : "80px"};    
     }
@@ -173,7 +182,7 @@ const ContentFrame = styled.div`
     
     ${breakPoints.web} {
       padding: ${({type}) => type === "short" ? "24px 30px 21px" : "26px 30px 32px"};
-      height: 205px;
+      height: ${({type}) => type !== "short" ? "205px" : "auto"};
     } 
 `;
 
