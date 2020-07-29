@@ -2,13 +2,14 @@ import styled from "styled-components";
 import {breakPoints, mobile, pointColor} from "../../theme/theme";
 import {SNS_LIST} from "../../scheme/common";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
+import Head from "next/head"
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {BASE_URL} from "client/constants";
 
 export default function Share(props) {
   console.log("props.game ::: ", props.game);
-  const url = window?.location?.href;
+  const url = window?.location?.href + "bingo?id=" + props?.game?.id;
   const sendKakao = async () => {
     console.log("실행됨?");
     const _flag = await Kakao.isInitialized();
@@ -49,23 +50,53 @@ export default function Share(props) {
     }
   };
 
+  const FaceBookMetaData = () => {
+    return (
+      <Head>
+        <meta property="og:url" content={`${BASE_URL + "/" + props?.game?.id}`}/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="세상의 모든 빙고 빙고링"/>
+        <meta property="og:description" content="빙고링 테스트"/>
+        <meta property="og:image" content={`${props?.game?.thumbnail}`}/>
+      </Head>
+    )
+  };
+
   const clickLink = (link) => {
     window.open(link)
   };
 
 
   return (
-    <Container>
-      <Title>빙고를 친구에게 공유하세요!</Title>
-      <RowFrame>
-        {
-          SNS_LIST.map((sns, index) => {
-              return index === 3 ?
-                <CopyToClipboard text={url}>
+    <>
+      <FaceBookMetaData/>
+      <Container>
+        <Title>빙고를 친구에게 공유하세요!</Title>
+        <RowFrame>
+          {
+            SNS_LIST.map((sns, index) => {
+                return index === 3 ?
+                  <CopyToClipboard text={url}>
+                    <SNSFrame
+                      onClick={() => props.onCopyUrl()}
+                      key={index.toString()}
+                      index={index}
+                    >
+                      <SNSIconFrame
+                        background={sns.background}
+                        src={sns.image}
+                      />
+                      <SNSTitle>
+                        {sns.sns}
+                      </SNSTitle>
+                    </SNSFrame>
+                  </CopyToClipboard>
+                  :
                   <SNSFrame
-                    onClick={() => props.onCopyUrl()}
                     key={index.toString()}
                     index={index}
+                    data-href={`${BASE_URL + "/" + props?.game?.id}`}
+                    onClick={sns.link ? () => clickLink(sns.link) : () => sendKakao()}
                   >
                     <SNSIconFrame
                       background={sns.background}
@@ -75,26 +106,12 @@ export default function Share(props) {
                       {sns.sns}
                     </SNSTitle>
                   </SNSFrame>
-                </CopyToClipboard>
-                :
-                <SNSFrame
-                  key={index.toString()}
-                  index={index}
-                  onClick={sns.link ? () => clickLink(sns.link) : () => sendKakao()}
-                >
-                  <SNSIconFrame
-                    background={sns.background}
-                    src={sns.image}
-                  />
-                  <SNSTitle>
-                    {sns.sns}
-                  </SNSTitle>
-                </SNSFrame>
-            }
-          )
-        }
-      </RowFrame>
-    </Container>
+              }
+            )
+          }
+        </RowFrame>
+      </Container>
+    </>
   )
 }
 

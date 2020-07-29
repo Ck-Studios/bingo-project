@@ -49,14 +49,28 @@ export default function Game(props) {
   };
 
   useEffect(() => {
-    if (markedCounts <= 6) {
-      setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
-    } else if (markedCounts >= 7 && markedCounts <= 13) {
-      setResultImagePath(matchedGame?.node?.bingoResults[1]?.image);
-    } else if (markedCounts >= 14 && markedCounts <= 19) {
-      setResultImagePath(matchedGame?.node?.bingoResults[2]?.image);
-    } else if (markedCounts >= 20 && markedCounts <= 25) {
-      setResultImagePath(matchedGame?.node?.bingoResults[3]?.image);
+    if (matchedGame?.node?.boardTheme?.size === 5) {
+      if (markedCounts <= 7) {
+        setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
+      } else if (markedCounts >= 7 && markedCounts <= 13) {
+        setResultImagePath(matchedGame?.node?.bingoResults[1]?.image);
+      } else if (markedCounts >= 14 && markedCounts <= 19) {
+        setResultImagePath(matchedGame?.node?.bingoResults[2]?.image);
+      } else if (markedCounts >= 20 && markedCounts <= 25) {
+        setResultImagePath(matchedGame?.node?.bingoResults[3]?.image);
+      }
+    }
+
+    if( matchedGame?.node?.boardTheme?.size === 6) {
+      if (markedCounts <= 10) {
+        setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
+      } else if (markedCounts >= 11 && markedCounts <= 20) {
+        setResultImagePath(matchedGame?.node?.bingoResults[1]?.image);
+      } else if (markedCounts >= 21 && markedCounts <= 28) {
+        setResultImagePath(matchedGame?.node?.bingoResults[2]?.image);
+      } else if (markedCounts >= 29 && markedCounts <= 36) {
+        setResultImagePath(matchedGame?.node?.bingoResults[3]?.image);
+      }
     }
   }, [markedCounts]);
 
@@ -250,6 +264,7 @@ export default function Game(props) {
                 onClick={() => markedCounts > 0 && showResults()}
                 whileTap={{scale: 0.95}}
               >
+                {/*0개일 때 회색*/}
                 <PlayIcon>
                   <Image
                     src={`/static/images/icons/play.svg`}

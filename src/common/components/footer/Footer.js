@@ -4,14 +4,14 @@ import styled from "styled-components";
 export default function Footer() {
     return (
         <ContainerFrame>
-            <div style={{opacity: 0.7}}>
-                <Text marginRight="18px">
-                    팀 소개
-                </Text>
-                <Text>
-                    광고문의
-                </Text>
-            </div>
+            {/*<div style={{opacity: 0.7}}>*/}
+            {/*    <Text marginRight="18px">*/}
+            {/*        팀 소개*/}
+            {/*    </Text>*/}
+            {/*    <Text>*/}
+            {/*        광고문의*/}
+            {/*    </Text>*/}
+            {/*</div>*/}
             <Copyrights>
                 © 2020 Synapse Corporation Inc.
             </Copyrights>

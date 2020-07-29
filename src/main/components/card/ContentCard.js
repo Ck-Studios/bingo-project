@@ -53,6 +53,7 @@ export default function ContentCard(props) {
         </Title>
         <ButtonFrame>
           <StartButton
+            onClick={props.gameStart}
             whileTap={{ scale: 0.95 }}
           >
             <PlayIcon>

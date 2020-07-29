@@ -26,9 +26,13 @@ export default function App({Component, pageProps, router, status}) {
       </Head>
       <>
         <div id="fb-root"></div>
-        <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v7.0"
-                nonce="13WcN22r">
-        </script>
+        {/*<script async defer crossOrigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v7.0"*/}
+        {/*        nonce="13WcN22r">*/}
+        {/*</script>*/}
+        <script
+          type="text/javascript" src="/static/scripts/facebook_sdk.js"
+        />
+
         <Provider store={store}>
           <ApolloProvider client={apolloClient}>
             <AnimatePresence exitBeforeEnter>
