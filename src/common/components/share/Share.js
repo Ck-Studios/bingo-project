@@ -1,9 +1,14 @@
 import styled from "styled-components";
 import {breakPoints, mobile, pointColor} from "../../theme/theme";
 import {SNS_LIST} from "../../scheme/common";
+import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import Link from "next/link";
+import {useRouter} from "next/router";
+import {BASE_URL} from "client/constants";
 
 export default function Share(props) {
+  console.log("props.game ::: ", props.game);
+  const url = window?.location?.href;
   const sendKakao = async () => {
     console.log("실행됨?");
     const _flag = await Kakao.isInitialized();
@@ -11,12 +16,12 @@ export default function Share(props) {
       await Kakao.Link.sendDefault({
         objectType: "feed",
         content: {
-          title: "집순이 집돌이 빙고: 집에만 있어도 행복해!",
-          description: "#빙고 #집순이 #집돌이",
-          imageUrl: "http://drive.google.com/uc?export=view&id=1YLyzgEC9SsZRpXcgTrRxdhY0fg7nh3Lz",
+          title: props?.game?.title,
+          description: "#빙고링",
+          imageUrl: props?.game?.thumbnail,
           link: {
-            mobileWebUrl: "http://192.168.1.136:3000",
-            webUrl: "http://192.168.1.136:3000",
+            mobileWebUrl: BASE_URL + "/" + props?.game?.id,
+            webUrl: BASE_URL + "/" + props?.game?.id,
           }
         },
         social: {
@@ -28,15 +33,8 @@ export default function Share(props) {
           {
             title: '웹으로 보기',
             link: {
-              mobileWebUrl: "http://192.168.1.136:3000",
-              webUrl: "http://192.168.1.136:3000",
-            },
-          },
-          {
-            title: '앱으로 보기',
-            link: {
-              mobileWebUrl: "http://192.168.1.136:3000",
-              webUrl: "http://192.168.1.136:3000",
+              mobileWebUrl: BASE_URL + "/" + props?.game?.id,
+              webUrl: BASE_URL + "/" + props?.game?.id,
             },
           },
         ],
@@ -56,31 +54,44 @@ export default function Share(props) {
   };
 
 
-
   return (
     <Container>
       <Title>빙고를 친구에게 공유하세요!</Title>
-      {/*<div className="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button"*/}
-      {/*     data-size="large"><a target="_blank"*/}
-      {/*                          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"*/}
-      {/*                          className="fb-xfbml-parse-ignore">공유하기</a></div>*/}
       <RowFrame>
         {
-          SNS_LIST.map((sns, index) => (
-            <SNSFrame
-              key={index.toString()}
-              index={index}
-              onClick={sns.link ? () => clickLink(sns.link) : () => sendKakao()}
-            >
-              <SNSIconFrame
-                background={sns.background}
-                src={sns.image}
-              />
-              <SNSTitle>
-                {sns.sns}
-              </SNSTitle>
-            </SNSFrame>
-          ))
+          SNS_LIST.map((sns, index) => {
+              return index === 3 ?
+                <CopyToClipboard text={url}>
+                  <SNSFrame
+                    onClick={() => props.onCopyUrl()}
+                    key={index.toString()}
+                    index={index}
+                  >
+                    <SNSIconFrame
+                      background={sns.background}
+                      src={sns.image}
+                    />
+                    <SNSTitle>
+                      {sns.sns}
+                    </SNSTitle>
+                  </SNSFrame>
+                </CopyToClipboard>
+                :
+                <SNSFrame
+                  key={index.toString()}
+                  index={index}
+                  onClick={sns.link ? () => clickLink(sns.link) : () => sendKakao()}
+                >
+                  <SNSIconFrame
+                    background={sns.background}
+                    src={sns.image}
+                  />
+                  <SNSTitle>
+                    {sns.sns}
+                  </SNSTitle>
+                </SNSFrame>
+            }
+          )
         }
       </RowFrame>
     </Container>

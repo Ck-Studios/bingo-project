@@ -16,16 +16,32 @@ import {useRouter} from "next/router";
 import {GAMES} from "mock/data";
 import Share from "common/components/share/Share";
 import Modal from "common/components/modal/Modal";
+import OneButtonModal from "common/components/modal/OneButtonModal";
 
 
 function MainContainer(props) {
   const {loading, error, data} = useQuery(LOAD_BINGO);
   const router = useRouter();
   const [showModal, toggleModal] = useState(false);
+  const [showUrlModal, toggleUrlModal] = useState(false);
+  const [selectedGame, selectGame] = useState(null);
+
+  const onCopyUrl = () => {
+    toggleModal(false);
+    toggleUrlModal(true);
+  };
+
+  const onPressShareButton = (game) => {
+    toggleModal(true);
+    selectGame(game);
+  };
 
 
   if (loading) return "loading...";
-  if (error) return "에러";
+  if (error) {
+    console.log("error:: ", error);
+    return "에러";
+  }
 
 
   console.log("data", data);
@@ -38,8 +54,15 @@ function MainContainer(props) {
       {
         showModal &&
         <Modal hideModal={() => toggleModal(false)}>
-          <Share />
+          <Share
+            game={selectedGame}
+            onCopyUrl={onCopyUrl}
+          />
         </Modal>
+      }
+      {
+        showUrlModal &&
+          <OneButtonModal hideModal={() => toggleUrlModal(false)}/>
       }
       <div>
         <Header/>
@@ -52,12 +75,13 @@ function MainContainer(props) {
           {
             edges?.map((game, index) => (
               <ItemFrame
+                index={index}
                 variants={SLIDE_UP_2}
                 whileTap={{scale: 0.95}}
                 key={index.toString()}
               >
                 <ContentCard
-                  showShareModal={() => toggleModal(true)}
+                  onPressShareButton={onPressShareButton}
                   gameStart={() => router.push({
                     pathname: "/bingo",
                     query: {
@@ -90,6 +114,11 @@ const ContainerFrame = styled.div`
 const ItemFrame = styled(motion.div)`
     margin-top: 30px;
     width: 100%;
+    margin-top: ${({index}) => index > 0 ? 30 : 20}px;
+    
+    ${breakPoints.web} {
+      margin-top: ${({index}) => index > 0 ? 50 : 30}px;
+    }
 `;
 
 const ContentListFrame = styled(motion.div)`

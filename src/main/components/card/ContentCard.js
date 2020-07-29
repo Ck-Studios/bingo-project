@@ -23,11 +23,11 @@ export default function ContentCard(props) {
       <ImageFrame type="short" onClick={props.gameStart}>
         <Image
           cover
-          src={game?.boardTheme?.boardImage}
+          src={game?.thumbnail}
         />
       </ImageFrame>
       <ContentFrame type="short">
-        <Title style={{fontSize: 20}} onClick={props.gameStart}>
+        <Title style={{fontSize: 20}} onClick={props.gameStart} type="short">
           {game.title}
         </Title>
         <Image
@@ -46,7 +46,7 @@ export default function ContentCard(props) {
       >
         <Image
           cover
-          src={game?.boardTheme?.boardImage}
+          src={game?.thumbnail}
         />
       </ImageFrame>
       <ContentFrame>
@@ -57,39 +57,62 @@ export default function ContentCard(props) {
           <StartButton
             whileTap={{ scale: 0.95 }}
           >
-            <IconFrame
-              marginRight="5px"
-            >
+            <PlayIcon>
               <Image
                 src="/static/images/icons/play.svg"
               />
-            </IconFrame>
+            </PlayIcon>
             <ButtonText>
               시작하기
             </ButtonText>
           </StartButton>
           <ShareButton
             whileTap={{ scale: 0.95 }}
-            onClick={() => props.showShareModal()}
+            onClick={() => props.onPressShareButton(game)}
           >
-            <IconFrame
-              marginRight="5px"
-            >
+            <ShareIcon>
               <Image
                 contain
                 src="/static/images/icons/share.svg"
               />
-            </IconFrame>
+            </ShareIcon>
           </ShareButton>
         </ButtonFrame>
       </ContentFrame>
     </ContainerFrame>
 }
 
+const PlayIcon = styled.div`
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  margin-bottom: 5px;
+  ${breakPoints.web} {
+    margin-right: 10px;
+  }
+`;
+
+const ShareIcon = styled(PlayIcon)`
+  width: 18px;
+  height: 18px;
+  margin 0;
+  
+  ${breakPoints.web} {
+    width: 20px;
+    height: 20px;
+   margin: 0;
+  }
+  
+`;
+
 const ButtonText = styled.p`
     font-size: 16px;
     font-weight: bold;
     color: ${({color}) => color || pointColor.white};
+    
+    ${breakPoints.web} {
+      font-size: 20px;
+    }
 `;
 
 const StartButton = styled(motion.div)`
@@ -128,10 +151,16 @@ const ButtonFrame = styled.div`
 const Title = styled.p`
     font-size: 22px;
     font-weight: bold;
+    line-height: 1.43;
     color: ${pointColor.gray7};
+    height: ${({type}) => type === "short" ? "auto" : "60px"};
+    margin-right: ${({type}) => type === "short" && "16px"};
     
     ${breakPoints.web} {
-      font-size: 28px;    
+      margin: -6.5px 0;
+      font-size: 28px;
+      height: 80px;    
+      height: ${({type}) => type === "short" ? "auto" : "80px"};    
     }
 `;
 
@@ -144,6 +173,7 @@ const ContentFrame = styled.div`
     
     ${breakPoints.web} {
       padding: ${({type}) => type === "short" ? "24px 30px 21px" : "26px 30px 32px"};
+      height: 205px;
     } 
 `;
 

@@ -9,6 +9,7 @@ import {LOAD_BINGO} from "modules/scheme";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 import {motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
+import OneButtonModal from "common/components/modal/OneButtonModal";
 
 export default function Game(props) {
   const router = useRouter();
@@ -16,6 +17,8 @@ export default function Game(props) {
   const {loading, error, data} = useQuery(LOAD_BINGO);
 
   const games = data?.allBingos?.edges;
+
+  const [showUrlModal, toggleUrlModal] = useState(false);
 
   const [showResultImage, toggleResultImage] = useState(false);
   const [gameStatus, setGameStatus] = useState("running");
@@ -146,7 +149,11 @@ export default function Game(props) {
         x.document.close();
       };
     };
+  };
 
+  const onCopyUrl = () => {
+    toggleShareModal(false);
+    toggleUrlModal(true);
   };
 
   if (error) return "에러";
@@ -158,9 +165,19 @@ export default function Game(props) {
         {
           showShareModal &&
           <Modal hideModal={() => toggleShareModal(false)}>
-            <Share/>
+            <Share
+              onCopyUrl={onCopyUrl}
+              game={matchedGame?.node}
+            />
           </Modal>
         }
+        {
+          showUrlModal &&
+            <OneButtonModal
+              hideModal={() => toggleUrlModal(false)}
+            />
+        }
+
         <BingoFrame id="bingo">
           <Image
             crossorigin
@@ -218,7 +235,10 @@ export default function Game(props) {
                 </RestartButton>
               </ResultButtonFrame>
               <div style={{paddingTop: 30}}>
-                <Share/>
+                <Share
+                  onCopyUrl={onCopyUrl}
+                  game={matchedGame?.node}
+                />
               </div>
             </ResultContent>
             :
@@ -261,6 +281,7 @@ export default function Game(props) {
 
 const SaveIcon = styled.div`
   margin-right: 5px;
+  margin-bottom: 10px;
   width: 12.5px;
   height: 12.5px;
   

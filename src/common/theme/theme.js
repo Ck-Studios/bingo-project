@@ -15,6 +15,7 @@ export const pointColor = {
     gray9: "#6E6D79",
     gray10: "#999999",
     gray11: "#777777",
+    gray12: "#dddddd",
     mainColor: "#0067ff",
     activeColor: "#003cff",
     activeColorLight: "#e5f0ff",

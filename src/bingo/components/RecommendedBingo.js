@@ -64,7 +64,7 @@ const Title = styled.p`
 `;
 
 const ItemFrame = styled.div`
-    margin-top: ${({index}) => index > 0 ? 20 : 30}px;
+    margin-top: ${({index}) => index > 0 ? 30 : 20}px;
 `;
 
 const ContentListFrame = styled.div`

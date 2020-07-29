@@ -7,6 +7,9 @@ export const LOAD_BINGO = gql`
         node {
           id
           title
+          thumbnail
+          order
+          text
           boardTheme {
             id
             size
