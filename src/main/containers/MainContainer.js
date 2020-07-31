@@ -14,14 +14,17 @@ import gql from "graphql-tag"
 import {LOAD_BINGO} from "modules/scheme";
 import {useRouter} from "next/router";
 import {GAMES} from "mock/data";
+import {useDispatch} from "react-redux";
 import Share from "common/components/share/Share";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
+import {selectBingo} from "modules/bingo";
 
 
 function MainContainer(props) {
   const {loading, error, data} = useQuery(LOAD_BINGO);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [showModal, toggleModal] = useState(false);
   const [showUrlModal, toggleUrlModal] = useState(false);
   const [selectedGame, selectGame] = useState(null);
@@ -36,6 +39,16 @@ function MainContainer(props) {
     selectGame(game);
   };
 
+
+  const navigateAndSelectGame = (game) => {
+    dispatch(selectBingo(game?.node));
+    router.push({
+      pathname: "/bingo",
+      query: {
+        id: game?.node?.id,
+      }
+    });
+  }
 
   if (loading) return "loading...";
   if (error) {
@@ -62,7 +75,7 @@ function MainContainer(props) {
       }
       {
         showUrlModal &&
-          <OneButtonModal hideModal={() => toggleUrlModal(false)}/>
+        <OneButtonModal hideModal={() => toggleUrlModal(false)}/>
       }
       <div>
         <Header/>
@@ -82,13 +95,8 @@ function MainContainer(props) {
               >
                 <ContentCard
                   onPressShareButton={onPressShareButton}
-                  gameStart={() => router.push({
-                    pathname: "/bingo",
-                    query: {
-                      id: game?.node?.id,
-                    }
-                  })}
-                  game={game.node}
+                  gameStart={() => navigateAndSelectGame(game)}
+                  game={game?.node}
                 />
               </ItemFrame>
             ))

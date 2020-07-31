@@ -2,6 +2,7 @@ import {PREFIX} from "client/constants";
 
 const initialState = {
     games: null,
+    selectedGame: null,
     counts: 0,
 };
 
@@ -10,6 +11,8 @@ export const RESET_COUNTS = "bingo/RESET_COUNTS";
 export const LOAD_BINGOS = "bingo/LOAD_BINGOS";
 export const LOAD_BINGOS_SUCCESS = "bingo/LOAD_BINGOS_SUCCESS";
 export const LOAD_BINGOS_FAIL = "bingo/LOAD_BINGOS_FAIL";
+
+export const SELECT_GAME = "bingo/SELECT_GAME";
 
 export default function bingo(state=initialState, action) {
     switch(action.type) {
@@ -27,8 +30,20 @@ export default function bingo(state=initialState, action) {
 
         case LOAD_BINGOS_FAIL:
             return {...state, error: action.payload.error};
+
+        case SELECT_GAME:
+            return {...state, selectedGame: action.payload.game}
         default:
             return {...state};
+    }
+}
+
+export function selectBingo(game) {
+    return {
+        type: SELECT_GAME,
+        payload: {
+            game,
+        }
     }
 }
 
