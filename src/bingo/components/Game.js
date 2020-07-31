@@ -10,6 +10,7 @@ import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 import {motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
+import {BASE_URL} from "client/constants";
 
 export default function Game(props) {
   const router = useRouter();
@@ -30,7 +31,25 @@ export default function Game(props) {
 
   const [resultBoardArray, setResultBoardArray] = useState(null);
 
+  const insertMeta = (game) => {
+    const meta = `
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@빙고링" />
+        <meta name="twitter:creator" content="@빙고링" />
+        <meta property="og:url" content=\`${BASE_URL + "/bingo?id=" + game?.node?.id}\`/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content=\`${game?.node?.title}\`/>
+        <meta property="og:description" content="빙고링"/>
+        <meta property="og:image" content=\`${game?.node?.thumbnail}\`/>
+        <meta property="og:app_id" content="1015774698842581" />
+    `;
+
+    document.getElementsByTagName('head')[0].append(meta);
+  };
+
+
   useEffect(() => {
+    insertMeta(matchedGame);
     if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
       setClientWidth(_clientWidth);

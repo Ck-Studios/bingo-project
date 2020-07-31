@@ -35,7 +35,6 @@ function MainContainer(props) {
   };
 
   const onPressShareButton = (game) => {
-    insertMeta(game);
     toggleModal(true);
     selectGame(game);
   };
@@ -54,7 +53,7 @@ function MainContainer(props) {
     `
 
     document.getElementsByTagName('head')[0].append(meta);
-  }
+  };
 
 
   const navigateAndSelectGame = (game) => {

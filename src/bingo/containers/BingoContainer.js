@@ -1,4 +1,4 @@
-import {Component} from "react";
+import {useEffect} from "react";
 import BingoBoard from "common/utils/BingoBoard";
 import styled from "styled-components";
 import {Image, mobile} from "common/theme/theme";
@@ -8,27 +8,25 @@ import Header from "common/components/header/Header";
 import RecommendedBingo from "bingo/components/RecommendedBingo";
 import Footer from "common/components/footer/Footer";
 import {motion} from "framer-motion";
-import {PREFIX} from "client/constants";
+import {BASE_URL, PREFIX} from "client/constants";
 import {SLIDE_UP} from "common/animation/AnimationVariants";
 import AnimationFrame from "common/animation/AnimationFrame";
 
-class BingoContainer extends Component {
-  render() {
-    return (
-      <ContainerFrame>
-        <Header/>
-        <AnimationFrame
-          variants={SLIDE_UP}
-        >
-          <Game
-            boardSize={360}
-          />
-        </AnimationFrame>
-        <RecommendedBingo/>
-        <Footer/>
-      </ContainerFrame>
-    )
-  }
+function BingoContainer(props) {
+  return (
+    <ContainerFrame>
+      <Header/>
+      <AnimationFrame
+        variants={SLIDE_UP}
+      >
+        <Game
+          boardSize={360}
+        />
+      </AnimationFrame>
+      <RecommendedBingo/>
+      <Footer/>
+    </ContainerFrame>
+  )
 }
 
 export default BingoContainer;

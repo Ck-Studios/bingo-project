@@ -86,7 +86,7 @@ export default function Share(props) {
   }
 
   useEffect(() => {
-    insertMeta();
+    // insertMeta();
   }, []);
 
   const TwitterMetaData = () => {
