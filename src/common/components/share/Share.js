@@ -67,65 +67,8 @@ export default function Share(props) {
   // https://twitter.com/intent/tweet?url=https%3A%2F%2Fkr.vonvon.me%2FMsbj8&text=2092%EB%85%84+%EC%9A%B4%EB%AA%85+%ED%85%8C%EC%8A%A4%ED%8A%B8&hashtags=vonvon_kr+%232092%EB%85%84%EC%9A%B4%EB%AA%85%ED%85%8C%EC%8A%A4%ED%8A%B8&related=None
 
   const sendTwitter = () => {
-    // window.open("https://publish.twitter.com/oembed?url=" + `${BASE_URL + "/bingo?id=" + props?.game?.id}`, "_blank");
-    const url = `https://twitter.com/intent/tweet?url=${BASE_URL + "/bingo?id=" + props?.game?.id}&text=${props?.game?.title}&hashtags=빙고링+%23${_.snakeCase(props?.game?.title)}`;
+    const url = `https://twitter.com/intent/tweet?url=${BASE_URL + "/bingo?id=" + props?.game?.id}&text=${props?.game?.title}&hashtags=빙고링+%23${_.snakeCase(props?.game?.title)}&related=None`;
     window.open(url, "_blank");
-  };
-
-  const insertMeta = () => {
-    const meta = `
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@빙고링" />
-        <meta name="twitter:creator" content="@빙고링" />
-        <meta property="og:url" content=\`${BASE_URL + "/bingo?id=" + props?.game?.id}\`/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content=\`${props?.game?.title}\`/>
-        <meta property="og:description" content="빙고링"/>
-        <meta property="og:image" content=\`${props?.game?.thumbnail}\`/>
-        <meta property="og:app_id" content="1015774698842581" />
-        <meta property="fb:app_id" content="1015774698842581" />
-    `
-
-    document.getElementsByTagName('head')[0].append(meta);
-
-  }
-
-  useEffect(() => {
-    // insertMeta();
-  }, []);
-
-  const TwitterMetaData = () => {
-    return (
-      <Head>
-        <meta property="og:title" content={props?.game?.title}/>
-        <meta property="og:url" content={`${BASE_URL + "/bingo?id=" + props?.game?.id}`}/>
-        <meta property="og:description" content="description" />
-        <meta property="og:image" content={`${props?.game?.thumbnail}`}/>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@빙고링" />
-        <meta name="twitter:creator" content="@빙고링" />
-      </Head>
-    )
-  }
-
-  const FaceBookMetaData = () => {
-    return (
-      <Head>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@빙고링" />
-        <meta name="twitter:creator" content="@빙고링" />
-        <meta property="og:url" content={`${BASE_URL + "/bingo?id=" + props?.game?.id}`}/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content={props?.game?.title}/>
-        <meta property="og:description" content="빙고링"/>
-        <meta property="og:image" content={`${props?.game?.thumbnail}`}/>
-        <meta property="og:app_id" content="1015774698842581" />
-      </Head>
-    )
-  };
-
-  const clickLink = (link) => {
-    window.open(link)
   };
 
   const renderButton = (sns, index) => {
