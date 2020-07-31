@@ -1,6 +1,8 @@
 import {useEffect} from "react";
 import styled from "styled-components";
 import {pointColor} from "common/theme/theme";
+import {AnimatePresence, motion} from "framer-motion";
+import {FADE, SLIDE_UP} from "common/animation/AnimationVariants";
 
 export default function Modal(props) {
   useEffect(() => {
@@ -13,16 +15,29 @@ export default function Modal(props) {
   }, []);
 
   return (
+
     <>
-      <BackgroundLayer/>
+      <BackgroundLayer
+        key="modal-bg"
+        variants={FADE}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+      />
       <ModalWrapper tabIndex="-1">
-        <ModalContentFrame tabIndex="0">
-          <CloseIcon
-            onClick={() => props.hideModal()}
-            src="/static/images/icons/exit.svg"
-          />
-          {props.children}
-        </ModalContentFrame>
+          <ModalContentFrame
+            tabIndex="0"
+            initial="initial"
+            animate="enter"
+            exit="exit"
+            variants={SLIDE_UP}
+          >
+            <CloseIcon
+              onClick={() => props.hideModal()}
+              src="/static/images/icons/exit.svg"
+            />
+            {props.children}
+          </ModalContentFrame>
       </ModalWrapper>
     </>
   )
@@ -36,7 +51,7 @@ const CloseIcon = styled.img`
   position: absolute;
 `;
 
-const BackgroundLayer = styled.div`
+const BackgroundLayer = styled(motion.div)`
   width: 100%;
   position: fixed;
   z-index: 200;
@@ -50,7 +65,7 @@ const BackgroundLayer = styled.div`
 
 `;
 
-const ModalContentFrame = styled.div`
+const ModalContentFrame = styled(motion.div)`
   position: relative;
   width: 90%;
   top: 23%;

@@ -1,6 +1,8 @@
 import {useEffect} from "react";
 import styled from "styled-components";
 import {breakPoints, pointColor} from "common/theme/theme";
+import {FADE, SLIDE_UP} from "common/animation/AnimationVariants";
+import {motion} from "framer-motion";
 
 export default function OneButtonModal(props) {
   useEffect(() => {
@@ -14,9 +16,21 @@ export default function OneButtonModal(props) {
 
   return (
     <>
-      <BackgroundLayer/>
+      <BackgroundLayer
+        key="modal-bg"
+        variants={FADE}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+      />
       <ModalWrapper tabIndex="-1">
-        <ModalContentFrame tabIndex="0">
+        <ModalContentFrame
+          tabIndex="0"
+          initial="initial"
+          animate="enter"
+          exit="exit"
+          variants={SLIDE_UP}
+        >
           <TextFrame>
             <p>주소가 복사되었습니다.</p>
             <p>원하는 곳에 붙여넣기 해주세요.</p>
@@ -61,7 +75,7 @@ const ConfirmButtonFrame = styled.div`
   }
 `;
 
-const BackgroundLayer = styled.div`
+const BackgroundLayer = styled(motion.div)`
   width: 100%;
   position: fixed;
   z-index: 200;
@@ -75,7 +89,7 @@ const BackgroundLayer = styled.div`
 
 `;
 
-const ModalContentFrame = styled.div`
+const ModalContentFrame = styled(motion.div)`
   position: relative;
   width: 90%;
   top: 23%;

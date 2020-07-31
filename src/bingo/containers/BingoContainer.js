@@ -18,6 +18,8 @@ function BingoContainer(props) {
       <Header/>
       <AnimationFrame
         variants={SLIDE_UP}
+        initial="initial"
+        enter="enter"
       >
         <Game
           boardSize={360}

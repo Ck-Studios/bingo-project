@@ -1,9 +1,10 @@
 import {useState, useEffect} from "react";
 import _ from "lodash";
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import {Lottie} from "@crello/react-lottie";
 import {useDispatch, useSelector} from "react-redux";
 import {mobile, breakPoints, Image, desktop} from "common/theme/theme";
+import {AnimatePresence, motion} from "framer-motion";
 import * as animationData from "common/animation/lottie/pencil";
 import {commitCounts} from "modules/bingo";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
@@ -98,6 +99,7 @@ export default function BingoBoard(props) {
     null
     :
     (
+
       <ContainerFrame
         className="board"
         size={boardContainerSize}
@@ -121,41 +123,61 @@ export default function BingoBoard(props) {
                     index={itemIndex}
                     marked={item.marked}
                   >
-                    {
-                      game?.boardTheme?.ringImage === "default" ?
-                        <AnimationFrame>
-                          <Lottie
-                            className="ring"
-                            playingState={
-                              item.marked ?
-                                "playing"
-                                :
-                                "stopped"
-                            }
-                            config={animationConfig}
-                            width={clientWidth / row.length}
-                            height={clientWidth / row.length}
-                            speed={0.7}
-                            isClickToPauseDisabled={false}
-                            isStopped={!item.marked}
-                            isPaused={!item.marked}
-                          />
-                        </AnimationFrame>
-                        :
-                        item.marked ?
-                          <RingFrame
-                            className="ring"
-                            size={(boardContainerSize / row.length) - 6}
-                          >
-                            <Ring
-                              src={game?.boardTheme?.ringImage}
-                              crossorigin
-                              contain
+                    <AnimatePresence>
+                      {
+                        game?.boardTheme?.ringImage === "default" ?
+                          <AnimationFrame>
+                            <Lottie
+                              className="ring"
+                              playingState={
+                                item.marked ?
+                                  "playing"
+                                  :
+                                  "stopped"
+                              }
+                              config={animationConfig}
+                              width={clientWidth / row.length}
+                              height={clientWidth / row.length}
+                              speed={0.7}
+                              isClickToPauseDisabled={false}
+                              isStopped={!item.marked}
+                              isPaused={!item.marked}
                             />
-                          </RingFrame>
+                          </AnimationFrame>
                           :
-                          null
-                    }
+                          item.marked ?
+                            <RingFrame
+                              key="ring"
+                              variants={{
+                                initial: {
+                                  opacity: 0,
+                                },
+                                enter: {
+                                  opacity: 1,
+                                  transition: {duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96]}
+                                },
+                                exit: {
+                                  opacity: 0,
+                                  transition: {duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96]}
+                                }
+                              }}
+                              initial="initial"
+                              animate="enter"
+                              exit="exit"
+                              className="ring"
+                              size={(boardContainerSize / row.length) - 6}
+                            >
+                              <Ring
+                                src={game?.boardTheme?.ringImage}
+                                crossorigin
+                                contain
+                              />
+                            </RingFrame>
+                            :
+                            null
+                      }
+                    </AnimatePresence>
+
                   </BingoItem>
                 ))
               }
@@ -163,17 +185,43 @@ export default function BingoBoard(props) {
           ))
         }
       </ContainerFrame>
+
     )
 }
+
+const rota = keyframes`
+  0% { transform: rotate(0deg); }
+  50%, 100% { transform: rotate(360deg); }
+`;
+
+const fill = keyframes`
+  0% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+`;
+
+const mask = keyframes`
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+`;
+
+
+const Mask = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: white;
+`;
 
 const AnimationFrame = styled.div`
     position: absolute;
     z-index: 10;
 `;
 
-const RingFrame = styled.div`
+const RingFrame = styled(motion.div)`
+    position: relative;
     width: ${({size}) => size}px;
     height: ${({size}) => size}px;
+    z-index: 300;
 `;
 
 const Ring = styled(Image)`

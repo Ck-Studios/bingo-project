@@ -7,7 +7,7 @@ import Header from "common/components/header/Header";
 import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
 import {BASE_URL, PREFIX} from "client/constants";
-import {motion} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import {CHILDREN_DELAY, SLIDE_UP_2} from "common/animation/AnimationVariants";
 import {useQuery} from "@apollo/react-hooks";
 import gql from "graphql-tag"
@@ -39,23 +39,6 @@ function MainContainer(props) {
     selectGame(game);
   };
 
-  const insertMeta = (game) => {
-    const meta = `
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@빙고링" />
-        <meta name="twitter:creator" content="@빙고링" />
-        <meta property="og:url" content=\`${BASE_URL + "/bingo?id=" + game?.node?.id}\`/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content=\`${game?.node?.title}\`/>
-        <meta property="og:description" content="빙고링"/>
-        <meta property="og:image" content=\`${game?.node?.thumbnail}\`/>
-        <meta property="og:app_id" content="1015774698842581" />
-    `
-
-    document.getElementsByTagName('head')[0].append(meta);
-  };
-
-
   const navigateAndSelectGame = (game) => {
     dispatch(selectBingo(game?.node));
     router.push({
@@ -66,33 +49,31 @@ function MainContainer(props) {
     });
   }
 
-  if (loading) return "loading...";
+  if (loading) return "";
   if (error) {
-    console.log("error:: ", error);
     return "에러";
   }
-
-
-  console.log("data", data);
 
   const {allBingos} = data;
   const {edges} = allBingos;
 
   return (
     <ContainerFrame>
-      {
-        showModal &&
-        <Modal hideModal={() => toggleModal(false)}>
-          <Share
-            game={selectedGame}
-            onCopyUrl={onCopyUrl}
-          />
-        </Modal>
-      }
-      {
-        showUrlModal &&
-        <OneButtonModal hideModal={() => toggleUrlModal(false)}/>
-      }
+      <AnimatePresence>
+        {
+          showModal &&
+          <Modal hideModal={() => toggleModal(false)} key="modal">
+            <Share
+              game={selectedGame}
+              onCopyUrl={onCopyUrl}
+            />
+          </Modal>
+        }
+        {
+          showUrlModal &&
+          <OneButtonModal hideModal={() => toggleUrlModal(false)} key="modal"/>
+        }
+      </AnimatePresence>
       <div>
         <Header/>
         <ContentListFrame

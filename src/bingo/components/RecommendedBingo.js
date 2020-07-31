@@ -7,6 +7,7 @@ import {SLIDE_UP} from "common/animation/AnimationVariants";
 import {GAMES} from "mock/data";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO} from "modules/scheme";
+import {motion} from "framer-motion";
 
 export default function RecommendedBingo(props) {
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function RecommendedBingo(props) {
             >
               <ItemFrame
                 index={index}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => router.push({
                   pathname: "/bingo",
                   query: {
@@ -63,7 +65,7 @@ const Title = styled.p`
     }
 `;
 
-const ItemFrame = styled.div`
+const ItemFrame = styled(motion.div)`
     margin-top: ${({index}) => index > 0 ? 30 : 20}px;
 `;
 

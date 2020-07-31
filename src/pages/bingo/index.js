@@ -9,11 +9,6 @@ import {BASE_URL} from "client/constants";
 import {GET_MATCHED_BINGO, LOAD_BINGO} from "modules/scheme";
 
 export default function Index(props) {
-  // const game = props?.initialReduxState?.bingo.selectedGame;
-  //
-  // console.log("game::: ", game);
-  // router.query.id
-  // console.log("matched:: ", props.matchedBingo);
   const matchedGame = props.matchedBingo?.data?.bingo;
 
   return (

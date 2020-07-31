@@ -7,7 +7,7 @@ import {useRouter} from "next/router";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO} from "modules/scheme";
 import {MAX_CLIENT_WIDTH} from "common/constants/constants";
-import {motion} from "framer-motion";
+import {AnimatePresence, motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
 import {BASE_URL} from "client/constants";
@@ -174,12 +174,17 @@ export default function Game(props) {
   };
 
   if (error) return "에러";
-  if (!matchedGame) return "loading...";
+  if (!matchedGame) return (
+    <div style={{width: "100%", height: "100%", background: "white"}}>
+
+    </div>
+  );
 
   return (
     <>
       <ContainerFrame>
         <ContentWrapper>
+          <AnimatePresence>
           {
             showShareModal &&
             <Modal hideModal={() => toggleShareModal(false)}>
@@ -195,6 +200,7 @@ export default function Game(props) {
               hideModal={() => toggleUrlModal(false)}
             />
           }
+          </AnimatePresence>
 
           <BingoFrame id="bingo">
             <Image
