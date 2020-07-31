@@ -16,7 +16,7 @@ export default function Index(props) {
   // console.log("matched:: ", props.matchedBingo);
   const matchedGame = props.matchedBingo?.data?.bingo;
 
-  return matchedGame ? (
+  return (
     <>
       <Head>
         <meta name="twitter:card" content="summary_large_image"/>
@@ -35,9 +35,7 @@ export default function Index(props) {
         </AnimationFrame>
       </ContainerLayout>
     </>
-  )
-    :
-    null
+  );
 }
 
 

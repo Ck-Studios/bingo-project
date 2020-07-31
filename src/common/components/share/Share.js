@@ -56,7 +56,7 @@ export default function Share(props) {
     // window.open("http://www.facebook.com/sharer.php?u=" + encodeURIComponent(BASE_URL + "/bingo?id=" + props?.game?.id),"_blank")
     FB?.ui({
       method: "share",
-      href: encodeURIComponent(BASE_URL + "/bingo?id=" + props?.game?.id)
+      href: BASE_URL + "/bingo?id=" + props?.game?.id
     }, function(response) {
       console.log(response)
 
@@ -65,7 +65,7 @@ export default function Share(props) {
 
   const sendTwitter = () => {
     // window.open("https://publish.twitter.com/oembed?url=" + `${BASE_URL + "/bingo?id=" + props?.game?.id}`, "_blank");
-    window.open("https://twitter.com/intent/tweet?text=" + props?.game?.title + `${BASE_URL + "/bingo?id=" + props?.game?.id}` + "#빙고링" + `#${props?.game?.title}`, "_blank");
+    window.open("https://twitter.com/intent/tweet?text=" + props?.game?.title + " " + `${BASE_URL + "/bingo?id=" + props?.game?.id}` + " " + "#빙고링" + `#${props?.game?.title}`, "_blank");
   };
 
   const insertMeta = () => {
