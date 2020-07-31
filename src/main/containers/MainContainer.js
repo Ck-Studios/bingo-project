@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext, useMemo} from "react";
 import {connect} from "react-redux";
 import styled from "styled-components";
 import {pointColor, mobile, Image, breakPoints} from "common/theme/theme";
@@ -19,6 +19,7 @@ import Share from "common/components/share/Share";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
 import {selectBingo} from "modules/bingo";
+import IntersectionObserver, {IntersectionContext} from "common/components/layout/IntersectionObserver";
 
 
 function MainContainer(props) {
@@ -84,18 +85,18 @@ function MainContainer(props) {
         >
           {
             edges?.map((game, index) => (
-              <ItemFrame
-                index={index}
-                variants={SLIDE_UP_2}
-                whileTap={{scale: 0.95}}
-                key={index.toString()}
-              >
-                <ContentCard
-                  onPressShareButton={onPressShareButton}
-                  gameStart={() => navigateAndSelectGame(game)}
-                  game={game?.node}
-                />
-              </ItemFrame>
+              <IntersectionObserver key={index.toString()}>
+                <ItemFrame
+                  index={index}
+                  delayOrder={1}
+                >
+                  <ContentCard
+                    onPressShareButton={onPressShareButton}
+                    gameStart={() => navigateAndSelectGame(game)}
+                    game={game?.node}
+                  />
+                </ItemFrame>
+              </IntersectionObserver>
             ))
           }
         </ContentListFrame>
@@ -116,7 +117,8 @@ const ContainerFrame = styled.div`
     background: ${pointColor.white};
 `;
 
-const ItemFrame = styled(motion.div)`
+
+const ItemLayout = styled(motion.div)`
     margin-top: 30px;
     width: 100%;
     margin-top: ${({index}) => index > 0 ? 30 : 20}px;
@@ -132,3 +134,40 @@ const ContentListFrame = styled(motion.div)`
       padding: 0 27px;
     }
 `;
+
+const ItemFrame = ({children, delayOrder, duration = 0.4, easing = [0.42, 0, 0.58, 1]}) => {
+  const { inView } = useContext(IntersectionContext);
+  const transition = useMemo(
+    () => ({
+      duration,
+      delay: delayOrder / 5,
+      ease: easing
+    }),
+    [duration, delayOrder, easing]
+  );
+
+  const variants = {
+    hidden: {
+      y: 200,
+      opacity: 0,
+      transition
+    },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition
+    }
+  };
+
+  return (
+    <ItemLayout
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
+      exit="hidden"
+      variants={variants}
+      whileTap={{scale: 0.95}}
+    >
+      {children}
+    </ItemLayout>
+  )
+}

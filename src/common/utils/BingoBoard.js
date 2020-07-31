@@ -2,7 +2,6 @@ import {useState, useEffect} from "react";
 import _ from "lodash";
 import styled, {keyframes} from "styled-components";
 import {Lottie} from "@crello/react-lottie";
-import {useDispatch, useSelector} from "react-redux";
 import {mobile, breakPoints, Image, desktop} from "common/theme/theme";
 import {AnimatePresence, motion} from "framer-motion";
 import * as animationData from "common/animation/lottie/pencil";
