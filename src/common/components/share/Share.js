@@ -83,6 +83,7 @@ export default function Share(props) {
         <meta property="og:description" content="빙고링"/>
         <meta property="og:image" content=\`${props?.game?.thumbnail}\`/>
         <meta property="og:app_id" content="1015774698842581" />
+        <meta property="fb:app_id" content="1015774698842581" />
     `
 
     document.getElementsByTagName('head')[0].append(meta);
