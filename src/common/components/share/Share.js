@@ -1,11 +1,7 @@
 import styled from "styled-components";
-import {useEffect} from "react";
 import {breakPoints, mobile, pointColor} from "../../theme/theme";
 import {SNS_LIST} from "../../scheme/common";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
-import Head from "next/head"
-import Link from "next/link";
-import {useRouter} from "next/router";
 import _ from "lodash";
 import {BASE_URL} from "client/constants";
 

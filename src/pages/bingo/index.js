@@ -22,12 +22,16 @@ export default function Index(props) {
         <meta name="twitter:card" content="summary_large_image"/>
         <meta name="twitter:site" content="@빙고링"/>
         <meta name="twitter:creator" content="@빙고링"/>
+        <meta name="twitter:image" content={matchedGame?.thumbnail}/>
+        <meta name="twitter:title" content={matchedGame?.title}/>
         <meta property="og:url" content={BASE_URL + "/bingo?id=" + matchedGame?.id}/>
         <meta property="og:type" content="website"/>
         <meta property="og:title" content={matchedGame?.title}/>
         <meta property="og:description" content="빙고링"/>
         <meta property="og:image" content={matchedGame?.thumbnail}/>
         <meta property="og:app_id" content="1015774698842581"/>
+        <meta property="fb:app_id" content="1015774698842581"/>
+
       </Head>
       <ContainerLayout>
         <AnimationFrame>
