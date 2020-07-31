@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import { pointColor, Image, breakPoints, IconFrame, } from "common/theme/theme";
+import {pointColor, Image, breakPoints, IconFrame,} from "common/theme/theme";
 import styled from "styled-components";
 import BingoBoard from "common/utils/BingoBoard";
 import Share from "common/components/share/Share";
@@ -11,6 +11,7 @@ import {motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
 import {BASE_URL} from "client/constants";
+import Head from "next/head";
 
 export default function Game(props) {
   const router = useRouter();
@@ -32,6 +33,13 @@ export default function Game(props) {
   const [resultBoardArray, setResultBoardArray] = useState(null);
 
   const insertMeta = (game) => {
+
+    const twitterCard = document.createElement("meta");
+    twitterCard.name = "twitter:card";
+    twitterCard.content = "summary_large_image";
+    const metaTitle = document.createElement("meta");
+    metaTitle.property = "og:url";
+    metaTitle.content = BASE_URL + "/bingo?id=" + game?.node?.id;
     const meta = `
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@빙고링" />
@@ -47,9 +55,15 @@ export default function Game(props) {
     document.getElementsByTagName('head')[0].append(meta);
   };
 
+  useEffect(() => {
+    if (matchedGame) {
+      // insertMeta(matchedGame);
+    }
+  }, [matchedGame]);
+
 
   useEffect(() => {
-    insertMeta(matchedGame);
+
     if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
       setClientWidth(_clientWidth);
@@ -80,7 +94,7 @@ export default function Game(props) {
       }
     }
 
-    if( matchedGame?.node?.boardTheme?.size === 6) {
+    if (matchedGame?.node?.boardTheme?.size === 6) {
       if (markedCounts <= 10) {
         setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
       } else if (markedCounts >= 11 && markedCounts <= 20) {
@@ -193,123 +207,136 @@ export default function Game(props) {
   if (!matchedGame) return "loading...";
 
   return (
-    <ContainerFrame>
-      <ContentWrapper>
-        {
-          showShareModal &&
-          <Modal hideModal={() => toggleShareModal(false)}>
-            <Share
-              onCopyUrl={onCopyUrl}
-              game={matchedGame?.node}
-            />
-          </Modal>
-        }
-        {
-          showUrlModal &&
+    <>
+      <Head>
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site" content="@빙고링"/>
+        <meta name="twitter:creator" content="@빙고링"/>
+        <meta property="og:url" content={BASE_URL + "/bingo?id=" + matchedGame?.node?.id}/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content={matchedGame?.node?.title}/>
+        <meta property="og:description" content="빙고링"/>
+        <meta property="og:image" content={matchedGame?.node?.thumbnail}/>
+        <meta property="og:app_id" content="1015774698842581"/>
+      </Head>
+      <ContainerFrame>
+        <ContentWrapper>
+          {
+            showShareModal &&
+            <Modal hideModal={() => toggleShareModal(false)}>
+              <Share
+                onCopyUrl={onCopyUrl}
+                game={matchedGame?.node}
+              />
+            </Modal>
+          }
+          {
+            showUrlModal &&
             <OneButtonModal
               hideModal={() => toggleUrlModal(false)}
             />
-        }
-
-        <BingoFrame id="bingo">
-          <Image
-            crossorigin
-            src={matchedGame?.node?.boardTheme?.boardImage}
-          />
-          <BoardFrame className="board-frame-container" width={clientWidth}>
-            <BingoBoard
-              setMarkedCounts={setMarkedCounts}
-              boardSize={props.boardSize}
-              gameStatus={gameStatus}
-              game={matchedGame?.node}
-              gameSize={matchedGame?.node?.boardTheme?.size}
-              setGameStatus={setGameStatus}
-              setResultBoard={setResultBoardArray}
-            />
-          </BoardFrame>
-          {
-            showResultImage &&
-            <div className="result-image" style={{marginTop: -5}}>
-              <Image
-                src={resultImagePath}
-              />
-            </div>
           }
-        </BingoFrame>
-        {
-          showResultImage ?
-            <ResultContent>
-              <ResultButtonFrame>
-                <SaveButton
-                  onClick={() => saveImage()}
-                  whileTap={{scale: 0.95}}
-                >
-                  <SaveIcon>
-                    <Image
-                      src={`/static/images/icons/download.svg`}
-                    />
-                  </SaveIcon>
-                  <ButtonText>
-                    이미지로 저장
-                  </ButtonText>
-                </SaveButton>
-                <RestartButton
-                  onClick={() => replayGame()}
-                  whileTap={{scale: 0.95}}
-                >
-                  <PlayIcon>
-                    <Image
-                      src={`/static/images/icons/play2.svg`}
-                    />
-                  </PlayIcon>
-                  <ButtonText color={pointColor.purpleDark}>
-                    다시하기
-                  </ButtonText>
-                </RestartButton>
-              </ResultButtonFrame>
-              <div style={{paddingTop: 30}}>
-                <Share
-                  onCopyUrl={onCopyUrl}
-                  game={matchedGame?.node}
+
+          <BingoFrame id="bingo">
+            <Image
+              crossorigin
+              src={matchedGame?.node?.boardTheme?.boardImage}
+            />
+            <BoardFrame className="board-frame-container" width={clientWidth}>
+              <BingoBoard
+                setMarkedCounts={setMarkedCounts}
+                boardSize={props.boardSize}
+                gameStatus={gameStatus}
+                game={matchedGame?.node}
+                gameSize={matchedGame?.node?.boardTheme?.size}
+                setGameStatus={setGameStatus}
+                setResultBoard={setResultBoardArray}
+              />
+            </BoardFrame>
+            {
+              showResultImage &&
+              <div className="result-image" style={{marginTop: -5}}>
+                <Image
+                  src={resultImagePath}
                 />
               </div>
-            </ResultContent>
-            :
-            <ButtonFrame>
-              <Message>
-                체크하려면 해당하는 칸을 클릭하세요.
-              </Message>
-              <ResultButton
-                onClick={() => markedCounts > 0 && showResults()}
-                whileTap={{scale: 0.95}}
-              >
-                {/*0개일 때 회색*/}
-                <PlayIcon>
-                  <Image
-                    src={`/static/images/icons/play.svg`}
+            }
+          </BingoFrame>
+          {
+            showResultImage ?
+              <ResultContent>
+                <ResultButtonFrame>
+                  <SaveButton
+                    onClick={() => saveImage()}
+                    whileTap={{scale: 0.95}}
+                  >
+                    <SaveIcon>
+                      <Image
+                        src={`/static/images/icons/download.svg`}
+                      />
+                    </SaveIcon>
+                    <ButtonText>
+                      이미지로 저장
+                    </ButtonText>
+                  </SaveButton>
+                  <RestartButton
+                    onClick={() => replayGame()}
+                    whileTap={{scale: 0.95}}
+                  >
+                    <PlayIcon>
+                      <Image
+                        src={`/static/images/icons/play2.svg`}
+                      />
+                    </PlayIcon>
+                    <ButtonText color={pointColor.purpleDark}>
+                      다시하기
+                    </ButtonText>
+                  </RestartButton>
+                </ResultButtonFrame>
+                <div style={{paddingTop: 30}}>
+                  <Share
+                    onCopyUrl={onCopyUrl}
+                    game={matchedGame?.node}
                   />
-                </PlayIcon>
-                <ButtonText>
-                  결과보기
-                </ButtonText>
-              </ResultButton>
-              <ShareButton
-                onClick={() => toggleShareModal(true)}
-                whileTap={{scale: 0.95}}
-              >
-                <ShareIcon>
-                  <Image
-                    src={`/static/images/icons/share.svg`}
-                  />
-                </ShareIcon>
-                <ButtonText color={pointColor.purpleDark}>
-                  공유하기
-                </ButtonText>
-              </ShareButton>
-            </ButtonFrame>
-        }
-      </ContentWrapper>
-    </ContainerFrame>
+                </div>
+              </ResultContent>
+              :
+              <ButtonFrame>
+                <Message>
+                  체크하려면 해당하는 칸을 클릭하세요.
+                </Message>
+                <ResultButton
+                  onClick={() => markedCounts > 0 && showResults()}
+                  whileTap={{scale: 0.95}}
+                >
+                  {/*0개일 때 회색*/}
+                  <PlayIcon>
+                    <Image
+                      src={`/static/images/icons/play.svg`}
+                    />
+                  </PlayIcon>
+                  <ButtonText>
+                    결과보기
+                  </ButtonText>
+                </ResultButton>
+                <ShareButton
+                  onClick={() => toggleShareModal(true)}
+                  whileTap={{scale: 0.95}}
+                >
+                  <ShareIcon>
+                    <Image
+                      src={`/static/images/icons/share.svg`}
+                    />
+                  </ShareIcon>
+                  <ButtonText color={pointColor.purpleDark}>
+                    공유하기
+                  </ButtonText>
+                </ShareButton>
+              </ButtonFrame>
+          }
+        </ContentWrapper>
+      </ContainerFrame>
+    </>
   )
 }
 
