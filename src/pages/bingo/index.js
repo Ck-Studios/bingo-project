@@ -13,11 +13,10 @@ export default function Index(props) {
   //
   // console.log("game::: ", game);
   // router.query.id
-  console.log("matched:: ", props.matchedBingo);
-  const matchedGame = props.matchedBingo;
+  // console.log("matched:: ", props.matchedBingo);
+  const matchedGame = props.matchedBingo?.data?.bingo;
 
-  const router = useRouter();
-  return (
+  return matchedGame ? (
     <>
       <Head>
         <meta name="twitter:card" content="summary_large_image"/>
@@ -37,6 +36,8 @@ export default function Index(props) {
       </ContainerLayout>
     </>
   )
+    :
+    null
 }
 
 

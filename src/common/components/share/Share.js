@@ -202,7 +202,6 @@ export default function Share(props) {
 
   return (
     <>
-      <FaceBookMetaData/>
       <Container>
         <Title>빙고를 친구에게 공유하세요!</Title>
         <RowFrame>

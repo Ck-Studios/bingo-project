@@ -32,36 +32,6 @@ export default function Game(props) {
 
   const [resultBoardArray, setResultBoardArray] = useState(null);
 
-  const insertMeta = (game) => {
-
-    const twitterCard = document.createElement("meta");
-    twitterCard.name = "twitter:card";
-    twitterCard.content = "summary_large_image";
-    const metaTitle = document.createElement("meta");
-    metaTitle.property = "og:url";
-    metaTitle.content = BASE_URL + "/bingo?id=" + game?.node?.id;
-    const meta = `
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@빙고링" />
-        <meta name="twitter:creator" content="@빙고링" />
-        <meta property="og:url" content=\`${BASE_URL + "/bingo?id=" + game?.node?.id}\`/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content=\`${game?.node?.title}\`/>
-        <meta property="og:description" content="빙고링"/>
-        <meta property="og:image" content=\`${game?.node?.thumbnail}\`/>
-        <meta property="og:app_id" content="1015774698842581" />
-    `;
-
-    document.getElementsByTagName('head')[0].append(meta);
-  };
-
-  useEffect(() => {
-    if (matchedGame) {
-      // insertMeta(matchedGame);
-    }
-  }, [matchedGame]);
-
-
   useEffect(() => {
 
     if (window) {
@@ -208,17 +178,6 @@ export default function Game(props) {
 
   return (
     <>
-      <Head>
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:site" content="@빙고링"/>
-        <meta name="twitter:creator" content="@빙고링"/>
-        <meta property="og:url" content={BASE_URL + "/bingo?id=" + matchedGame?.node?.id}/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content={matchedGame?.node?.title}/>
-        <meta property="og:description" content="빙고링"/>
-        <meta property="og:image" content={matchedGame?.node?.thumbnail}/>
-        <meta property="og:app_id" content="1015774698842581"/>
-      </Head>
       <ContainerFrame>
         <ContentWrapper>
           {
