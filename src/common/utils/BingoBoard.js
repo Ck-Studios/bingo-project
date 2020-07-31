@@ -149,6 +149,7 @@ export default function BingoBoard(props) {
                           >
                             <Ring
                               src={game?.boardTheme?.ringImage}
+                              crossorigin
                               contain
                             />
                           </RingFrame>

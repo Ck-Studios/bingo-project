@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {useEffect} from "react";
 import {breakPoints, mobile, pointColor} from "../../theme/theme";
 import {SNS_LIST} from "../../scheme/common";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
@@ -8,11 +9,9 @@ import {useRouter} from "next/router";
 import {BASE_URL} from "client/constants";
 
 export default function Share(props) {
-  console.log("props.game ::: ", props.game);
   const url = window?.location?.href + "bingo?id=" + props?.game?.id;
   const sendKakao = async () => {
     try {
-      console.log("ㅗ애 안돼")
       const _flag = await Kakao.isInitialized();
       if (_flag) {
         await Kakao.Link.sendDefault({
@@ -68,6 +67,23 @@ export default function Share(props) {
     // window.open("https://publish.twitter.com/oembed?url=" + `${BASE_URL + "/bingo?id=" + props?.game?.id}`, "_blank");
     window.open("https://twitter.com/intent/tweet?text=" + props?.game?.title + `${BASE_URL + "/bingo?id=" + props?.game?.id}` + "#빙고링" + `#${props?.game?.title}`, "_blank");
   };
+
+  const insertMeta = () => {
+    const meta = "<meta property=\"og:title\" content={props?.game?.title}/>\n" +
+      "        <meta property=\"og:url\" content={`${BASE_URL + \"/bingo?id=\" + props?.game?.id}`}/>\n" +
+      "        <meta property=\"og:description\" content=\"description\" />\n" +
+      "        <meta property=\"og:image\" content={`${props?.game?.thumbnail}`}/>\n" +
+      "        <meta name=\"twitter:card\" content=\"summary_large_image\" />\n" +
+      "        <meta name=\"twitter:site\" content=\"@빙고링\" />\n" +
+      "        <meta name=\"twitter:creator\" content=\"@빙고링\" />"
+
+    document.getElementsByTagName('head')[0].append(meta);
+
+  }
+
+  useEffect(() => {
+    insertMeta();
+  }, []);
 
   const TwitterMetaData = () => {
     return (
