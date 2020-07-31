@@ -6,6 +6,7 @@ import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import Head from "next/head"
 import Link from "next/link";
 import {useRouter} from "next/router";
+import _ from "lodash";
 import {BASE_URL} from "client/constants";
 
 export default function Share(props) {
@@ -63,9 +64,12 @@ export default function Share(props) {
     })
   };
 
+  // https://twitter.com/intent/tweet?url=https%3A%2F%2Fkr.vonvon.me%2FMsbj8&text=2092%EB%85%84+%EC%9A%B4%EB%AA%85+%ED%85%8C%EC%8A%A4%ED%8A%B8&hashtags=vonvon_kr+%232092%EB%85%84%EC%9A%B4%EB%AA%85%ED%85%8C%EC%8A%A4%ED%8A%B8&related=None
+
   const sendTwitter = () => {
     // window.open("https://publish.twitter.com/oembed?url=" + `${BASE_URL + "/bingo?id=" + props?.game?.id}`, "_blank");
-    window.open("https://twitter.com/intent/tweet?text=" + props?.game?.title + " " + `${BASE_URL + "/bingo?id=" + props?.game?.id}` + " " + "#빙고링" + `#${props?.game?.title}`, "_blank");
+    const url = `https://twitter.com/intent/tweet?url=${BASE_URL + "/bingo?id=" + props?.game?.id}&text=${props?.game?.title}&hashtags=빙고링+%23${_.snakeCase(props?.game?.title)}`;
+    window.open(url, "_blank");
   };
 
   const insertMeta = () => {
