@@ -69,13 +69,17 @@ export default function Share(props) {
   };
 
   const insertMeta = () => {
-    const meta = "<meta property=\"og:title\" content={props?.game?.title}/>\n" +
-      "        <meta property=\"og:url\" content={`${BASE_URL + \"/bingo?id=\" + props?.game?.id}`}/>\n" +
-      "        <meta property=\"og:description\" content=\"description\" />\n" +
-      "        <meta property=\"og:image\" content={`${props?.game?.thumbnail}`}/>\n" +
-      "        <meta name=\"twitter:card\" content=\"summary_large_image\" />\n" +
-      "        <meta name=\"twitter:site\" content=\"@빙고링\" />\n" +
-      "        <meta name=\"twitter:creator\" content=\"@빙고링\" />"
+    const meta = `
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@빙고링" />
+        <meta name="twitter:creator" content="@빙고링" />
+        <meta property="og:url" content=\`${BASE_URL + "/bingo?id=" + props?.game?.id}\`/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content=\`${props?.game?.title}\`/>
+        <meta property="og:description" content="빙고링"/>
+        <meta property="og:image" content=\`${props?.game?.thumbnail}\`/>
+        <meta property="og:app_id" content="1015774698842581" />
+    `
 
     document.getElementsByTagName('head')[0].append(meta);
 
