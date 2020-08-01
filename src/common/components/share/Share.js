@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {breakPoints, mobile, pointColor} from "../../theme/theme";
-import {SNS_LIST} from "../../scheme/common";
+import {breakPoints, mobile, pointColor} from "common/theme/theme";
+import {SNS_LIST} from "common/scheme/common";
 import {CopyToClipboard} from "react-copy-to-clipboard/lib/Component";
 import _ from "lodash";
 import {BASE_URL} from "client/constants";

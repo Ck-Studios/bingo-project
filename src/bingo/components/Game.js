@@ -11,6 +11,7 @@ import {AnimatePresence, motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
 import useScrollDirection from "common/components/hooks/useScrollDirection";
+import {SLIDE_DOWN} from "common/animation/AnimationVariants";
 
 export default function Game(props) {
   const router = useRouter();
@@ -99,11 +100,11 @@ export default function Game(props) {
 
     const x = window.open("", "_blank");
     x.document.open();
-    x.document.write(`<body style="margin: 0"><div id="container" ></div></body>`);
+    // x.document.write(`<body style="margin: 0"><div id="container" ></div></body>`);
     const boardImage = x.document.createElement("img");
     const resultImage = x.document.createElement("img");
     const ringImage = x.document.createElement("img");
-    const xContainer = x.document.getElementById("container");
+    // const xContainer = x.document.getElementById("container");
     let __loadedCounts = 0;
 
     boardImage.crossOrigin = "anonymous";
@@ -114,8 +115,8 @@ export default function Game(props) {
     resultImage.src = resultImagePath + "?" + performance.now();
     ringImage.src = matchedGame?.node?.boardTheme?.ringImage + "?" + performance.now();
 
-    // x.document.write(canvas);
-    xContainer.innerHTML = canvas;
+    x.document.write(canvas);
+    // xContainer.innerHTML = canvas;
     const __canvas = x.document.getElementById("canvas");
     const _xCanvas = __canvas.getContext("2d");
 
@@ -150,26 +151,42 @@ export default function Game(props) {
 
       let dataUrl = __canvas.toDataURL("image/png");
 
-      dataUrl = dataUrl.replace("image/png", 'image/octet-stream');
+      // dataUrl = dataUrl.replace("image/png", 'image/octet-stream');
       dataUrl = dataUrl.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png');
 
       const __img = `<img src="" width="100%" height="100%" id="results" style="object-fit: contain;"/>`;
       const __desktopImg = `<a id="link"><img src="" width="100%" height="100%" id="results" style="object-fit: contain;"/></a>`;
       const isDesktop = window.innerWidth > 540;
 
-      xContainer.innerHTML = isDesktop ? __desktopImg : __img;
+      // xContainer.innerHTML = isDesktop ? __desktopImg : __img;
+      // x.document.write(isDesktop ? __desktopImg : __img);
 
-      const _resultImage = x.document.getElementById("results");
-      if (isDesktop) {
-        const _link = x.document.getElementById("link");
-        _link.href = dataUrl;
-        _link.download = "빙고링.png";
+      const isChrome = navigator.userAgent.indexOf("Chrome") != -1;
+      if (!isChrome) {
+        x.document.write(isDesktop ? __desktopImg : __img);
+
+        if (isDesktop) {
+          const _link = x.document.getElementById("link");
+          _link.href = dataUrl;
+          _link.download = "빙고링.png";
+        }
+
+        const _resultImage = x.document.getElementById("results");
+        _resultImage.src = dataUrl;
+        _resultImage.onload = function () {
+          __canvas.parentNode.removeChild(__canvas);
+        };
       }
-      _resultImage.src = dataUrl;
+      x.document.close();
 
-      _resultImage.onload = function () {
-        x.document.close();
-      };
+      // if (isDesktop) {
+      //   const _link = x.document.getElementById("link");
+      //   _link.href = dataUrl;
+      //   _link.download = "빙고링.png";
+      // }
+      // __canvas.parentNode.removeChild(__canvas);
+      // x.window.location = dataUrl;
+      // x.document.close();
     };
   };
 
@@ -190,21 +207,21 @@ export default function Game(props) {
       <ContainerFrame>
         <ContentWrapper>
           <AnimatePresence>
-          {
-            showShareModal &&
-            <Modal hideModal={() => toggleShareModal(false)}>
-              <Share
-                onCopyUrl={onCopyUrl}
-                game={matchedGame?.node}
+            {
+              showShareModal &&
+              <Modal hideModal={() => toggleShareModal(false)}>
+                <Share
+                  onCopyUrl={onCopyUrl}
+                  game={matchedGame?.node}
+                />
+              </Modal>
+            }
+            {
+              showUrlModal &&
+              <OneButtonModal
+                hideModal={() => toggleUrlModal(false)}
               />
-            </Modal>
-          }
-          {
-            showUrlModal &&
-            <OneButtonModal
-              hideModal={() => toggleUrlModal(false)}
-            />
-          }
+            }
           </AnimatePresence>
 
           <BingoFrame id="bingo">
@@ -225,11 +242,18 @@ export default function Game(props) {
             </BoardFrame>
             {
               showResultImage &&
-              <div className="result-image" style={{marginTop: -8}}>
+              <motion.div
+                className="result-image"
+                style={{marginTop: -8}}
+                variants={SLIDE_DOWN}
+                initial="initial"
+                animate="enter"
+                exit="exit"
+              >
                 <Image
                   src={resultImagePath}
                 />
-              </div>
+              </motion.div>
             }
           </BingoFrame>
           {

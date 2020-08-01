@@ -18,6 +18,7 @@ export default function App({Component, pageProps, router, status}) {
   return (
     <>
       <Head>
+        <title>빙고링</title>
         <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'/>
         <script type="text/javascript" src="/static/scripts/kakao_sdk.js"/>
         <script type="text/javascript">

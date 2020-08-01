@@ -12,6 +12,20 @@ export const SLIDE_UP = {
   }
 };
 
+export const SLIDE_DOWN = {
+  initial: {opacity: 0, y: -50},
+  enter: {
+    opacity: 1,
+    y: 0,
+    transition: {duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96]}
+  },
+  exit: {
+    opacity: 0,
+    y: -50,
+    transition: {duration: 0.3, ease: [0.48, 0.15, 0.25, 0.96]}
+  }
+};
+
 
 export const FADE = {
   initial: {opacity: 0},
