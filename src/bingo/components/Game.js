@@ -39,7 +39,12 @@ export default function Game(props) {
 
   useEffect(() => {
     const _matchedGame = games?.find(item => item.node.id === gameId);
+    _matchedGame?.node?.bingoResults?.sort((a, b) => {
+      return parseInt(a.text) - parseInt(b.text);
+    });
+    console.log("matchedGame:: ", _matchedGame);
     setMatchedGame(_matchedGame);
+
     window.scrollTo(0, 1);
   }, [gameId, games]);
 
@@ -48,11 +53,13 @@ export default function Game(props) {
     setGameStatus("stop");
   };
 
+
   useEffect(() => {
     if (matchedGame?.node?.boardTheme?.size === 5) {
+
       if (markedCounts <= 7) {
         setResultImagePath(matchedGame?.node?.bingoResults[0]?.image);
-      } else if (markedCounts >= 7 && markedCounts <= 13) {
+      } else if (markedCounts > 7 && markedCounts <= 13) {
         setResultImagePath(matchedGame?.node?.bingoResults[1]?.image);
       } else if (markedCounts >= 14 && markedCounts <= 19) {
         setResultImagePath(matchedGame?.node?.bingoResults[2]?.image);

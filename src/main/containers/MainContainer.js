@@ -120,6 +120,7 @@ const HeaderFrame = styled.div`
   position: fixed;
   top: 0;
   width: 100%;
+  max-width: 540px !important;
   z-index: 25;
   transform: ${({ enabled }) =>
   enabled ? "translateY(0)" : "translateY(-100%)"};
