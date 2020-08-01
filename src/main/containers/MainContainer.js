@@ -16,6 +16,7 @@ import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
 import {selectBingo} from "modules/bingo";
 import IntersectionObserver, {IntersectionContext} from "common/components/layout/IntersectionObserver";
+import useScrollDirection from "common/components/hooks/useScrollDirection";
 
 
 function MainContainer(props) {
@@ -25,7 +26,14 @@ function MainContainer(props) {
   const [showModal, toggleModal] = useState(false);
   const [showUrlModal, toggleUrlModal] = useState(false);
   const [selectedGame, selectGame] = useState(null);
-  const [headerTransform, setHeaderTransform] = useState(false);
+  const [scrollDirection, setScrollDirection] = useState('up');
+
+  const direction = useScrollDirection("up");
+
+  useEffect(() => {
+    setScrollDirection(direction);
+  }, [direction]);
+
 
   const onCopyUrl = () => {
     toggleModal(false);
@@ -45,19 +53,6 @@ function MainContainer(props) {
         id: game?.node?.id,
       }
     });
-  };
-
-  const onPan = (event, info) => {
-    console.log("event", event);
-    console.log("info", info);
-
-    if (info?.delta?.y < 0) {
-      console.log("hihi");
-      setHeaderTransform(true);
-    } else {
-      setHeaderTransform(false);
-    }
-
   };
 
   if (loading) return "";
@@ -85,8 +80,8 @@ function MainContainer(props) {
           <OneButtonModal hideModal={() => toggleUrlModal(false)} key="modal"/>
         }
       </AnimatePresence>
-      <motion.div onPanStart={onPan}>
-        <HeaderFrame enabled={headerTransform}>
+      <div>
+        <HeaderFrame enabled={scrollDirection === "up"}>
           <Header/>
         </HeaderFrame>
         <Header/>
@@ -113,7 +108,7 @@ function MainContainer(props) {
             ))
           }
         </ContentListFrame>
-      </motion.div>
+      </div>
       <Footer/>
     </ContainerFrame>
   )
@@ -128,7 +123,7 @@ const HeaderFrame = styled.div`
   z-index: 25;
   transform: ${({ enabled }) =>
   enabled ? "translateY(0)" : "translateY(-100%)"};
-  transition: transform 1s;
+  transition: transform 0.5s;
 `;
 
 const ContainerFrame = styled.div`
@@ -141,6 +136,13 @@ const ContainerFrame = styled.div`
 `;
 
 
+const ContentListFrame = styled(motion.div)`
+    padding: 0 18px;
+    ${breakPoints.web} {
+      padding: 0 27px;
+    }
+`;
+
 const ItemLayout = styled(motion.div)`
     margin-top: 30px;
     width: 100%;
@@ -148,13 +150,6 @@ const ItemLayout = styled(motion.div)`
     
     ${breakPoints.web} {
       margin-top: ${({index}) => index > 0 ? 50 : 30}px;
-    }
-`;
-
-const ContentListFrame = styled(motion.div)`
-    padding: 0 18px;
-    ${breakPoints.web} {
-      padding: 0 27px;
     }
 `;
 

@@ -11,9 +11,6 @@ export default function ContentCard(props) {
   useEffect(() => {
     if(window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
-      console.log("???", _clientWidth);
-      const _boardContainerSize = Math.round(_clientWidth * 0.86) + 15;
-
       setClientWidth(_clientWidth);
     }
   }, []);

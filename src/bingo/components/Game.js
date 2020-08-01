@@ -10,6 +10,7 @@ import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 import {AnimatePresence, motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
+import useScrollDirection from "common/components/hooks/useScrollDirection";
 
 export default function Game(props) {
   const router = useRouter();
@@ -27,11 +28,9 @@ export default function Game(props) {
   const [markedCounts, setMarkedCounts] = useState(0);
   const [resultImagePath, setResultImagePath] = useState(null);
   const [showShareModal, toggleShareModal] = useState(false);
-
   const [resultBoardArray, setResultBoardArray] = useState(null);
 
   useEffect(() => {
-
     if (window) {
       const _clientWidth = window.innerWidth > MAX_CLIENT_WIDTH ? MAX_CLIENT_WIDTH : window.innerWidth;
       setClientWidth(_clientWidth);

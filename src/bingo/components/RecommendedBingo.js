@@ -1,3 +1,4 @@
+import {useContext, useMemo} from "react";
 import styled from "styled-components";
 import ContentCard from "main/components/card/ContentCard";
 import {mobile, pointColor, Image, breakPoints} from "common/theme/theme";
@@ -8,6 +9,7 @@ import {GAMES} from "mock/data";
 import {useQuery} from "@apollo/react-hooks";
 import {LOAD_BINGO} from "modules/scheme";
 import {motion} from "framer-motion";
+import IntersectionObserver, {IntersectionContext} from "common/components/layout/IntersectionObserver";
 
 export default function RecommendedBingo(props) {
   const router = useRouter();
@@ -28,13 +30,10 @@ export default function RecommendedBingo(props) {
       <ContentListFrame>
         {
           edges?.map((game, index) => (
-            <AnimationFrame
-              key={index.toString()}
-              variants={SLIDE_UP}
-            >
+            <IntersectionObserver key={index.toString()}>
               <ItemFrame
                 index={index}
-                whileTap={{ scale: 0.95 }}
+                delayOrder={1}
                 onClick={() => router.push({
                   pathname: "/bingo",
                   query: {
@@ -47,7 +46,7 @@ export default function RecommendedBingo(props) {
                   type="short"
                 />
               </ItemFrame>
-            </AnimationFrame>
+            </IntersectionObserver>
           ))
         }
       </ContentListFrame>
@@ -65,7 +64,7 @@ const Title = styled.p`
     }
 `;
 
-const ItemFrame = styled(motion.div)`
+const ItemLayout = styled(motion.div)`
     margin-top: ${({index}) => index > 0 ? 30 : 20}px;
 `;
 
@@ -77,3 +76,41 @@ const ContainerFrame = styled.div`
     padding: 30px 18px 0 18px;
     background: ${pointColor.white};
 `;
+
+
+const ItemFrame = ({children, delayOrder, duration = 0.4, easing = [0.42, 0, 0.58, 1]}) => {
+  const { inView } = useContext(IntersectionContext);
+  const transition = useMemo(
+    () => ({
+      duration,
+      delay: delayOrder / 5,
+      ease: easing
+    }),
+    [duration, delayOrder, easing]
+  );
+
+  const variants = {
+    hidden: {
+      y: 200,
+      opacity: 0,
+      transition
+    },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition
+    }
+  };
+
+  return (
+    <ItemLayout
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
+      exit="hidden"
+      variants={variants}
+      whileTap={{scale: 0.95}}
+    >
+      {children}
+    </ItemLayout>
+  )
+}

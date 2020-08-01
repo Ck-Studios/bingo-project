@@ -1,20 +1,28 @@
-import {useEffect} from "react";
-import BingoBoard from "common/utils/BingoBoard";
+import {useState, useEffect} from "react";
 import styled from "styled-components";
-import {Image, mobile} from "common/theme/theme";
 import {pointColor} from "common/theme/theme";
 import Game from "bingo/components/Game";
 import Header from "common/components/header/Header";
 import RecommendedBingo from "bingo/components/RecommendedBingo";
 import Footer from "common/components/footer/Footer";
-import {motion} from "framer-motion";
-import {BASE_URL, PREFIX} from "client/constants";
 import {SLIDE_UP} from "common/animation/AnimationVariants";
 import AnimationFrame from "common/animation/AnimationFrame";
+import useScrollDirection from "common/components/hooks/useScrollDirection";
 
 function BingoContainer(props) {
+  const [scrollDirection, setScrollDirection] = useState('Up');
+
+  const direction = useScrollDirection("up");
+
+  useEffect(() => {
+    setScrollDirection(direction);
+  }, [direction]);
+
   return (
     <ContainerFrame>
+      <HeaderFrame enabled={scrollDirection === "up"}>
+        <Header/>
+      </HeaderFrame>
       <Header/>
       <AnimationFrame
         variants={SLIDE_UP}
@@ -32,6 +40,16 @@ function BingoContainer(props) {
 }
 
 export default BingoContainer;
+
+const HeaderFrame = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 25;
+  transform: ${({ enabled }) =>
+  enabled ? "translateY(0)" : "translateY(-100%)"};
+  transition: transform 0.5s;
+`;
 
 const ContainerFrame = styled.div`
     width: 100%;
