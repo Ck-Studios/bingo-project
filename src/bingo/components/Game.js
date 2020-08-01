@@ -10,8 +10,6 @@ import {MAX_CLIENT_WIDTH} from "common/constants/constants";
 import {AnimatePresence, motion} from "framer-motion";
 import Modal from "common/components/modal/Modal";
 import OneButtonModal from "common/components/modal/OneButtonModal";
-import {BASE_URL} from "client/constants";
-import Head from "next/head";
 
 export default function Game(props) {
   const router = useRouter();
