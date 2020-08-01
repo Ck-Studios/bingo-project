@@ -1,19 +1,15 @@
 import {useState, useEffect, useContext, useMemo} from "react";
-import {connect} from "react-redux";
 import styled from "styled-components";
 import {pointColor, mobile, Image, breakPoints} from "common/theme/theme";
 import ContentCard from "main/components/card/ContentCard";
 import Header from "common/components/header/Header";
 import {withRouter} from "next/router";
 import Footer from "common/components/footer/Footer";
-import {BASE_URL, PREFIX} from "client/constants";
 import {AnimatePresence, motion} from "framer-motion";
 import {CHILDREN_DELAY, SLIDE_UP_2} from "common/animation/AnimationVariants";
 import {useQuery} from "@apollo/react-hooks";
-import gql from "graphql-tag"
 import {LOAD_BINGO} from "modules/scheme";
 import {useRouter} from "next/router";
-import {GAMES} from "mock/data";
 import {useDispatch} from "react-redux";
 import Share from "common/components/share/Share";
 import Modal from "common/components/modal/Modal";
@@ -29,6 +25,7 @@ function MainContainer(props) {
   const [showModal, toggleModal] = useState(false);
   const [showUrlModal, toggleUrlModal] = useState(false);
   const [selectedGame, selectGame] = useState(null);
+  const [headerTransform, setHeaderTransform] = useState(false);
 
   const onCopyUrl = () => {
     toggleModal(false);
@@ -48,7 +45,20 @@ function MainContainer(props) {
         id: game?.node?.id,
       }
     });
-  }
+  };
+
+  const onPan = (event, info) => {
+    console.log("event", event);
+    console.log("info", info);
+
+    if (info?.delta?.y < 0) {
+      console.log("hihi");
+      setHeaderTransform(true);
+    } else {
+      setHeaderTransform(false);
+    }
+
+  };
 
   if (loading) return "";
   if (error) {
@@ -75,7 +85,10 @@ function MainContainer(props) {
           <OneButtonModal hideModal={() => toggleUrlModal(false)} key="modal"/>
         }
       </AnimatePresence>
-      <div>
+      <motion.div onPanStart={onPan}>
+        <HeaderFrame enabled={headerTransform}>
+          <Header/>
+        </HeaderFrame>
         <Header/>
         <ContentListFrame
           initial="closed"
@@ -100,13 +113,23 @@ function MainContainer(props) {
             ))
           }
         </ContentListFrame>
-      </div>
+      </motion.div>
       <Footer/>
     </ContainerFrame>
   )
 }
 
 export default withRouter(MainContainer);
+
+const HeaderFrame = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 25;
+  transform: ${({ enabled }) =>
+  enabled ? "translateY(0)" : "translateY(-100%)"};
+  transition: transform 1s;
+`;
 
 const ContainerFrame = styled.div`
     background: ${pointColor.gray0};

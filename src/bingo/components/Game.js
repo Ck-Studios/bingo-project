@@ -83,13 +83,14 @@ export default function Game(props) {
   };
 
   const saveImage = () => {
+    const BOARD_SIZE = matchedGame?.node?.boardTheme?.size;
     const ABSOLUTE_BOARD_SIZE_X = 360;
     const ABSOLUTE_BOARD_SIZE_Y = 450;
     const _resultHeight = 80;
     const canvas = `<canvas id='canvas' width='${ABSOLUTE_BOARD_SIZE_X}' height='${ABSOLUTE_BOARD_SIZE_Y + _resultHeight}'></canvas>`;
 
 
-    const RING_SIZE = 56;
+    const RING_SIZE = BOARD_SIZE === 5 ? 56 : 46;
     const SIDE_WIDTH = 40;
 
     const x = window.open("", "_blank");
@@ -117,7 +118,7 @@ export default function Game(props) {
     const images = [boardImage, resultImage, ringImage];
 
     const calcLocation = (location) => {
-      const GAP = 9;
+      const GAP = BOARD_SIZE === 5 ? 9 : 8;
       const positionY = 110;
       return {
         x: (SIDE_WIDTH / 2 + (location.x * RING_SIZE) + (location.x * GAP)) + 2,
@@ -220,7 +221,7 @@ export default function Game(props) {
             </BoardFrame>
             {
               showResultImage &&
-              <div className="result-image" style={{marginTop: -5}}>
+              <div className="result-image" style={{marginTop: -8}}>
                 <Image
                   src={resultImagePath}
                 />
@@ -271,7 +272,9 @@ export default function Game(props) {
                   체크하려면 해당하는 칸을 클릭하세요.
                 </Message>
                 <ResultButton
+                  className={`${markedCounts === 0 ? "disabled" : "active"}`}
                   onClick={() => markedCounts > 0 && showResults()}
+                  disabled={markedCounts === 0}
                   whileTap={{scale: 0.95}}
                 >
                   {/*0개일 때 회색*/}
@@ -387,12 +390,15 @@ const ResultButton = styled(motion.div)`
     margin-top: 10px;
     width: 100%;
     height: 46px;
-    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 25px;
     box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(${pointColor.gradientPurple} 0%, ${pointColor.mainPurple} 90%);
+    &.disabled {
+      background: ${pointColor.gray11}
+    }
     ${breakPoints.web} {
       height: 54px;
     }
