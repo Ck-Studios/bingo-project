@@ -77,6 +77,7 @@
     "react-redux": "^7.2.0",
     "react-responsive-modal": "^5.0.2",
     "react-social-kr": "^1.1.9",
+    "react-use": "^15.3.3",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.1.3",
