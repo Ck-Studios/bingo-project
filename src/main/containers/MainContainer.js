@@ -27,12 +27,19 @@ function MainContainer(props) {
   const [showUrlModal, toggleUrlModal] = useState(false);
   const [selectedGame, selectGame] = useState(null);
   const [scrollDirection, setScrollDirection] = useState('up');
+  const [windowLoaded, setWindowLoaded] = useState(false);
 
   const direction = useScrollDirection("up");
 
   useEffect(() => {
     setScrollDirection(direction);
   }, [direction]);
+
+  useEffect(() => {
+    if (window) {
+      setWindowLoaded(true);
+    }
+  }, [])
 
 
   const onCopyUrl = () => {
@@ -55,6 +62,7 @@ function MainContainer(props) {
     });
   };
 
+  if(!windowLoaded) return "";
   if (loading) return "";
   if (error) {
     return "에러";

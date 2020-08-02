@@ -11,12 +11,21 @@ import useScrollDirection from "common/components/hooks/useScrollDirection";
 
 function BingoContainer(props) {
   const [scrollDirection, setScrollDirection] = useState('Up');
+  const [windowLoaded, setWindowLoaded] = useState(false);
 
   const direction = useScrollDirection("up");
 
   useEffect(() => {
     setScrollDirection(direction);
   }, [direction]);
+
+  useEffect(() => {
+    if (window) {
+      setWindowLoaded(true)
+    }
+  }, []);
+
+  if(!windowLoaded) return "";
 
   return (
     <ContainerFrame>
