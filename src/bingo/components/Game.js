@@ -43,7 +43,6 @@ export default function Game(props) {
     _matchedGame?.node?.bingoResults?.sort((a, b) => {
       return parseInt(a.text) - parseInt(b.text);
     });
-    console.log("matchedGame:: ", _matchedGame);
     setMatchedGame(_matchedGame);
 
     window.scrollTo(0, 1);
