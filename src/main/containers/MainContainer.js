@@ -53,7 +53,6 @@ function MainContainer(props) {
   };
 
   const navigateAndSelectGame = (game) => {
-    dispatch(selectBingo(game?.node));
     router.push({
       pathname: "/bingo",
       query: {

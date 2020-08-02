@@ -16,8 +16,8 @@ export default function ContentCard(props) {
   }, []);
 
   return props.type === "short" ?
-    <ShortContainerFrame>
-      <ImageFrame type="short" onClick={props.gameStart}>
+    <ShortContainerFrame onClick={props.gameStart}>
+      <ImageFrame type="short">
         <Image
           cover
           src={game?.thumbnail}

@@ -241,14 +241,18 @@ export default function Game(props) {
             </BoardFrame>
             {
               showResultImage &&
-              <div
+              <motion.div
                 className="result-image"
-                style={{marginTop: -8, width: "100%"}}
+                variants={SLIDE_DOWN}
+                initial="initial"
+                animate="enter"
+                exit="exit"
               >
-                <Image
+                <img
+                  style={{width:"100%", height: "100%"}}
                   src={resultImagePath}
                 />
-              </div>
+              </motion.div>
             }
           </BingoFrame>
           {
@@ -471,6 +475,6 @@ const ContainerFrame = styled.div`
     z-index: 10;
     
     .result-image {
-        margin-top: -4px;
+        margin-top: -8px;
     }
 `;

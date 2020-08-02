@@ -34,14 +34,14 @@ export default function RecommendedBingo(props) {
               <ItemFrame
                 index={index}
                 delayOrder={1}
-                onClick={() => router.push({
-                  pathname: "/bingo",
-                  query: {
-                    id: game.node.id
-                  }
-                })}
               >
                 <ContentCard
+                  gameStart={() => router.push({
+                    pathname: "/bingo",
+                    query: {
+                      id: game.node.id
+                    }
+                  })}
                   game={game.node}
                   type="short"
                 />
@@ -79,7 +79,7 @@ const ContainerFrame = styled.div`
 
 
 const ItemFrame = ({children, delayOrder, duration = 0.4, easing = [0.42, 0, 0.58, 1]}) => {
-  const { inView } = useContext(IntersectionContext);
+  const {inView} = useContext(IntersectionContext);
   const transition = useMemo(
     () => ({
       duration,
