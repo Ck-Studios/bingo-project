@@ -36,6 +36,29 @@ export const GET_MATCHED_BINGO = gql`
       thumbnail
       text
       boardTheme {
+        id
+        size
+        boardImage
+        ringImage
+      }
+      bingoResults {
+        id
+        type
+        text
+        image
+      }
+    }
+  }
+`;
+
+export const LOAD_LOCAL_BINGO = gql`
+  {
+    allBingos @client {
+      edges {
+        node {
+          id
+          title
+          boardTheme {
             id
             size
             boardImage
@@ -47,31 +70,8 @@ export const GET_MATCHED_BINGO = gql`
             text
             image
           }
+        }
+      }
     }
   }
-`;
-
-export const LOAD_LOCAL_BINGO = gql`
-    {
-        allBingos @client {
-            edges {
-                node {
-                    id
-                    title
-                    boardTheme {
-                        id
-                        size
-                        boardImage
-                        ringImage
-                    }
-                    bingoResults {
-                        id
-                        type
-                        text
-                        image
-                    }
-                }
-            }
-        }
-    }
 `;

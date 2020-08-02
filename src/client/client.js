@@ -10,7 +10,7 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
-      uri: "https://bingoring.me/api",
+      uri: "https://api.bingoring.me/gql",
       credentials: "same-origin",
       fetch,
     }),
