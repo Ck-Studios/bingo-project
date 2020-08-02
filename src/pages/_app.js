@@ -24,6 +24,10 @@ export default function App({Component, pageProps, router, status}) {
         <script type="text/javascript">
           Kakao.init('e81eae6e644074fa4932b6658d4c5883');
         </script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166051021-1"></script>
+        <script type="text/javascript" src="static/scripts/ga_sdk.js"/>
+
+
       </Head>
       <>
         <div id="fb-root"></div>
