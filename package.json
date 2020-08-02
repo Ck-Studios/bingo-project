@@ -1,6 +1,6 @@
 {
-  "name": "create-next-app-cli",
-  "version": "0.1.0",
+  "name": "bingoring-web",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -84,5 +84,7 @@
     "styled-components": "^5.0.1",
     "styled-jsx": "^3.2.4",
     "swiper": "^5.3.1"
+  },
+  "devDependencies": {
   }
 }

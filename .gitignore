@@ -215,3 +215,5 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/react,jetbrains,webstorm,nuxtjs,nuxt,yarn
 .idea
 .next
+
+.serverless
