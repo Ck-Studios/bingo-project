@@ -243,7 +243,7 @@ export default function Game(props) {
               showResultImage &&
               <motion.div
                 className="result-image"
-                style={{marginTop: -8}}
+                style={{marginTop: -8, marginLeft: 0, marginRight: 0, width: "100%"}}
                 variants={SLIDE_DOWN}
                 initial="initial"
                 animate="enter"
