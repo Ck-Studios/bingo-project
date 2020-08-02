@@ -21,6 +21,7 @@ export default function App({Component, pageProps, router, status}) {
         <title>빙고링</title>
         <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css' rel='stylesheet' type='text/css'/>
         <script type="text/javascript" src="/static/scripts/kakao_sdk.js"/>
+        <script data-ad-client="ca-pub-3753319193838381" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <script type="text/javascript">
           Kakao.init('e81eae6e644074fa4932b6658d4c5883');
         </script>
