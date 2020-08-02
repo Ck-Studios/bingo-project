@@ -303,9 +303,8 @@ export default function Game(props) {
                   className={`${markedCounts === 0 ? "disabled" : "active"}`}
                   onClick={() => markedCounts > 0 && showResults()}
                   disabled={markedCounts === 0}
-                  whileTap={{scale: 0.95}}
+                  whileTap={{scale: markedCounts === 0 ? 1 : 0.95}}
                 >
-                  {/*0개일 때 회색*/}
                   <PlayIcon>
                     <Image
                       src={`/static/images/icons/play.svg`}
