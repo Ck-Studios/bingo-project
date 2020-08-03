@@ -155,18 +155,17 @@ const ButtonFrame = styled.div`
 
 const Title = styled.p`
     font-size: 22px;
-    font-weight: bold;
+    font-weight: 800;
     line-height: 1.43;
     color: ${pointColor.gray7};
     height: ${({type}) => type === "short" ? "auto" : "60px"};
-    margin-right: ${({type}) => type === "short" && "16px"};
-    word-break: break-all;
+    
     
     ${breakPoints.web} {
-      width: 380px;
       margin: ${({type}) => type !== "short" && "-6.5px 0"};
       font-size: ${({type}) => type === "short" ? "26px" : "28px"};
-      height: 80px;    
+      height: 80px;
+      word-break: keep-all;    
       height: ${({type}) => type === "short" ? "auto" : "80px"};    
     }
 `;

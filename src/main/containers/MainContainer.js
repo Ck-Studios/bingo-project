@@ -88,9 +88,12 @@ function MainContainer(props) {
         }
       </AnimatePresence>
       <div>
-        <HeaderFrame enabled={window.scrollY > 300 && scrollDirection === "up"}>
-          <Header/>
-        </HeaderFrame>
+        {
+          window.scrollY > 300 &&
+          <HeaderFrame enabled={scrollDirection === "up"}>
+            <Header/>
+          </HeaderFrame>
+        }
         <Header/>
         <ContentListFrame
           initial="closed"
@@ -161,7 +164,7 @@ const ItemLayout = styled(motion.div)`
     }
 `;
 
-const ItemFrame = ({children, delayOrder, duration = 0.4, easing = [0.42, 0, 0.58, 1]}) => {
+const ItemFrame = ({children, delayOrder, duration = 0.3, easing = [0.42, 0, 0.58, 1]}) => {
   const { inView } = useContext(IntersectionContext);
   const transition = useMemo(
     () => ({

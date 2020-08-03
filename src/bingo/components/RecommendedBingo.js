@@ -13,6 +13,8 @@ import IntersectionObserver, {IntersectionContext} from "common/components/layou
 
 export default function RecommendedBingo(props) {
   const router = useRouter();
+  const currentGameID = router.query.id;
+
 
   const {loading, error, data} = useQuery(LOAD_BINGO);
 
@@ -29,7 +31,7 @@ export default function RecommendedBingo(props) {
       </Title>
       <ContentListFrame>
         {
-          edges?.map((game, index) => (
+          edges?.filter((game) => game.node.id !== currentGameID)?.map((game, index) => (
             <IntersectionObserver key={index.toString()}>
               <ItemFrame
                 index={index}
@@ -78,7 +80,7 @@ const ContainerFrame = styled.div`
 `;
 
 
-const ItemFrame = ({children, delayOrder, duration = 0.4, easing = [0.42, 0, 0.58, 1]}) => {
+const ItemFrame = ({children, delayOrder, duration = 0.3, easing = [0.42, 0, 0.58, 1]}) => {
   const {inView} = useContext(IntersectionContext);
   const transition = useMemo(
     () => ({
