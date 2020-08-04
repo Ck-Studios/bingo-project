@@ -30,7 +30,7 @@ function BingoContainer(props) {
   return (
     <ContainerFrame>
       {
-        window.scrollY > 300 &&
+        window.scrollY > 1300 &&
         <HeaderFrame enabled={scrollDirection === "up"}>
           <Header/>
         </HeaderFrame>

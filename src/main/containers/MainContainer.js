@@ -18,7 +18,6 @@ import {selectBingo} from "modules/bingo";
 import IntersectionObserver, {IntersectionContext} from "common/components/layout/IntersectionObserver";
 import useScrollDirection from "common/components/hooks/useScrollDirection";
 
-
 function MainContainer(props) {
   const {loading, error, data} = useQuery(LOAD_BINGO);
   const router = useRouter();
@@ -26,7 +25,7 @@ function MainContainer(props) {
   const [showModal, toggleModal] = useState(false);
   const [showUrlModal, toggleUrlModal] = useState(false);
   const [selectedGame, selectGame] = useState(null);
-  const [scrollDirection, setScrollDirection] = useState('up');
+  const [scrollDirection, setScrollDirection] = useState("up");
   const [windowLoaded, setWindowLoaded] = useState(false);
 
   const direction = useScrollDirection("up");
@@ -39,8 +38,7 @@ function MainContainer(props) {
     if (window) {
       setWindowLoaded(true);
     }
-  }, [])
-
+  }, []);
 
   const onCopyUrl = () => {
     toggleModal(false);
@@ -89,7 +87,7 @@ function MainContainer(props) {
       </AnimatePresence>
       <div>
         {
-          window.scrollY > 300 &&
+          window.pageYOffset > 1300 &&
           <HeaderFrame enabled={scrollDirection === "up"}>
             <Header/>
           </HeaderFrame>
@@ -199,4 +197,13 @@ const ItemFrame = ({children, delayOrder, duration = 0.3, easing = [0.42, 0, 0.5
       {children}
     </ItemLayout>
   )
-}
+};
+
+const HeaderWrapper = styled.div`
+  width: 100%;
+  height: 46px;
+        
+  ${breakPoints.web} {
+    height: 64px;
+  }
+`;
