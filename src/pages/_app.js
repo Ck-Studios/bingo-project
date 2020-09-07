@@ -49,9 +49,15 @@ export default function App({Component, pageProps, router, status}) {
       </>
       <style global jsx>
         {`
-        @font-face { font-family: 'NanumSquareRound'; src: url('/static/NanumSquareRoundOTFB') format('otf'); font-weight: normal; font-style: normal; }
+            @font-face { 
+                font-family: 'NanumSquareRoundOTFR'; 
+                src: url('/static/fonts/NanumSquareRoundOTFEB.otf'); 
+                format('otf'); 
+                font-weight: normal; 
+                font-style: normal; 
+            }
             * {
-              font-family: 'NanumSquareRound', 'Sans-serif'
+              font-family: 'NanumSquareRoundOTFR', 'Sans-serif'
             }
             body {
                 width: 100%;
